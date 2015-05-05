@@ -80,3 +80,12 @@ def remove_directory(fname):
     if os.path.exists(fname):
         shutil.rmtree(fname)
 
+
+def is_subset(list1, list2):
+    res = True
+    for elem in list1:
+        if elem not in list2:
+            res = False
+            break
+    
+    return res

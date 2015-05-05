@@ -10,8 +10,8 @@
 
 from .Tool import Tool
 from ..Support import Utilities
-from ..Support.JulietCppLineno2Fname import lineno2fun
-from ..Support.Compiler import Compiler
+from .JulietCppLineno2Fname import lineno2fun
+from ..Validation.Compiler import Compiler
 
 import logging
 
