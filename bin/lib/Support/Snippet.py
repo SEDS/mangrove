@@ -80,8 +80,8 @@ def disregard_comments(file_manager):
     """
     indices = remove_comments(file_manager.get_original_source_path(), \
                               file_manager.get_trial_source_path())
-    file_manager.backup_trial_file()
-    file_manager.write_subset_file(indices)
+    # file_manager.backup_trial_file()
+    # file_manager.write_subset_file(indices)
     return indices
 
 
@@ -147,6 +147,7 @@ def code_reduction_topformflat(minimizer, file_manager, indices, \
     changed_lines = topformflat(level, last_file, \
                                 file_manager.get_trial_source_path())
     while changed_lines:
+        logging.debug("Reducing by TopFormFlat, [%s] level" % level)
         new_ln_warnings = convert_ln_to_topformflat(line_numbers, changed_lines)
         min_indices = range(1, file_manager.get_trial_source_num_lines() + 1)
         min_indices = list(min_indices)

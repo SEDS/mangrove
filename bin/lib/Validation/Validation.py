@@ -15,13 +15,15 @@ def test(file_manager, tool, line_numbers, description, indices):
         return True
 
     compiler = tool.get_compiler()
-    result = compiler.compile(file_manager.get_source_basename(), \
+    original_fname = file_manager.get_source_path()
+    result = compiler.compile(original_fname, \
                               file_manager.get_build_object_path(), 
                               file_manager.get_trial_source_path())
 
     if result == 0:
         failed = False
-        tool.handle_compile_file(file_manager.get_trial_source_path())
+        tool.handle_compile_file(file_manager.get_trial_source_path(), \
+                                 compiler.get_command(original_fname))
         parsed_output = tool.get_tool_output(filtered=False)
         for (file_name, lines, _, desc) in parsed_output:
             fname1 = os.path.basename(file_name)

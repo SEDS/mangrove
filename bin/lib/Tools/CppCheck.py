@@ -265,7 +265,7 @@ CppCheck, description...
   #
   # Compile the weakness using CppCheck Tool
   #
-  def handle_compile (self, suite):
+  def handle_compile (self, suite, ):
     logging.info ('Compiling suite [%s] with tool [%s]' % (suite.directory, self.name ()))
 
     # Get into the correct directory
@@ -290,8 +290,8 @@ CppCheck, description...
   # 
   # Compile just a single file
   # 
-  def handle_compile_file (self, filepath, concat_output=False):
-    self.run_cppcheck(filepath, concat_output)
+  def handle_compile_file (self, filepath, options=None, concat_output=False):
+    self.run_cppcheck(filepath, options, concat_output)
 
   #
   # Get a unique project name for the provided suite
@@ -379,10 +379,16 @@ CppCheck, description...
     return res
 
 
-  def run_cppcheck(self, fname, concat_output=False):
+  def run_cppcheck(self, fname, options=None, concat_output=False):
     logging.debug('Running CppCheck on file [%s]' % fname)
     #TODO:
     cmd = CPPCHECK_PATH + "cppcheck --force --inline-suppr -q -I . "
+    if options:
+      tmp = re.findall(r'-D\S+', options)
+      tmp += re.findall(r'-I\S+', options)
+      tmp += re.findall(r'-I\s+[^ \t\n\r\f\v-]+', options)
+      cmd += " " + " ".join(tmp) + " "
+
     cmd += fname
     cmd += ' 2>&1'
 

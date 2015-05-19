@@ -62,6 +62,11 @@ class FileManager:
         with open(self.get_trial_source_path()) as fd:
             self.original_file_lines = fd.readlines()
 
+    def get_source_path(self):
+        """ex : /usr/matias/.../airport.java
+        """
+        return os.path.join(self._get_source_location(), self.fname)
+
     def get_source_basename(self):
         """ex : airport.java
         """
