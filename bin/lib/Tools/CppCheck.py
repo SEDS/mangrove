@@ -382,7 +382,7 @@ CppCheck, description...
   def run_cppcheck(self, fname, options=None, concat_output=False):
     logging.debug('Running CppCheck on file [%s]' % fname)
     #TODO:
-    cmd = CPPCHECK_PATH + "cppcheck --force --inline-suppr -q -I . "
+    cmd = CPPCHECK_PATH + "cppcheck --inconclusive -j 4 -I . "
     if options:
       tmp = re.findall(r'-D\S+', options)
       tmp += re.findall(r'-I\S+', options)

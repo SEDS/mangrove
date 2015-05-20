@@ -37,7 +37,8 @@ def create_snippet(configuration, directory, filename, \
     prepend = str(line_numbers[0]) + '_'
 
     # First we remove comments
-    if configuration.get_value('minimize.remove.comments'):
+    # if configuration.get_value('minimize.remove.comments'):
+    if True:
         # disregard_comments(file_manager, indices, description)
         indices = disregard_comments(file_manager)
         line_numbers = convert_ln_to_no_comments(line_numbers, indices)
@@ -143,37 +144,47 @@ def code_reduction_topformflat(minimizer, file_manager, indices, \
     level = 0
     logging.debug("Starting to minimize by TopFormFlat")
 
-    last_file = file_manager.force_backup_trial_file()
-    changed_lines = topformflat(level, last_file, \
+    current_lines = list(range(1,file_manager.get_trial_source_num_lines() + 1))
+    # new_ln_warnings = line_numbers
+    first_file = file_manager.force_backup_trial_file()
+    changed_lines = topformflat(level, first_file, \
                                 file_manager.get_trial_source_path())
     while changed_lines:
         logging.debug("Reducing by TopFormFlat, [%s] level" % level)
-        new_ln_warnings = convert_ln_to_topformflat(line_numbers, changed_lines)
+        # new_ln_warnings = convert_ln_to_topformflat(new_ln_warnings, changed_lines, current_lines)
         min_indices = range(1, file_manager.get_trial_source_num_lines() + 1)
         min_indices = list(min_indices)
         #
         # TODO: test_result should always be False here... 
         # Let's keep it just to make sure
         #
-        test_result = test(file_manager, tool, new_ln_warnings, \
-                           description, min_indices)
-        if not test_result:
-            minimization = minimizer.minimize(min_indices)
-            for min_indices in minimization:
-                original_indices = convert_ln_to_original(min_indices, \
-                                                          changed_lines)
-                if not Utilities.is_subset(line_numbers, original_indices):
-                    minimizer.set_test_result(True)
-                    continue
+        if True:
+            original_indices = convert_ln_to_original(min_indices, changed_lines, \
+                                                      current_lines)
+            file_manager.backup_trial_file()
+            file_manager.write_subset_file(original_indices)
+            test_result = test(file_manager, tool, line_numbers, \
+                                       description, original_indices)
+            assert not test_result
 
-                file_manager.backup_trial_file()
-                file_manager.write_subset_file(original_indices)
-                working_file = file_manager.get_next_backup_filename()
-                test_result = test(file_manager, tool, line_numbers, \
-                                   description, original_indices)
-                minimizer.set_test_result(test_result)
-        
-        file_manager.force_backup_trial_file()
+        minimization = minimizer.minimize(min_indices)
+        for min_indices in minimization:
+            original_indices = convert_ln_to_original(min_indices, \
+                                                      changed_lines, \
+                                                      current_lines)
+            if not Utilities.is_subset(line_numbers, original_indices):
+                minimizer.set_test_result(True)
+                continue
+
+            file_manager.backup_trial_file()
+            file_manager.write_subset_file(original_indices)
+            working_file = file_manager.get_next_backup_filename()
+            test_result = test(file_manager, tool, line_numbers, \
+                               description, original_indices)
+            minimizer.set_test_result(test_result)
+
+        current_lines = original_indices
+        last_file = file_manager.force_backup_trial_file()
         level += 1
         changed_lines = topformflat(level, last_file, \
                                     file_manager.get_trial_source_path())
@@ -182,7 +193,7 @@ def code_reduction_topformflat(minimizer, file_manager, indices, \
         file_manager.move_to_trial_file(working_file)
         return (original_indices, line_numbers)
     else:
-        file_manager.move_to_trial_file(last_file)
+        file_manager.move_to_trial_file(first_file)
         return (indices, line_numbers)
 
 

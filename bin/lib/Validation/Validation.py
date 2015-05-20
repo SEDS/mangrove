@@ -28,9 +28,12 @@ def test(file_manager, tool, line_numbers, description, indices):
         for (file_name, lines, _, desc) in parsed_output:
             fname1 = os.path.basename(file_name)
             fname2 = os.path.basename(file_manager.get_original_source_path())
+            equal_description = True
+            if description:
+                equal_description = description == desc
             if fname1 == fname2 and \
                     check_indices(indices, line_numbers, lines) and \
-                    description == desc:
+                    equal_description:
                 failed = True
                 break
 

@@ -55,7 +55,7 @@ def parse_arguments ():
     return (args, tool)
 
 
-def process_bug (configuration, tool, args, bug, suite, weakness = None):
+def process_bug (configuration, tool, args, criteria, datapoint):
     """Processes a single bug (which is a warning generated
     by an SCA tool)
     
@@ -67,17 +67,13 @@ def process_bug (configuration, tool, args, bug, suite, weakness = None):
     suite -- name of the suite if it exists
     wakness -- name of the weakness if it exists
     """
-    directory = suite.getDirectory()
-    filename = bug.getFilename()
-    linenumber = bug.getLine()
-    info = bug.getInfo()
+    directory = datapoint.getDirectory()
+    filename = datapoint.getFilename()
+    linenumber = datapoint.getLine()
+    info = datapoint.getInfo()
 
-    if args.fps_file:
-        logging.info ('Running mangrove for weakness [%s] in directory [%s] and file [%s]. The warning to reproduce is in line [%s]' \
-                      % (weakness.getName(), directory, filename, linenumber))
-    else:
-        logging.info ('Running mangrove in directory [%s] and file [%s]. The warning to reproduce is in line [%s]' \
-                      % (directory, filename, linenumber))
+    logging.info ('Running mangrove in directory [%s] and file [%s]. The warning to reproduce is in line [%s]' \
+                  % (directory, filename, linenumber))
 
     Snippet.create_snippet (configuration, directory, filename, \
                       [int(linenumber)], info, tool)
@@ -106,10 +102,10 @@ def main ():
     else:
         directory = os.path.dirname(args.file)
         filename = os.path.basename(args.file)
-        bug = XMLManager.Bug(filename, "", args.line, args.info)
-        suite = XMLManager.Suite(directory, "", "").add(bug)
-        weakness = XMLManager.Weakness().add(suite)
-        bugs_data = XMLManager.ResultSet().add(weakness)
+        criteria = XMLManager.Criteria("3", "1", "1")
+        datapoint = Datapoint(directory, filename, args.line, args.info)
+        criteria.add(datapoint)
+        bugs_data = XMLManager.ResultSet().add(criteria)
 
     # Parse configuration file
     config_fname = os.path.dirname(os.path.realpath(__file__))
@@ -117,12 +113,18 @@ def main ():
     configuration = ConfigParser(config_fname)
 
     # Process the files
-    for weakness in bugs_data.weaknesses():
-        for suite in weakness.suites():
-            for bug in suite.bugs():
-                process_bug (configuration, tool, args, bug, suite, weakness)
+    processed = {}
+    for criteria in bugs_data.criterias():
+        for datapoint in criteria.datapoints():
+            if datapoint.getLine() == 0:
+                continue
+            key = (datapoint.getFilename(), datapoint.getLine())
+            if key in processed:
+                continue
+            processed[key] = 1
+            process_bug (configuration, tool, args, criteria, datapoint)
 
-    logging.info ("Done.")
+    logging.info ("DONE.")
     sys.exit (0)
 
 
