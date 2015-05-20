@@ -360,22 +360,34 @@ CppCheck, description...
   # Parses the output of cppcheck given in a string.
   # The output has the following format (example of a line):
   #     [CWE758_Undefined_Behavior__struct_malloc_use_18.c:26]: (error) Data is allocated but not initialized: pointer
+  #     [test-cases/NIST_Cpp/testcases/CWE762/CWE762_Mismatched_Memory_Management_Routines__delete_char_realloc_21.cpp:53] -> [test-cases/NIST_Cpp/testcases/CWE762/CWE762_Mismatched_Memory_Management_Routines__delete_char_realloc_21.cpp:34]: (error) Mismatching allocation and deallocation: data
   def parse_cppcheck_output(self, output):
     res = []
     line2fun = None
     output = output.decode('utf-8')
     for line in output.split('\n'):
       line = line.strip()
-      m = re.match(r"\[(.+):(\d+)\]: \((.*)\) (.*)", line)
-      if m:
-        fname = m.groups()[0]
-        ln = int(m.groups()[1])
-        desc = m.groups()[3].strip()
+      m1 = re.match(r"\[(.+):(\d+)\] -> \[(.+):(\d+)\]: \((.*)\) (.*)", line)
+      m2 = re.match(r"\[(.+):(\d+)\]: \((.*)\) (.*)", line)
+      if m1:
+        fname1 = m1.groups()[0]
+        ln1 = int(m1.groups()[1])
+        fname2 = m1.groups()[2]
+        ln2 = int(m1.groups()[3])
+        desc = m1.groups()[5].strip()
+        desc = re.sub(r"at line (\d+)", r"****at certain line****", desc)
+        if not line2fun:
+          line2fun = lineno2fun(fname1)
+        res.append((fname1, [ln1], line2fun[ln1], desc))
+        res.append((fname2, [ln2], line2fun[ln2], desc))
+      elif m2:
+        fname = m2.groups()[0]
+        ln = int(m2.groups()[1])
+        desc = m2.groups()[3].strip()
         desc = re.sub(r"at line (\d+)", r"****at certain line****", desc)
         if not line2fun:
           line2fun = lineno2fun(fname)
         res.append((fname, [ln], line2fun[ln], desc))
-
     return res
 
 

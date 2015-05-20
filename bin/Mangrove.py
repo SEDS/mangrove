@@ -75,8 +75,12 @@ def process_bug (configuration, tool, args, criteria, datapoint):
     logging.info ('Running mangrove in directory [%s] and file [%s]. The warning to reproduce is in line [%s]' \
                   % (directory, filename, linenumber))
 
-    Snippet.create_snippet (configuration, directory, filename, \
-                      [int(linenumber)], info, tool)
+    try:
+        Snippet.create_snippet (configuration, directory, filename, \
+                               [int(linenumber)], info, tool)
+    except Snippet.ProcessingError as e:
+        logging.error(e.msg)
+
     # TODO: add extra actions here, like anonymization
 
 def main ():

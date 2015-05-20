@@ -14,6 +14,17 @@ from ..Reduction.TopFormFlat import topformflat
 from ..Validation.Validation import test
 
 
+class ProcessingError(Exception):
+    """Exception raised for errors while creating the snippets.
+
+    Arguments:
+    msg  -- explanation of the error
+    """
+
+    def __init__(self, msg):
+        self.msg = msg
+
+
 def create_snippet(configuration, directory, filename, \
                    line_numbers, description, tool):
     """Generates a code snippet generating the same SCA tool warning as was
@@ -122,7 +133,8 @@ def code_reduction(minimizer, file_manager, indices, \
         logging.error("ERROR: could not generate error when minimizing file [%s]" \
                       % file_manager.get_trial_source_path())
         logging.error("ERROR (cont): original warning was: [%s]" % description)
-        sys.exit(1)
+        raise ProcessingError('ERROR: Unable to regenate the warning')
+        # sys.exit(1)
 
 
 def code_reduction_topformflat(minimizer, file_manager, indices, \
@@ -165,7 +177,11 @@ def code_reduction_topformflat(minimizer, file_manager, indices, \
             file_manager.write_subset_file(original_indices)
             test_result = test(file_manager, tool, line_numbers, \
                                        description, original_indices)
-            assert not test_result
+            if test_result:
+                logging.error("ERROR: could not generate error when topformflating file [%s]" \
+                      % file_manager.get_trial_source_path())
+                logging.error("ERROR (cont): original warning was: [%s]" % description)
+                raise ProcessingError('ERROR: Unable to regenate the warning')
 
         minimization = minimizer.minimize(min_indices)
         for min_indices in minimization:
