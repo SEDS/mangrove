@@ -36,10 +36,7 @@ class ND:
 
         This is to be set every time minimize generates a set.
         """
-        if result:
-            self.test_result = self.PASS
-        else:
-            self.test_result = self.FAIL
+        self.test_result = result
 
     def minimize(self, c, bound = 30, increase_size = False):
         """Algorithm to minimize the set c, by means of a Naive Debugging

@@ -94,7 +94,7 @@ class OutcomeCache:
                 return self.result
             elif self.tail != {}:
                 # Select some superset
-                superset = self.tail[self.tail.keys()[0]]
+                superset = self.tail[list(self.tail)[0]]
                 return superset.lookup_superset(c, start + 1)
             else:
                 return None
@@ -210,14 +210,16 @@ class DD:
     debug_resolve   = 0
 
     def __init__(self):
+        print ("###############")
         self.__resolving = 0
         self.__last_reported_length = 0
         self.monotony = 0
         self.outcome_cache  = OutcomeCache()
         self.cache_outcomes = 1
-        self.minimize = 1
-        self.maximize = 1
+        self.__minimize = 1
+        self.__maximize = 1
         self.assume_axioms_hold = 1
+        self.__test_result = self.UNRESOLVED
 
     # Helpers
     def __listminus(self, c1, c2):
@@ -254,7 +256,7 @@ class DD:
 
         c = c1[:]
         for delta in c2:
-            if delta not in s1.has_key:
+            if delta not in s1:
                 c.append(delta)
 
         return c
@@ -305,7 +307,8 @@ class DD:
     def coerce(self, c):
         """Return the configuration C as a compact string"""
         # Default: use printable representation
-        return 'c'
+        # return 'c'
+        return str(c)
 
     def pretty(self, c):
         """Like coerce(), but sort beforehand"""
@@ -350,7 +353,11 @@ class DD:
 
     def _test(self, c):
         """Stub to overload in subclasses"""
-        return self.UNRESOLVED                # Placeholder
+        # return self.UNRESOLVED                # Placeholder
+        return self.__test_result
+
+    def set_test_result(self, value):
+        self.__test_result = value
 
 
     # Splitting
@@ -371,7 +378,7 @@ class DD:
         subsets = []
         start = 0
         for i in range(n):
-            subset = c[start:start + (len(c) - start) / (n - i)]
+            subset = c[start:int(start + (len(c) - start) / (n - i))]
             subsets.append(subset)
             start = start + len(subset)
         return subsets
@@ -409,7 +416,9 @@ class DD:
         c2 = self.__listunion(r, c)
 
         csubr = self.__listunion(csub, r)
-        t = self.test(csubr)
+        # t = self.test(csubr)
+        yield (None, csubr)
+        t = self.__test_result
 
         # necessary to use more resolving mechanisms which can reverse each
         # other, can (but needn't) be used in subclasses
@@ -435,15 +444,21 @@ class DD:
                 csubr = None
                 break
 
-            t = self.test(csubr)
+            # t = self.test(csubr)
+            yield (None, csubr)
+            t = self.__test_result
 
         self.__resolving = 0
         if csubr == None:
-            return self.UNRESOLVED, initial_csub
+            yield (self.UNRESOLVED, initial_csub)
+            return
+            # return self.UNRESOLVED, initial_csub
 
         # assert t == self.PASS or t == self.FAIL
         csub = self.__listminus(csubr, r)
-        return t, csub
+        yield (t, csub)
+        return
+        # return t, csub
 
     # Inquiries
     def resolving(self):
@@ -454,8 +469,8 @@ class DD:
     # Logging
     def report_progress(self, c, title):
         if len(c) != self.__last_reported_length:
-            print
-            print (title + ": " + len(c) + " deltas left:", self.coerce(c))
+            # print 
+            # print (title + ": " + str(len(c)) + " deltas left:", self.coerce(c))
             self.__last_reported_length = len(c)
 
 
@@ -503,13 +518,13 @@ class DD:
 
             cs = self.split(c, n)
 
-            print
-            print ("dd (run #" + run + "): trying",)
-            for i in range(n):
-                if i > 0:
-                    print ("+",)
-                print (len(cs[i]),)
-            print
+            # print
+            # print ("dd (run #" + run + "): trying",)
+            # for i in range(n):
+            #     if i > 0:
+            #         print ("+",)
+            #     print (len(cs[i]),)
+            # print
 
             # Check subsets
             ts = []
@@ -591,12 +606,19 @@ class DD:
 
 
     def test_mix(self, csub, c, direction):
-        if self.minimize:
-            (t, csub) = self.test_and_resolve(csub, [], c, direction)
-            if t == self.FAIL:
-                return (t, csub)
+        if self.__minimize:
+            # (t, csub) = self.test_and_resolve(csub, [], c, direction)
+            for (t, csub) in self.test_and_resolve(csub, [], c, direction):
+                if not t:
+                    yield (None, csub)
+                    t = self.__test_result
 
-        if self.maximize:
+                if t == self.FAIL:
+                    yield (t, csub)
+                    return
+                    # return (t, csub)
+
+        if self.__maximize:
             csubbar = self.__listminus(self.CC, csub)
             cbar    = self.__listminus(self.CC, c)
             if direction == self.ADD:
@@ -604,8 +626,13 @@ class DD:
             else:
                 directionbar = self.ADD
 
-            (tbar, csubbar) = self.test_and_resolve(csubbar, [], cbar,
-                                                    directionbar)
+            # (tbar, csubbar) = self.test_and_resolve(csubbar, [], cbar,
+            #                                         directionbar)
+            for (tbar, csubbar) in self.test_and_resolve(csubbar, [], cbar,
+                                                    directionbar):
+                if not tbar:
+                    yield (None, csub)
+                    tbar = self.__test_result
 
             csub = self.__listminus(self.CC, csubbar)
 
@@ -616,15 +643,17 @@ class DD:
             else:
                 t = self.UNRESOLVED
 
-        return (t, csub)
+        # return (t, csub)
+        yield (t, csub)
+        return
 
 
     # Delta Debugging (new ISSTA version)
     def ddgen(self, c, minimize, maximize):
         """Return a 1-minimal failing subset of C"""
 
-        self.minimize = minimize
-        self.maximize = maximize
+        self.__minimize = minimize
+        self.__maximize = maximize
 
         n = 2
         self.CC = c
@@ -642,20 +671,24 @@ class DD:
     def _dd(self, c, n):
         """Stub to overload in subclasses"""
 
-        assert self.test([]) == self.PASS
+        # assert self.test([]) == self.PASS
 
         run = 1
         cbar_offset = 0
 
         # We replace the tail recursion from the paper by a loop
         while 1:
-            tc = self.test(c)
+            # tc = self.test(c)
+            yield c
+            tc = self.__test_result
             assert tc == self.FAIL or tc == self.UNRESOLVED
 
             if n > len(c):
                 # No further minimizing
-                print ("dd: done")
-                return c
+                # print ("dd: done")
+                # return c
+                yield c
+                return
 
             self.report_progress(c, "dd")
 
@@ -668,13 +701,13 @@ class DD:
             for index in range(len(css)):
                 cs = css[index]
 
-                print
-                print ("dd (run #" + run + "): trying",)
-                for i in range(n):
-                    if i > 0:
-                        print ("+",)
-                    print (len(cs[i]),)
-                print
+                # print
+                # print ("dd (run #" + str(run) + "): trying",)
+                # for i in range(n):
+                #     if i > 0:
+                #         print ("+",)
+                #     print (len(cs[i]),)
+                # print
 
                 c_failed    = 0
                 cbar_failed = 0
@@ -687,7 +720,12 @@ class DD:
                     if self.debug_dd:
                         print ("dd: trying", self.pretty(cs[i]))
 
-                    (t, cs[i]) = self.test_mix(cs[i], c, self.REMOVE)
+                    # (t, cs[i]) = self.test_mix(cs[i], c, self.REMOVE)
+                    for (t, val) in self.test_mix(cs[i], c, self.REMOVE):
+                        cs[i] = val
+                        if not t:
+                            yield val
+                            t = self.__test_result
 
                     if t == self.FAIL:
                         # Found
@@ -711,8 +749,14 @@ class DD:
 
                     for j in range(n):
                         i = (j + cbar_offset) % n
+                        i = int(i)
                         cbars[i] = self.__listminus(c, cs[i])
-                        t, cbars[i] = self.test_mix(cbars[i], c, self.ADD)
+                        # t, cbars[i] = self.test_mix(cbars[i], c, self.ADD)
+                        for (t, val) in self.test_mix(cbars[i], c, self.ADD):
+                            cbars[i] = val
+                            if not t:
+                                yield val
+                                t = self.__test_result
 
                         doubled = self.__listintersect(cbars[i], cs[i])
                         if doubled != []:
@@ -737,11 +781,13 @@ class DD:
                 if not c_failed and not cbar_failed and index == len(css) - 1:
                     if n >= len(c):
                         # No further minimizing
-                        print ("dd: done")
-                        return c
+                        # print ("dd: done")
+                        # return c
+                        yield c
+                        return
 
                     next_n = min(len(c), n * 2)
-                    print ("dd: increase granularity to", next_n)
+                    # print ("dd: increase granularity to", next_n)
                     cbar_offset = (cbar_offset * next_n) / n
                     broken = True
 
@@ -812,7 +858,7 @@ class DD:
             cs = self.split(c, n)
 
             print
-            print ("dd (run #" + run + "): trying",)
+            print ("dd (run #" + str(run) + "): trying",)
             for i in range(n):
                 if i > 0:
                     print ("+",)
@@ -828,6 +874,7 @@ class DD:
             # Check subsets
             for j in range(n):
                 i = (j + cbar_offset) % n
+                i = int(i)
 
                 if self.debug_dd:
                     print ("dd: trying", self.pretty(cs[i]))
@@ -907,4 +954,104 @@ class DD:
 
     def dd(self, c):
         return self.dddiff(c)           # Backwards compatibility
+
+    def minimize(self, c, a = None, b = None):
+        return self.ddmin(c)
+
+# if __name__ == '__main__':
+#     # Test the outcome cache
+#     oc_test()
+    
+#     # Define our own DD class, with its own test method
+#     class MyDD(DD):
+#         def _test_a(self, c):
+#             "Test the configuration C.  Return PASS, FAIL, or UNRESOLVED."
+
+#             # Just a sample
+#             # if 2 in c and not 3 in c:
+#             #   return self.UNRESOLVED
+#             # if 3 in c and not 7 in c:
+#                 #   return self.UNRESOLVED
+#             if 7 in c and not 2 in c:
+#                 return self.UNRESOLVED
+#             if 5 in c and 8 in c:
+#                 return self.FAIL
+#             return self.PASS
+
+#         def _test_b(self, c):
+#             if c == []:
+#                 return self.PASS
+#             if 1 in c and 2 in c and 3 in c and 4 in c and \
+#                5 in c and 6 in c and 7 in c and 8 in c:
+#                 return self.FAIL
+#             return self.UNRESOLVED
+
+#         def _test_c(self, c):
+#             if 1 in c and 2 in c and 3 in c and 4 in c and \
+#                6 in c and 8 in c:
+#                     if 5 in c and 7 in c:
+#                         return self.UNRESOLVED
+#                     else:
+#                         return self.FAIL
+#             if 1 in c or 2 in c or 3 in c or 4 in c or \
+#                6 in c or 8 in c:
+#                     return self.UNRESOLVED
+#             return self.PASS
+
+#         def __init__(self):
+#             self._test = self._test_c
+#             DD.__init__(self)
+
+#     print ("WYNOT - a tool for delta debugging.")
+#     mydd = MyDD()
+#     # mydd.debug_test     = 1           # Enable debugging output
+#     # mydd.debug_dd       = 1           # Enable debugging output
+#     # mydd.debug_split    = 1           # Enable debugging output
+#     # mydd.debug_resolve  = 1           # Enable debugging output
+
+#     # mydd.cache_outcomes = 0
+#     # mydd.monotony = 0
+
+#     print ("Minimizing failure-inducing input...")
+#     c = mydd.ddmin([1, 2, 3, 4, 5, 6, 7, 8])  # Invoke DDMIN
+#     print ("The 1-minimal failure-inducing input is", c)
+#     print ("Removing any element will make the failure go away.")
+#     print
+    
+#     print ("Computing the failure-inducing difference...")
+#     (c, c1, c2) = mydd.dd([1, 2, 3, 4, 5, 6, 7, 8]) # Invoke DD
+#     print ("The 1-minimal failure-inducing difference is", c)
+#     print (c1, "passes,", c2, "fails")
+
+
+
+
+if __name__ == "__main__":
+    # class DDD(DD):
+    #     def mytest(self, c):
+    #         if 3 in c and 4 in c and 12 in c:
+    #             return self.FAIL
+    #         return self.PASS
+    #     def __init__(self):
+    #         self._test = self.mytest
+    #         DD.__init__(self)
+
+
+    # dd = DDD()
+    # c = [1,2,3,4,7,8,9,10,11,12,200]
+    # print (dd.ddmin(c))
+
+
+
+    dd = DD()
+    c = [1,2,3,4,7,8,9,10,11,12,200]
+    res = False
+    code_snippets = dd.ddmin(c)
+    for c in code_snippets:
+        # print (c)
+        if 2 in c and 3 in c and 7 in c:
+            dd.set_test_result (dd.FAIL)
+        else:
+            dd.set_test_result (dd.PASS)
+    print (c)
 

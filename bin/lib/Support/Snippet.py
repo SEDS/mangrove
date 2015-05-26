@@ -64,8 +64,7 @@ def create_snippet(configuration, directory, filename, \
         logging.debug('Minimizing by means of Naive Debugging')
     elif algorithm == 'DD':
         minimizer = DD.DD()
-        logging.error('Minimizing by means of Delta Debugging. NOT IMPLEMENTED')
-        return
+        logging.error('Minimizing by means of Delta Debugging.')
     else:
         logging.error('Unkown algorithm to perform minimization [%s]' \
                        % algorithm)
@@ -121,14 +120,16 @@ def code_reduction(minimizer, file_manager, indices, \
         minimization = minimizer.minimize(indices)
         for indices in minimization:
             if not Utilities.is_subset(line_numbers, indices):
-                minimizer.set_test_result(True)
+                minimizer.set_test_result(minimizer.PASS)
                 continue
 
             file_manager.backup_trial_file()
             file_manager.write_subset_file(indices)
             test_result = test(file_manager, tool, line_numbers, \
                                description, indices)
+            test_result = minimizer.PASS if test_result else minimizer.FAIL
             minimizer.set_test_result(test_result)
+
     else:
         logging.error("ERROR: could not generate error when minimizing file [%s]" \
                       % file_manager.get_trial_source_path())
@@ -189,7 +190,7 @@ def code_reduction_topformflat(minimizer, file_manager, indices, \
                                                       changed_lines, \
                                                       current_lines)
             if not Utilities.is_subset(line_numbers, original_indices):
-                minimizer.set_test_result(True)
+                minimizer.set_test_result(minimizer.PASS)
                 continue
 
             file_manager.backup_trial_file()
@@ -197,6 +198,7 @@ def code_reduction_topformflat(minimizer, file_manager, indices, \
             working_file = file_manager.get_next_backup_filename()
             test_result = test(file_manager, tool, line_numbers, \
                                description, original_indices)
+            test_result = minimizer.PASS if test_result else minimizer.FAIL
             minimizer.set_test_result(test_result)
 
         current_lines = original_indices

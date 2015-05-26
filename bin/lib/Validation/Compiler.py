@@ -76,8 +76,11 @@ class Compiler:
                     #TODO: should we cd to dirname???
                     pass
 
-                # replacing -o fname.o
                 command = file_compilation['command']
+                # include original directory, just in case
+                command += ' -I ' + dirname
+
+                # replacing -o fname.o
                 matching = re.search(r"-o\s+.+\.o", command)
                 if matching:
                     (a, b) = matching.span()

@@ -22,7 +22,8 @@ def test(file_manager, tool, line_numbers, description, indices):
 
     if result == 0:
         failed = False
-        tool.handle_compile_file(file_manager.get_trial_source_path(), \
+        tool.handle_compile_file(original_fname, \
+                                 file_manager.get_trial_source_path(), \
                                  compiler.get_command(original_fname))
         parsed_output = tool.get_tool_output(filtered=False)
         for (file_name, lines, _, desc) in parsed_output:
