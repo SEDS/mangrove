@@ -1,5 +1,5 @@
 import os
-
+import re
 
 def test(file_manager, tool, line_numbers, description, indices):
     """Tests the debugging algorith. It returns False if it FAILS.
@@ -31,7 +31,9 @@ def test(file_manager, tool, line_numbers, description, indices):
             fname2 = os.path.basename(file_manager.get_original_source_path())
             equal_description = True
             if description:
-                equal_description = description == desc
+                desc1 = re.sub(r'line \d+', 'line X', description)
+                desc2 = re.sub(r'line \d+', 'line X', desc)
+                equal_description = desc1 == desc2
             if fname1 == fname2 and \
                     check_indices(indices, line_numbers, lines) and \
                     equal_description:

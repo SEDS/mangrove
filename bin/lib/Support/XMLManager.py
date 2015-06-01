@@ -93,15 +93,18 @@ class Datapoint:
     def from_xml (xml) :
         return Datapoint (xml.get ('directory'),
                           xml.get ('filename'),
-                          int (xml.get ('line')))
+                          int (xml.get ('line')),
+                          xml.get ('function'),
+                          xml.get ('info'))
 
-    def __init__ (self, directory, filename, line, info=""):
+    def __init__ (self, directory, filename, line, function="", info=""):
         self.__directory__ = directory
         self.__filename__ = filename
         self.__line__ = int(line)
         # self.__compiler__ = compiler
         # self.__args__ = args
         # self.__bugs__ = []
+        self.__function__ = function
         self.__info__ = info
 
     def setDirectory (self, directory):
@@ -121,6 +124,9 @@ class Datapoint:
 
     # def getCompiler (self):
     #     return self.__compiler__
+
+    def getFunction (self):
+        return self.__function__
 
     def getInfo (self):
         return self.__info__

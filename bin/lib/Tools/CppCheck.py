@@ -376,7 +376,6 @@ CppCheck, description...
         fname2 = m1.groups()[2]
         ln2 = int(m1.groups()[3])
         desc = m1.groups()[5].strip()
-        desc = re.sub(r"at line (\d+)", r"****at certain line****", desc)
         if not line2fun:
           line2fun = lineno2fun(fname1)
         res.append((fname1, [ln1], line2fun[ln1], desc))
@@ -385,7 +384,6 @@ CppCheck, description...
         fname = m2.groups()[0]
         ln = int(m2.groups()[1])
         desc = m2.groups()[3].strip()
-        desc = re.sub(r"at line (\d+)", r"****at certain line****", desc)
         if not line2fun:
           line2fun = lineno2fun(fname)
         res.append((fname, [ln], line2fun[ln], desc))

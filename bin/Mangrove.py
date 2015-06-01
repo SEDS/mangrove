@@ -4,6 +4,7 @@ import sys
 import os
 import argparse
 import logging
+import re
 
 from lib.Support import XMLManager, Snippet, Utilities
 from lib.Support.ConfigParser import ConfigParser
@@ -104,12 +105,14 @@ def main ():
     if args.fps_file:
         bugs_data = XMLManager.read_xml(args.fps_file)
     else:
-        directory = os.path.dirname(args.file)
-        filename = os.path.basename(args.file)
+        directory = os.path.dirname(args.fname)
+        filename = os.path.basename(args.fname)
         criteria = XMLManager.Criteria("3", "1", "1")
-        datapoint = Datapoint(directory, filename, args.line, args.info)
+        datapoint = XMLManager.Datapoint(directory, filename, args.line, \
+                                         "good", args.info)
         criteria.add(datapoint)
-        bugs_data = XMLManager.ResultSet().add(criteria)
+        bugs_data = XMLManager.ResultSet()
+        bugs_data.add(criteria)
 
     # Parse configuration file
     config_fname = os.path.dirname(os.path.realpath(__file__))
@@ -122,7 +125,11 @@ def main ():
         for datapoint in criteria.datapoints():
             if datapoint.getLine() == 0:
                 continue
-            key = (datapoint.getFilename(), datapoint.getLine())
+            function = datapoint.getFunction()
+            if not re.match(r'.*good.*', function):
+                continue # it is not a false positive
+            info = datapoint.getInfo()
+            key = (datapoint.getFilename(), datapoint.getLine(), info)
             if key in processed:
                 continue
             processed[key] = 1
