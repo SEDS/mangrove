@@ -1,6 +1,6 @@
 #! /usr/bin/env python
 
-class ND:
+class IRD:
 
     # Test outcomes.
     PASS       = "PASS"
@@ -84,14 +84,14 @@ class ND:
 
 
 if __name__ == "__main__":
-    nd = ND()
+    ird = IRD()
     c = [1,2,3,4,7,8,9,10,11,12,200]
     res = False
-    code_snippets = nd.minimize(c, None, True)
+    code_snippets = ird.minimize(c, None, True)
     for c in code_snippets:
         print (c)
         if 2 in c and 3 in c and 7 in c:
-            nd.set_test_result (nd.FAIL)
+            ird.set_test_result (ird.FAIL)
         else:
-            nd.set_test_result (nd.PASS)
+            ird.set_test_result (ird.PASS)
 

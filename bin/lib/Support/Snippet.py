@@ -8,7 +8,7 @@ from . import FileManager, Utilities
 from .IndicesManager import *
 from .CommentsRemover import remove_comments
 
-from ..Reduction import ND, DD
+from ..Reduction import IRD, DD
 from ..Reduction.TopFormFlat import topformflat
 
 from ..Validation.Validation import test
@@ -59,8 +59,8 @@ def create_snippet(configuration, directory, filename, \
     indices = list(indices)
 
     algorithm = configuration.get_value('minimize.algorithm')
-    if algorithm == 'ND':
-        minimizer = ND.ND()
+    if algorithm == 'IRD':
+        minimizer = IRD.IRD()
         logging.debug('Minimizing by means of Naive Debugging')
     elif algorithm == 'DD':
         minimizer = DD.DD()
