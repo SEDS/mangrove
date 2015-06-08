@@ -101,7 +101,8 @@ CppCheck, description...
   #
   def init (self, args):
     # Call the base class (Command) init
-    super (CppCheck, self).init (args)
+    Tool.init(self, args)
+    # super (CppCheck, self).init (args)
 
     self.__SCATE_root__ = os.path.realpath (os.path.join (os.path.dirname (__file__), '../../'))
     self.__facts__ = []
