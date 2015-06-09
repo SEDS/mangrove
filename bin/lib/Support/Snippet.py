@@ -59,7 +59,12 @@ def create_snippet(configuration, directory, filename, \
     # if the line is in a function with an if condition, the parents
     # line are the line number of the function and the line number of
     # the conditional
-    forced_lines = __get_nested_lines(line_numbers, tool, file_manager)
+    try:
+        forced_lines = __get_nested_lines(line_numbers, tool, file_manager)
+    except NestedStructure.NestedError as e:
+        logging.error("ERROR: could not find nested structures for file [%s]" \
+                      % file_manager.get_trial_source_path())
+        raise ProcessingError('ERROR: Unable to find nested lines')
 
     algorithm = configuration.get_value('minimize.algorithm')
     if algorithm == 'IRD':
@@ -234,7 +239,8 @@ def __get_nested_lines(line_numbers, tool, file_manager):
         else:
             tmp.append(args[i])
             i += 1
-    args = tmp
+    dirname = os.path.dirname(file_manager.get_original_source_path())
+    args = tmp + ["-I", dirname]
     res = []
     for line in line_numbers:
         fname = file_manager.get_trial_source_path()
