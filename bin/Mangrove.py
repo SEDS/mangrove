@@ -36,8 +36,8 @@ def parse_arguments ():
 
     # Let the Tools modify the parser
     for tool in Utilities.get_tools ():
-      logging.debug ('Expanding build command-line parsing using [%s]' % tool)
-      tool.init_parser (tool_parser)
+        logging.debug ('Expanding build command-line parsing using [%s]' % tool)
+        tool.init_parser (tool_parser)
 
     args = parser.parse_args (sys.argv[1:])
 

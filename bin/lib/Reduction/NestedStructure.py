@@ -4,7 +4,7 @@ import os
 import clang.cindex
 
 
-FILTER_TYPES = [clang.cindex.CursorKind.FUNCTION_DECL, 
+FILTER_TYPES = [clang.cindex.CursorKind.FUNCTION_DECL, # DONE
                 clang.cindex.CursorKind.NAMESPACE,
                 clang.cindex.CursorKind.IF_STMT,
                 clang.cindex.CursorKind.SWITCH_STMT,
@@ -17,7 +17,7 @@ FILTER_TYPES = [clang.cindex.CursorKind.FUNCTION_DECL,
 MAX_WIDTH = 200
 
 # TODO: this is for mac
-clang.cindex.Config.set_library_path("/Library/Developer/CommandLineTools/usr/lib")
+# clang.cindex.Config.set_library_path("/Library/Developer/CommandLineTools/usr/lib")
 
 
 class NestedError(Exception):
@@ -35,58 +35,122 @@ def is_node_type_useful(node):
     return node.kind in FILTER_TYPES
 
 
-def find_semantic_parents(node):
-    if node.kind == node.kind.TRANSLATION_UNIT:
+def remove_dup(x):
+    if x == []:
         return []
-    elif node.kind == clang.cindex.CursorKind.FUNCTION_DECL or \
-            node.kind == clang.cindex.CursorKind.NAMESPACE:
-        return find_semantic_parents(node.semantic_parent) + [node.location.line]
-    # TODO: node.kind == CursorKind.CONDITIONAL_OPERATOR
-    # TODO: CursorKind.SWITCH_STMT
-    # TODO: CursorKind.GOTO_STMT
     else:
-        return find_semantic_parents(node.semantic_parent)
+        return [x[i] for i in range(len(x)-1) if x[i] != x[i+1]] + [x[-1]]
 
-def find_elsestmt(nodeIN):
-    elseifbeginlineArrayIN = []
-    elsebeginlineIN = None
-    ifstructurenodeArrayIN = []
-    ifstructureelseifnodeArrayIN = []
-    #add then{} node
-    for d in nodeIN.get_children():
-        if (d.kind.name == 'COMPOUND_STMT'):
-            ifstructurenodeArrayIN.append(d)
-            break
 
-    def find_elsestmtRE(nodeIN2):
-        for e in nodeIN2.get_children():
-            if e.kind.name == 'IF_STMT':
-                #add elseif() node
-                ifstructureelseifnodeArrayIN.append(e)
-                find_elsestmtRE.node_lastelseifstmt = e
-                elseifbeginlineArrayIN.append(e.extent.start.line)
-                #add compound statement corresponding to elseif() node
-                for f in e.get_children():
-                    if (f.kind.name == 'COMPOUND_STMT'):
-                        ifstructurenodeArrayIN.append(f)
-                        break
-                find_elsestmtRE(e)
+def find_first(tokens, spell):
+    pos = 0
+    while tokens[pos].spelling != spell:
+        pos += 1
+    return pos
 
-    find_elsestmtRE.node_lastelseifstmt = nodeIN
-    find_elsestmtRE(nodeIN)
 
-    counter = 0
-    for f in find_elsestmtRE.node_lastelseifstmt.get_children():
-        if f.kind.name == 'COMPOUND_STMT':
-            counter += 1
-            if counter == 2:
-                elsebeginlineIN = f.extent.start.line
-                #add else() node
-                ifstructurenodeArrayIN.append(f)
+def find_last(tokens, spell):
+    pos = - 1
+    while tokens[pos].spelling != spell:
+        pos -= 1
+    return pos
 
-    return (elseifbeginlineArrayIN, elsebeginlineIN, \
-            ifstructurenodeArrayIN, ifstructureelseifnodeArrayIN)
 
+def get_if_lines(node):
+    """ Gets the lines of the if (...) { } else { }. For example, for the code:
+1. if (var == 
+2.      1) 
+3.  {
+4.
+5.  } else 
+6.  {
+7.
+8.  }
+
+Will return [[1,2,3,5,6,8]]
+    """
+    fst = node.location.line
+    children = list(node.get_children())
+    
+    condition = children[0]
+    tokens = list(condition.get_tokens())
+    snd = tokens[-1].location.line 
+    
+    then = children[1]
+    tokens = list(then.get_tokens())
+    if tokens[0].spelling == '{':
+        snd = tokens[0].location.line
+        res = range(fst, snd + 1)
+        pos = find_last(tokens, '}')
+        res.append(tokens[pos].location.line)
+    else: 
+        res = range(fst, snd + 1)
+
+    if len(children) == 3:
+        res.append(tokens[-1].location.line) # the else
+        else_node = children[2]
+        tokens = list(else_node.get_tokens())
+        if tokens[0].spelling == '{':
+            res.append(tokens[0].location.line)
+            pos = find_last(tokens, '}')
+            res.append(tokens[pos].location.line)
+        elif tokens[0].spelling == 'if':
+            res.extend(get_if_lines(else_node))
+
+    return remove_dup(res)
+
+
+def process_if_node(node, location):
+    lines = get_if_lines(node)
+    if location.line >= lines[0] and location.line <= lines[-1]:
+        return lines
+    else:
+        return []
+
+
+def process_func_decl(node, location):
+    child = next(node.get_children())
+    tokens = list(child.get_tokens())
+    if tokens[0].spelling == '{':
+        res = range(node.location.line, tokens[0].location.line + 1)
+        pos = find_last(tokens, '}')
+        res.append(tokens[pos].location.line)
+    else:
+        res = [node.location.line]
+
+    if location.line >= res[0] and location.line <= res[-1]:
+        return remove_dup(res)
+    else:
+        return []
+
+
+def process_switch_node(node, location):
+    [condition, inner] = list(node.get_children())
+    tokens = list(condition.get_tokens())
+    res = range(node.location.line, tokens[-1].location.line + 1)
+    inner_tokens = list(inner.get_tokens())
+    if inner_tokens[0].spelling == '{':
+        res.append(inner_tokens[0].location.line)
+        pos = find_last(inner_tokens, '}')
+        res.append(inner_tokens[pos].location.line)
+    for child in inner.get_children():
+        if child.kind == clang.cindex.CursorKind.CASE_STMT:
+            tokens = next(child.get_children()).get_tokens()
+            tokens = list(tokens)
+            res.extend(range(child.location.line, tokens[-1].location.line + 1))
+        elif child.kind == clang.cindex.CursorKind.BREAK_STMT:
+            res.append(child.location.line)
+        elif child.kind == clang.cindex.CursorKind.DEFAULT_STMT:
+            tokens = list(child.get_tokens())
+            pos = find_first(tokens, ':')
+            res.extend(range(child.location.line, tokens[pos].location.line + 1))
+
+    res = remove_dup(res)
+    res.sort()
+    if location.line >= res[0] and location.line <= res[-1]:
+        return res
+    else:
+        return []
 
 
 def get_node_in_line(translation_unit, fd, line_num):
@@ -112,39 +176,61 @@ def find_nested_structure_helper(node, location, history):
         return False
     if node.location.line == location.line:
         if is_node_type_useful(node):
-            if node.kind == clang.cindex.CursorKind.IF_STMT:
-                _, _, if_elses, _ = find_elsestmt(node)
-                if_elses.revert()
-                for if_else in if_elses:
-                    if if_else.location.line <= node.location.line:
-                        history.append(if_else.location.line)
-            else:
-                history.append(node.location.line)
+            history.append(node.location.line)
         return True
 
     for c in node.get_children():
         if find_nested_structure_helper(c, location, history):
             if is_node_type_useful(node):
-                history.append(node.location.line)
+                if node.kind == clang.cindex.CursorKind.IF_STMT:
+                    lines = process_if_node(node, location)
+                    history.extend(lines)
+                elif node.kind == clang.cindex.CursorKind.FUNCTION_DECL or \
+                     node.kind == clang.cindex.CursorKind.NAMESPACE:
+                    lines = process_func_decl(node, location)
+                    history.extend(lines)
+                elif node.kind == clang.cindex.CursorKind.SWITCH_STMT:
+                    lines = process_switch_node(node, location)
+                    history.extend(lines)
+                else:
+                    history.append(node.location.line)
             return True
 
     return False
 
-def find_nested_structure(node, location):
-    history = []
-    find_nested_structure_helper(node, location, history)
-    history.reverse()
-    return history
+def find_nested_structure(node, locations):
+    res = []
+    for location in locations:
+        history = []
+        find_nested_structure_helper(node, location, history)
+        history = list(set(history))
+        history.sort()
+        res.extend(history)
+    res = list(set(res))
+    res.sort()
+    return res
 
 
-def find_nested_lines(fname, compilation_args, line_num):
+def find_nested_lines(fname, compilation_args, line_nums, lines_forced=False):
     # TODO: check for errors
     index = clang.cindex.Index(clang.cindex.conf.lib.clang_createIndex(False, True))
+    # index = clang.cindex.Index.create()
+    compilation_args.append('-stdlib=libstdc++')
     translation_unit = index.parse(fname, compilation_args)
     f = clang.cindex.File.from_name(translation_unit, translation_unit.spelling)
-    (node, location) = get_node_in_line(translation_unit, f, line_num)
-    lines = find_nested_structure(translation_unit.cursor, location)
-    print lines
+    locations = []
+    if not lines_forced:
+        for line_num in line_nums:
+            (_, location) = get_node_in_line(translation_unit, f, line_num)
+            locations.append(location)
+    else:
+        for line_num in line_nums:
+            try:
+                (_, location) = get_node_in_line(translation_unit, f, line_num)
+                locations.append(location)
+            except NestedError:
+                pass
+    lines = find_nested_structure(translation_unit.cursor, locations)
     return lines
 
 
@@ -152,6 +238,6 @@ def find_nested_lines(fname, compilation_args, line_num):
 if __name__ == "__main__":
     fname = sys.argv[1]
     args = sys.argv[2].split()
-    line_num = int(sys.argv[3])
-    lines = find_nested_lines(fname, args, line_num)
+    line_nums = [int(sys.argv[3])]
+    lines = find_nested_lines(fname, args, line_nums)
     print lines

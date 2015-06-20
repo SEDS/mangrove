@@ -72,6 +72,13 @@ class FileManager:
         """
         return self.fname
 
+    def copy_trial_to_nocomments(self):
+        nocomments_fname = os.path.join(self.build_dir, 'nocomments')
+        Utilities.create_directory(nocomments_fname)
+        nocomments_fname = os.path.join(nocomments_fname, self.fname)
+        shutil.copyfile(self.get_trial_source_path(), nocomments_fname)
+        return nocomments_fname
+
     def _get_source_semipath(self):
         """Concatenates packages as folders.
 
@@ -88,10 +95,13 @@ class FileManager:
         tmp = os.path.join(tmp, self._get_source_semipath())
         return tmp
 
-    def get_trial_source_num_lines(self):
-        with open(self.get_trial_source_path(), 'r') as fd:
+    def _get_file_num_lines(self, fname):
+        with open(fname, 'r') as fd:
             file_num_lines = sum(1 for _ in fd)
         return file_num_lines
+
+    def get_trial_source_num_lines(self):
+        return self._get_file_num_lines(self.get_trial_source_path())
 
     def write_subset_file(self, indices):
         with open(self.get_trial_source_path(), 'w') as fd:

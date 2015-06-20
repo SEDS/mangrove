@@ -89,3 +89,40 @@ def is_subset(list1, list2):
             break
     
     return res
+
+def sorted_is_subset(sorted_arr1, sorted_arr2):
+    i = 0
+    for elem in sorted_arr1:
+        while i < len(sorted_arr2) and sorted_arr2[i] != elem:
+            i += 1
+        if i == len(sorted_arr2):
+            return False
+    return True
+
+def sorted_union(sorted_list1, sorted_list2):
+    res = []
+    i = 0
+    j = 0
+    while i < len(sorted_list1) and j < len(sorted_list2):
+        if sorted_list1[i] < sorted_list2[j]:
+            if not res or res[-1] != sorted_list1[i]:
+              res.append(sorted_list1[i])
+            i += 1
+        elif sorted_list1[i] == sorted_list2[j]:
+            if not res or res[-1] != sorted_list1[i]:
+              res.append(sorted_list1[i])
+            i += 1
+            j += 1
+        else:
+            if not res or res[-1] != sorted_list2[j]:
+              res.append(sorted_list2[j])
+            j += 1
+
+    if i < len(sorted_list1):
+        res.extend(sorted_list1[i:])
+    if j < len(sorted_list2):
+        res.extend(sorted_list2[j:])
+
+    return res
+
+
