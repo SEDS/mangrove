@@ -231,6 +231,9 @@ def find_nested_lines(fname, compilation_args, line_nums, lines_forced=False):
             except NestedError:
                 pass
     lines = find_nested_structure(translation_unit.cursor, locations)
+    # TODO: in case that it cannot compile the file
+    if not lines:
+        lines = line_nums
     return lines
 
 

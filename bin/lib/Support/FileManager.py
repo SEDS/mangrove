@@ -66,7 +66,6 @@ class FileManager:
         """ex : /usr/matias/.../airport.java
         """
         return os.path.join(self._get_source_location(), self.fname)
-
     def get_source_basename(self):
         """ex : airport.java
         """
@@ -92,7 +91,8 @@ class FileManager:
 
     def get_trial_source_path(self):
         tmp = os.path.join(self.build_dir)
-        tmp = os.path.join(tmp, self._get_source_semipath())
+        # tmp = os.path.join(tmp, self._get_source_semipath())
+        tmp = os.path.join(tmp, self.fname)
         return tmp
 
     def _get_file_num_lines(self, fname):
@@ -115,7 +115,8 @@ class FileManager:
                     fd.write(self.original_file_lines[i - 1])
 
     def get_original_source_path(self):
-        return os.path.join(self.source_dir, self._get_source_semipath())
+        # return os.path.join(self.source_dir, self._get_source_semipath())
+        return self.get_source_path()
 
     def get_original_source_num_lines(self):
         return len(self.original_file_lines)
@@ -193,7 +194,6 @@ class JavaFileManager(FileManager):
     def __init__(self, dirs, fname, language, keep_copy=True, package=None):
         FileManager.__init__(self, dirs, fname, language, keep_copy, package)
 
-
     def get_java_compilation_fname(self):
         """if the file is Airport.java in package airport,
         then it returns airport.Airport.
@@ -214,6 +214,9 @@ class JavaFileManager(FileManager):
             tmp = os.path.join(*self.package.split('.'))
         tmp = os.path.join(tmp, self.fname_no_extension + '.class')
         return tmp
+
+    def get_build_dir(self):
+        return self.build_dir
 
     def get_build_class_path(self):
         return os.path.join(self.build_dir, self.get_class_semipath())

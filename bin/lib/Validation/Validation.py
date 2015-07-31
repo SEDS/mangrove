@@ -3,7 +3,7 @@ import re
 
 from ..Support import Utilities
 
-def test(file_manager, tool, line_numbers, forced_lines, description, \
+def test(lang, file_manager, tool, line_numbers, forced_lines, description, \
          indices, initial_fname=None, check_forced=True):
     """Tests the debugging algorith. It returns False if it FAILS.
 
@@ -30,17 +30,28 @@ def test(file_manager, tool, line_numbers, forced_lines, description, \
     else:
         fname = file_manager.get_trial_source_path()
         
-    result = compiler.compile(original_fname, \
+    if lang == 'java':
+        result = compiler.compile(original_fname, fname, \
+                              file_manager.get_build_dir())
+    elif lang == 'c':
+        result = compiler.compile(original_fname, \
                               file_manager.get_build_object_path(), 
                               fname)
 
     if result == 0:
         failed = False
-        tool.handle_compile_file(original_fname, \
+        if lang == 'java':
+            tool.handle_compile_file(file_manager.get_build_class_path(), \
+                                     compiler.get_command(original_fname))
+        elif lang == 'c':
+            tool.handle_compile_file(original_fname, \
                                  fname, \
                                  compiler.get_command(original_fname))
         parsed_output = tool.get_tool_output(filtered=False)
         for (file_name, lines, _, desc) in parsed_output:
+            # TODO: include multiple lines like in M B NP: com.javacodegeeks.example.findBugsPluginExample.OfConcernRankBugs.equals(Object) does not check for null argument  At OfConcernRankBugs.java:[lines 32-33]
+            if (len(lines)) > 1:
+                continue
             fname1 = os.path.basename(file_name)
             fname2 = os.path.basename(file_manager.get_original_source_path())
             equal_description = True

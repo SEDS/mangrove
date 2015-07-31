@@ -9,10 +9,10 @@ import fnmatch
 import logging
 
 
-class Compiler:
+class Compiler(object):
 
     def __init__(self, data):
-        self.__compilation_data = data
+        self.compilation_data = data
 
     @classmethod
     def from_file(cls, fname):
@@ -26,6 +26,37 @@ class Compiler:
         with open(fname, 'r') as json_data:
             data = json.load(json_data)
         return cls(data)
+
+    def get_files(self):
+        """Get the list of files that can be compiled with the current object
+        """
+        res = []
+        for entry in self.compilation_data:
+            res.append(entry['file'])
+        return res
+
+    def get_command(self, fname):
+        """Get the command to compile a specific file
+        """
+        for entry in self.compilation_data:
+            if fnmatch.fnmatch(fname, entry['file']):
+                return entry['command']
+        return None
+
+    def get_options(self, fname):
+        for entry in self.compilation_data:
+            if fnmatch.fnmatch(fname, entry['file']):
+                if 'options' in entry:
+                    return entry['options']
+                else:
+                    return None
+
+
+
+class CCompiler(Compiler):
+
+    def __init__(self, data):
+        super(CCompiler, self).__init__(data)
 
     @classmethod
     def from_command(cls, compiler, options=None):
@@ -41,22 +72,6 @@ class Compiler:
         data = [{'command': command, 'directory': '', 'file': '*'}]
         return cls(data)
 
-    def get_files(self):
-        """Get the list of files that can be compiled with the current object
-        """
-        res = []
-        for entry in self.__compilation_data:
-            res.append(entry['file'])
-        return res
-
-    def get_command(self, fname):
-        """Get the command to compile a specific file
-        """
-        for entry in self.__compilation_data:
-            if fnmatch.fnmatch(fname, entry['file']):
-                return entry['command']
-        return None
-
     def compile(self, original_fname, object_file, source_file):
         """Compile a file.
 
@@ -68,7 +83,7 @@ class Compiler:
         compilation = None
         dirname = os.path.dirname(original_fname)
         fname = os.path.basename(original_fname)
-        for file_compilation in self.__compilation_data:
+        for file_compilation in self.compilation_data:
             # we allow wildcards in the 'file' field of the json compile_commands
             # TODO: do we want wildcards here? Test them at least :P
             if fnmatch.fnmatch(original_fname, file_compilation['file']):
@@ -86,6 +101,8 @@ class Compiler:
                     (a, b) = matching.span()
                     command = command[:a] + "-o " + object_file + \
                                 command[b:]
+                else:
+                    command += " -o " + object_file
 
                 # replacing -c fname.c
                 matching = re.search(r"-c\s+.+\.c(?:xx|pp|\+\+)?", command)
@@ -94,7 +111,7 @@ class Compiler:
                     command = command[:a] + "-c " + source_file + \
                                 command[b:]
                 else:
-                    command += source_file
+                    command += " -c " + source_file
 
                 # try to compile it
                 try:
@@ -110,22 +127,97 @@ class Compiler:
                     return 1
 
 
+class JavaCompiler(Compiler):
+
+    def __init__(self, data):
+        super(JavaCompiler, self).__init__(data)
+
+    @classmethod
+    def from_command(cls, compiler, options=None, package=None):
+        """Creates the compiler from a compiler name and a set of options 
+
+        Arguments:
+        compiler - compiler name. e.x. "g++"
+        options - options of the compiler. e.x. "-I/usr/lib/library"
+        package - package of the current file
+        """
+        command = compiler + ' '
+        if options: command += options + ' '
+        data = [{'command': command, 'directory': '', 'file': '*', \
+                'package' : package}]
+        return cls(data)
+
+    def get_package_name(self, fname):
+        for file_compilation in self.compilation_data:
+            if file_compilation['file'] == '*' or \
+                    file_compilation['file'] == fname:
+                return file_compilation['package']
+        return None
+
+    def compile(self, original_fname, source_file, out_dir):
+        """Compile a file.
+
+        Arguments:
+        original_fname - original file name to be compiled
+        object_file - object file name to be generated
+        source_file - copy of the original file that is the actually compiled
+        """
+        compilation = None
+        dirname = os.path.dirname(original_fname)
+        fname = os.path.basename(original_fname)
+        for file_compilation in self.compilation_data:
+            # we allow wildcards in the 'file' field of the json compile_commands
+            # TODO: do we want wildcards here? Test them at least :P
+            if fnmatch.fnmatch(original_fname, file_compilation['file']):
+                if dirname != os.path.dirname(file_compilation['directory']):
+                    #TODO: should we cd to dirname???
+                    pass
+
+                command = file_compilation['command']
+                # include original directory, just in case
+                # command += ' -cp ' + dirname
+                command += ' -d ' + out_dir
+
+                command += " " + source_file
+
+                # try to compile it
+                try:
+                    output = subprocess.check_output(command, \
+                                                     stderr=subprocess.STDOUT, \
+                                                     shell=True)
+                    logging.debug("Compilation of file [%s] was successful with [%s]" \
+                                  % (fname, command))
+                    return 0
+                except subprocess.CalledProcessError as _:
+                    logging.debug("Compilation of file [%s] FAILED with command [%s]" \
+                                  % (fname, command))
+                    return 1
+
+
+# python Compiler.py c compile_commands.json mm_remove
+# python Compiler.py java compile_commands_java.json mm_remove
 if __name__ == "__main__":
     import shutil
     import sys
-    compiler = Compiler.from_file(sys.argv[1])
-    out_folder = sys.argv[2]
+    lang = sys.argv[1]
+    if lang == 'c':
+        compiler = CCompiler.from_file(sys.argv[2])
+    else:
+        compiler = JavaCompiler.from_file(sys.argv[2])
+    out_folder = sys.argv[3]
     i = 0
     for fname in compiler.get_files():
         if not os.path.exists(fname):
             continue
-        out_file = os.path.join(out_folder, str(i))
-        cfile = out_file + '.c'
-        ofile = out_file + '.o'
-        shutil.copyfile(fname, cfile)
-        res = compiler.compile(fname, ofile, cfile)
+        out_file = os.path.join(out_folder, str(i)) if lang == 'c' else out_folder
+        arg2 = out_file + '.c'if lang == 'c' else out_file
+        arg1 = out_file + '.o' if lang == 'c' else fname[:-4] + 'java'
+        if lang == 'c': shutil.copyfile(fname, arg2)
+        res = compiler.compile(fname, arg1, arg2)
         if res == 0:
-            print (fname + " compiled successfully as " + cfile)
+            print (fname + " compiled successfully as " + arg2)
         else:
-            print ("FAILED to compile " + fname + " as " + cfile)
+            print ("FAILED to compile " + fname + " as " + arg2)
         i += 1
+
+

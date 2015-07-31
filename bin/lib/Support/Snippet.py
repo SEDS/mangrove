@@ -3,6 +3,8 @@ import time
 import csv
 import sys
 import os
+import subprocess
+import re
 
 from . import FileManager, Utilities
 from .IndicesManager import *
@@ -41,10 +43,20 @@ def create_snippet(configuration, directory, filename, \
 
     # TODO: add specific subdir to results.directory
     keep_copy = configuration.get_value('minimize.keep.processed.files')
+    lang = configuration.get_value('language')
     dirs = FileManager.Dirs(directory, 
                             configuration.get_value('build.directory'), \
                             configuration.get_value('results.directory'))
-    file_manager = FileManager.CPPFileManager(dirs, filename, 'c', keep_copy)
+    if lang == 'java':
+        file_manager = FileManager.JavaFileManager(dirs, filename, 'java', \
+                        keep_copy, tool.get_compiler().get_package_name(filename))
+    elif lang == 'c':
+        file_manager = FileManager.CPPFileManager(dirs, filename, 'c', keep_copy)
+    else:
+        logging.error('Unkown source code language to perform minimization [%s]' \
+                       % lang)
+        return
+
     prepend = str(line_numbers[0]) + '_'
 
     # First we remove comments
@@ -61,7 +73,7 @@ def create_snippet(configuration, directory, filename, \
     # line are the line number of the function and the line number of
     # the conditional
     try:
-        forced_lines = __get_nested_lines(line_numbers, tool, file_manager)
+        forced_lines = __get_nested_lines(lang, line_numbers, tool, file_manager)
     except NestedStructure.NestedError as e:
         logging.error("ERROR: could not find nested structures for file [%s]" \
                       % file_manager.get_trial_source_path())
@@ -70,7 +82,7 @@ def create_snippet(configuration, directory, filename, \
     algorithm = configuration.get_value('minimize.algorithm')
     if algorithm == 'IRD':
         minimizer = IRD.IRD()
-        logging.debug('Minimizing by means of Naive Debugging')
+        logging.debug('Minimizing by means of Iterative Reduction Debugging')
     elif algorithm == 'DD':
         minimizer = DD.DD()
         logging.error('Minimizing by means of Delta Debugging.')
@@ -84,19 +96,19 @@ def create_snippet(configuration, directory, filename, \
     # Then, we check whether we want to flatenize
     if configuration.get_value('minimize.flatenize'):
         (indices, line_numbers, forced_lines) = code_reduction_topformflat(\
-                        minimizer, file_manager, indices, tool, line_numbers, \
-                        forced_lines, description)
+                        lang, minimizer, file_manager, indices, tool, \
+                        line_numbers, forced_lines, description)
 
-    indices = code_reduction(minimizer, file_manager, indices, tool, \
+    indices = code_reduction(lang, minimizer, file_manager, indices, tool, \
                        line_numbers, forced_lines, description)
     tmp = []
     nocomments_indices = range(1, file_manager._get_file_num_lines(nocomments_fname) + 1)
     while tmp != forced_lines: # fix point algorithm
         tmp = forced_lines
         forced_lines = Utilities.sorted_union(forced_lines, indices)
-        indices = code_reduction(minimizer, file_manager, nocomments_indices, tool, \
+        indices = code_reduction(lang, minimizer, file_manager, nocomments_indices, tool, \
                        line_numbers, forced_lines, description, nocomments_fname) #, check_forced=False)
-        forced_lines = __get_nested_lines(indices, tool, file_manager, True, nocomments_fname)
+        forced_lines = __get_nested_lines(lang, indices, tool, file_manager, True, nocomments_fname)
 
     result_fname = file_manager.move_trial_to_result(prepend=prepend)
 
@@ -117,7 +129,7 @@ def disregard_comments(file_manager):
     return indices
 
 
-def code_reduction(minimizer, file_manager, indices, tool, line_numbers, \
+def code_reduction(lang, minimizer, file_manager, indices, tool, line_numbers, \
                    forced_lines, description, initial_fname=None, check_forced=True):
     """Performs the code reduction by the debugging algorith. 
 
@@ -139,7 +151,7 @@ def code_reduction(minimizer, file_manager, indices, tool, line_numbers, \
     # TODO: test_result should always be False here... 
     # Let's keep it just to make sure
     #
-    test_result = test(file_manager, tool, line_numbers, forced_lines, \
+    test_result = test(lang, file_manager, tool, line_numbers, forced_lines, \
                        description, indices, initial_fname, check_forced)
     if not test_result:
         minimization = minimizer.minimize(indices)
@@ -150,8 +162,8 @@ def code_reduction(minimizer, file_manager, indices, tool, line_numbers, \
 
             file_manager.backup_trial_file()
             file_manager.write_subset_file(indices)
-            test_result = test(file_manager, tool, line_numbers, forced_lines, \
-                               description, indices)
+            test_result = test(lang ,file_manager, tool, line_numbers, \
+                                forced_lines, description, indices)
             test_result = minimizer.PASS if test_result else minimizer.FAIL
             minimizer.set_test_result(test_result)
 
@@ -165,13 +177,14 @@ def code_reduction(minimizer, file_manager, indices, tool, line_numbers, \
     return indices
 
 
-def code_reduction_topformflat(minimizer, file_manager, indices, \
+def code_reduction_topformflat(lang, minimizer, file_manager, indices, \
                                tool, line_numbers, forced_lines, description):
     """Performs the code reduction by the debugging algorith using TopFormFlat.
 
     This means that it reduces the code and tests if the result works or not.
 
     Arguments:
+    lang -- source code language
     minimizer -- algorithm to perform the debugging steps
     file_manager -- file manager object with the info of the file to process
     indices -- indices of the lines of the file to be reduced
@@ -202,10 +215,11 @@ def code_reduction_topformflat(minimizer, file_manager, indices, \
         if True:
             original_indices = convert_ln_to_original(min_indices, changed_lines, \
                                                       current_lines)
+            import time
             file_manager.backup_trial_file()
             file_manager.write_subset_file(original_indices)
-            test_result = test(file_manager, tool, line_numbers, forced_lines, \
-                                       description, original_indices)
+            test_result = test(lang, file_manager, tool, line_numbers, \
+                                forced_lines, description, original_indices)
             if test_result:
                 logging.error("ERROR: could not generate error when topformflating file [%s]" \
                       % file_manager.get_trial_source_path())
@@ -224,8 +238,8 @@ def code_reduction_topformflat(minimizer, file_manager, indices, \
             file_manager.backup_trial_file()
             file_manager.write_subset_file(original_indices)
             working_file = file_manager.get_next_backup_filename()
-            test_result = test(file_manager, tool, line_numbers, forced_lines, \
-                               description, original_indices)
+            test_result = test(lang, file_manager, tool, line_numbers, \
+                                forced_lines, description, original_indices)
             test_result = minimizer.PASS if test_result else minimizer.FAIL
             minimizer.set_test_result(test_result)
 
@@ -242,26 +256,57 @@ def code_reduction_topformflat(minimizer, file_manager, indices, \
         file_manager.move_to_trial_file(first_file)
         return (indices, line_numbers, forced_lines)
 
-def __get_nested_lines(line_numbers, tool, file_manager, \
+def __get_nested_lines(lang, line_numbers, tool, file_manager, \
                        lines_forced=False, fname=""):
-    args = tool.get_compiler().get_command(file_manager.get_trial_source_path())
-    args = args.split()[1:]
-    tmp = []
-    i = 0
-    while i < len(args):
-        if args[i] == "-o" or args[i] == "-c":
-            i += 2
-        else:
-            tmp.append(args[i])
-            i += 1
-    dirname = os.path.dirname(file_manager.get_original_source_path())
-    args = tmp + ["-I", dirname]
-    # res = []
-    # for line in line_numbers:
-    if not lines_forced:
-        fname = file_manager.get_trial_source_path()
-    res = NestedStructure.find_nested_lines(fname, args, \
-                                            line_numbers, lines_forced)
+    if lang == 'java':
+        # TODO: getting package.... this should be done with ANTLR parser when 
+        #       we compute the forced lines. here it could file if it's commented.
+        package_line = __get_package_line(file_manager.get_trial_source_path(),\
+                                        tool.get_compiler().get_package_name(fname))
+        command = "java -jar lib/Reduction/NestedStructure.jar "
+        command += file_manager.get_trial_source_path() + " "
+        # TODO
+        command += str(line_numbers[0])
+        try:
+            output = subprocess.check_output(command, \
+                                             stderr=subprocess.STDOUT, \
+                                             shell=True)
+            import ast
+            # return (ast.literal_eval(output), package)
+            res = [package_line] + ast.literal_eval(output)
+            res.sort()
+            return res
+        except subprocess.CalledProcessError as _:
+            logging.info("FAILED to get nested structure of file [%s] with command [%s]" \
+                          % (fname, command))
+            return
+    else:
+        args = tool.get_compiler().get_command(file_manager.get_trial_source_path())
+        args = args.split()[1:]
+        tmp = []
+        i = 0
+        while i < len(args):
+            if args[i] == "-o" or args[i] == "-c":
+                i += 2
+            else:
+                tmp.append(args[i])
+                i += 1
+        dirname = os.path.dirname(file_manager.get_original_source_path())
+        args = tmp + ["-I", dirname]
+        # res = []
+        # for line in line_numbers:
+        if not lines_forced:
+            fname = file_manager.get_trial_source_path()
+        res = NestedStructure.find_nested_lines(fname, args, \
+                                                line_numbers, lines_forced)
 
     return res
+
+def __get_package_line(fname, package):
+    counter = 1;
+    with open(fname) as fd:
+        for line in fd:
+            if re.search(r"(?:^|\s)+package\s+(.*)\s*" + package + ";", line):
+                return counter
+            counter += 1
 
