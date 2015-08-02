@@ -19,7 +19,6 @@ def read_xml(fname):
                 for datapoint in criteria.iter ('datapoint'):
                     criteria_el.add (Datapoint.from_xml (datapoint))
 
-
     except etree.XMLSyntaxError:
         logging.error('Unable to parse xml file [%s]' % fname)
         return
@@ -95,9 +94,10 @@ class Datapoint:
                           xml.get ('filename'),
                           int (xml.get ('line')),
                           xml.get ('function'),
-                          xml.get ('info'))
+                          xml.get ('info'),
+                          xml.get ('package'))
 
-    def __init__ (self, directory, filename, line, function="", info=""):
+    def __init__ (self, directory, filename, line, function="", info="", package = ""):
         self.__directory__ = directory
         self.__filename__ = filename
         self.__line__ = int(line)
@@ -106,12 +106,16 @@ class Datapoint:
         # self.__bugs__ = []
         self.__function__ = function
         self.__info__ = info
+        self.__package__ = package
 
     def setDirectory (self, directory):
         self.__directory__ = directory
 
     def getDirectory (self):
         return self.__directory__
+
+    def getPackage (self):
+        return self.__package__
 
     def getFilename (self):
         return self.__filename__

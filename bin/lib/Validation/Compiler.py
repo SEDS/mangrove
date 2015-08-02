@@ -154,7 +154,7 @@ class JavaCompiler(Compiler):
                 return file_compilation['package']
         return None
 
-    def compile(self, original_fname, source_file, out_dir):
+    def compile(self, original_fname, source_file, out_dir, classpath=None):
         """Compile a file.
 
         Arguments:
@@ -174,12 +174,15 @@ class JavaCompiler(Compiler):
                     pass
 
                 command = file_compilation['command']
+                if classpath:
+                    command += ' -cp ' + classpath
                 # include original directory, just in case
                 # command += ' -cp ' + dirname
                 command += ' -d ' + out_dir
 
                 command += " " + source_file
 
+                print command 
                 # try to compile it
                 try:
                     output = subprocess.check_output(command, \

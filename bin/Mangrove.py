@@ -72,13 +72,14 @@ def process_bug (configuration, tool, args, criteria, datapoint):
     filename = datapoint.getFilename()
     linenumber = datapoint.getLine()
     info = datapoint.getInfo()
+    package = datapoint.getPackage()
 
     logging.info ('Running mangrove in directory [%s] and file [%s]. The warning to reproduce is in line [%s]' \
                   % (directory, filename, linenumber))
 
     try:
         Snippet.create_snippet (configuration, directory, filename, \
-                               [int(linenumber)], info, tool)
+                               [int(linenumber)], info, package, tool)
     except Snippet.ProcessingError as e:
         logging.error(e.msg)
 
@@ -123,11 +124,15 @@ def main ():
     processed = {}
     for criteria in bugs_data.criterias():
         for datapoint in criteria.datapoints():
+            
+            # TODO: this is to filter for juliet
             if datapoint.getLine() == 0:
                 continue
-            function = datapoint.getFunction()
-            if not re.match(r'.*good.*', function):
-                continue # it is not a false positive
+            if configuration.get_value('language') == "c":
+                function = datapoint.getFunction()
+                if not re.match(r'.*good.*', function):
+                    continue # it is not a false positive
+
             info = datapoint.getInfo()
             key = (datapoint.getFilename(), datapoint.getLine(), info)
             if key in processed:

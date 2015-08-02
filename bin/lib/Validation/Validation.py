@@ -4,7 +4,7 @@ import re
 from ..Support import Utilities
 
 def test(lang, file_manager, tool, line_numbers, forced_lines, description, \
-         indices, initial_fname=None, check_forced=True):
+         indices, initial_fname=None, check_forced=True, classpath=None):
     """Tests the debugging algorith. It returns False if it FAILS.
 
     Arguments:
@@ -32,7 +32,7 @@ def test(lang, file_manager, tool, line_numbers, forced_lines, description, \
         
     if lang == 'java':
         result = compiler.compile(original_fname, fname, \
-                              file_manager.get_build_dir())
+                              file_manager.get_build_dir(), classpath)
     elif lang == 'c':
         result = compiler.compile(original_fname, \
                               file_manager.get_build_object_path(), 
@@ -42,7 +42,8 @@ def test(lang, file_manager, tool, line_numbers, forced_lines, description, \
         failed = False
         if lang == 'java':
             tool.handle_compile_file(file_manager.get_build_class_path(), \
-                                     compiler.get_command(original_fname))
+                                     compiler.get_command(original_fname), \
+                                     classpath=classpath)
         elif lang == 'c':
             tool.handle_compile_file(original_fname, \
                                  fname, \

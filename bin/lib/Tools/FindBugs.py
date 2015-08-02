@@ -91,7 +91,7 @@ FindBugs, description...
     group.add_argument('--compiler', type=str, help='compiler to compile the files')
 
     findbugs_parser.add_argument ('--options', type=str, help='options to compile the file')
-    findbugs_parser.add_argument ('--package', required=True, type=str, help='package of this java file')
+    findbugs_parser.add_argument ('--package', type=str, help='package of this java file')
     findbugs_parser.add_argument ('--results-dir', type=str, help='Directory to store the results')
 
 
@@ -290,8 +290,8 @@ FindBugs, description...
   # Compile just a single file
   # 
   def handle_compile_file (self, class_file, options=None, \
-                           concat_output=False):
-    self.run_findbugs(class_file, options, concat_output)
+                           concat_output=False, classpath=None):
+    self.run_findbugs(class_file, options, concat_output, classpath)
 
   #
   # Get a unique project name for the provided suite
@@ -403,7 +403,7 @@ FindBugs, description...
 
 
   def run_findbugs(self, class_fname, options=None, \
-                   concat_output=False):
+                   concat_output=False, classpath=None):
     logging.debug('Running FindBugs on file [%s]' % class_fname)
     #TODO:
     # dirname = os.path.dirname(original_fname)
@@ -413,17 +413,22 @@ FindBugs, description...
       m = re.findall(r'-cp\s+(.*?)(?:\s|$)', options)
       for cp in m:
         cmd += "-auxclasspath " + cp + " "
+    if classpath:
+        cmd += "-auxclasspath " + classpath + " "
+
       
     #   tmp += re.findall(r'-sourcepath\s+[^ \t\n\r\f\v-]+', options)
     #   cmd += "-sourcepath ".join(tmp) + " "
 
     cmd += class_fname
     cmd += ' 2>&1'
+    print cmd
 
     output = ""
     try:
       # TODO: this could be a util
       output = subprocess.check_output(cmd, shell=True)
+      print output
       logging.debug("findbugs output: [%s]" % output.decode('utf-8'))
     except subprocess.CalledProcessError as outexc:
       logging.error("ERROR: Unable to run findbugs on file [%s]. Failing command [%s]" \
