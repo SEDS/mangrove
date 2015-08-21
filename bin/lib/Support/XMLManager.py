@@ -95,9 +95,12 @@ class Datapoint:
                           int (xml.get ('line')),
                           xml.get ('function'),
                           xml.get ('info'),
-                          xml.get ('package'))
+                          xml.get ('package'),
+                          xml.get ('classpath'),
+                          xml.get ('sourcepath'))
 
-    def __init__ (self, directory, filename, line, function="", info="", package = ""):
+    def __init__ (self, directory, filename, line, function="", info="", \
+                    package="", classpath="", sourcepath=""):
         self.__directory__ = directory
         self.__filename__ = filename
         self.__line__ = int(line)
@@ -107,6 +110,8 @@ class Datapoint:
         self.__function__ = function
         self.__info__ = info
         self.__package__ = package
+        self.__classpath__ = classpath
+        self.__sourcepath__ = sourcepath
 
     def setDirectory (self, directory):
         self.__directory__ = directory
@@ -116,6 +121,12 @@ class Datapoint:
 
     def getPackage (self):
         return self.__package__
+
+    def getClasspath (self):
+        return self.__classpath__
+
+    def getSourcepath (self):
+        return self.__sourcepath__
 
     def getFilename (self):
         return self.__filename__

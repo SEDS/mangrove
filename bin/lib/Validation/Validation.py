@@ -4,7 +4,7 @@ import re
 from ..Support import Utilities
 
 def test(lang, file_manager, tool, line_numbers, forced_lines, description, \
-         indices, initial_fname=None, check_forced=True, classpath=None):
+         indices, initial_fname=None, check_forced=True, classpath=None, sourcepath=None):
     """Tests the debugging algorith. It returns False if it FAILS.
 
     Arguments:
@@ -32,7 +32,7 @@ def test(lang, file_manager, tool, line_numbers, forced_lines, description, \
         
     if lang == 'java':
         result = compiler.compile(original_fname, fname, \
-                              file_manager.get_build_dir(), classpath)
+                              file_manager.get_build_dir(), classpath, sourcepath)
     elif lang == 'c':
         result = compiler.compile(original_fname, \
                               file_manager.get_build_object_path(), 
@@ -43,7 +43,7 @@ def test(lang, file_manager, tool, line_numbers, forced_lines, description, \
         if lang == 'java':
             tool.handle_compile_file(file_manager.get_build_class_path(), \
                                      compiler.get_command(original_fname), \
-                                     classpath=classpath)
+                                     classpath=classpath, sourcepath=sourcepath)
         elif lang == 'c':
             tool.handle_compile_file(original_fname, \
                                  fname, \
@@ -57,9 +57,12 @@ def test(lang, file_manager, tool, line_numbers, forced_lines, description, \
             fname2 = os.path.basename(file_manager.get_original_source_path())
             equal_description = True
             if description:
-                desc1 = re.sub(r'line \d+', 'line X', description)
-                desc2 = re.sub(r'line \d+', 'line X', desc)
-                equal_description = desc1 == desc2
+                desc1 = re.sub(r'line \d+', 'line X', description).strip()
+                desc2 = re.sub(r'line \d+', 'line X', desc).strip()
+                if '?' in desc1 or '?' in desc2:
+                    equal_description = are_equal_but(desc1, desc2, '?')
+                else:
+                    equal_description = desc1 == desc2
             if fname1 == fname2 and \
                     check_indices(indices, line_numbers, lines) and \
                     equal_description:
@@ -69,6 +72,21 @@ def test(lang, file_manager, tool, line_numbers, forced_lines, description, \
         return not failed
     else:
         return True
+
+
+def are_equal_but(desc1, desc2, character):
+    split1 = desc1.split()
+    split2 = desc2.split()
+    are_equal = len(split1) == len(split2)
+    i = 0
+    while i < len(split1) and are_equal:
+        are_equal = split1[i] == split2[i]
+        if not are_equal:
+            if split1[i] == character or split2[i] == character:
+                are_equal = True
+        i += 1
+    return are_equal
+
 
 def check_indices(indices, orig_line_numbers, lines):
     """Checks whether the indices generated the same warning.

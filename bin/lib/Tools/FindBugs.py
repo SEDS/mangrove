@@ -290,8 +290,8 @@ FindBugs, description...
   # Compile just a single file
   # 
   def handle_compile_file (self, class_file, options=None, \
-                           concat_output=False, classpath=None):
-    self.run_findbugs(class_file, options, concat_output, classpath)
+                           concat_output=False, classpath=None, sourcepath=None):
+    self.run_findbugs(class_file, options, concat_output, classpath, sourcepath)
 
   #
   # Get a unique project name for the provided suite
@@ -366,7 +366,7 @@ FindBugs, description...
     res = []
     for line in output.split('\n'):
         line = line.strip()
-        m = re.match(r"[A-Z] [A-Z] [A-Za-z]{2,3}: (.*) At (.*):\[lines? (\d+)(?:-(\d+))?\]", line);
+        m = re.match(r"[A-Z] [A-Z] \w{2,3}: (.*) [Aa]t (.*):\[lines? (\d+)(?:-(\d+))?\]", line)
         if m:
             if m.groups()[-1]:
                 line_num = range(int(m.groups()[-2]), int(m.groups()[-1]) + 1)
@@ -403,7 +403,7 @@ FindBugs, description...
 
 
   def run_findbugs(self, class_fname, options=None, \
-                   concat_output=False, classpath=None):
+                   concat_output=False, classpath=None, sourcepath=None):
     logging.debug('Running FindBugs on file [%s]' % class_fname)
     #TODO:
     # dirname = os.path.dirname(original_fname)
@@ -414,7 +414,11 @@ FindBugs, description...
       for cp in m:
         cmd += "-auxclasspath " + cp + " "
     if classpath:
-        cmd += "-auxclasspath " + classpath + " "
+      if ";" in classpath: classpath = "\"" + classpath + "\""
+      cmd += "-auxclasspath " + classpath + " "
+    if sourcepath:
+      if ";" in sourcepath: sourcepath = "\"" + sourcepath + "\""
+      cmd += "-sourcepath " + sourcepath + " "
 
       
     #   tmp += re.findall(r'-sourcepath\s+[^ \t\n\r\f\v-]+', options)
@@ -423,12 +427,10 @@ FindBugs, description...
     cmd += class_fname
     cmd += ' 2>&1'
     print cmd
-
     output = ""
     try:
       # TODO: this could be a util
       output = subprocess.check_output(cmd, shell=True)
-      print output
       logging.debug("findbugs output: [%s]" % output.decode('utf-8'))
     except subprocess.CalledProcessError as outexc:
       logging.error("ERROR: Unable to run findbugs on file [%s]. Failing command [%s]" \

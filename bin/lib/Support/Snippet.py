@@ -28,7 +28,7 @@ class ProcessingError(Exception):
 
 
 def create_snippet(configuration, directory, filename, \
-                   line_numbers, description, package, tool):
+                   line_numbers, description, package, tool, classpath=None, sourcepath=None):
     """Generates a code snippet generating the same SCA tool warning as was
     produced in the original source code. Returns the snippet filename
 
@@ -43,7 +43,6 @@ def create_snippet(configuration, directory, filename, \
     # TODO: add specific subdir to results.directory
     keep_copy = configuration.get_value('minimize.keep.processed.files')
     lang = configuration.get_value('language')
-    classpath = None
     dirs = FileManager.Dirs(directory, 
                             configuration.get_value('build.directory'), \
                             configuration.get_value('results.directory'))
@@ -52,7 +51,6 @@ def create_snippet(configuration, directory, filename, \
             package = tool.get_compiler().get_package_name(filename)
         file_manager = FileManager.JavaFileManager(dirs, filename, 'java', \
                         keep_copy, package)
-        classpath = directory.replace(package.replace(".","/"), "")
     elif lang == 'c':
         file_manager = FileManager.CPPFileManager(dirs, filename, 'c', keep_copy)
     else:
@@ -78,7 +76,6 @@ def create_snippet(configuration, directory, filename, \
     try:
         forced_lines = __get_nested_lines(lang, line_numbers, tool, \
                                             file_manager, package)
-        print forced_lines
     except NestedStructure.NestedError as e:
         logging.error("ERROR: could not find nested structures for file [%s]" \
                       % file_manager.get_trial_source_path())
@@ -102,17 +99,19 @@ def create_snippet(configuration, directory, filename, \
     if configuration.get_value('minimize.flatenize'):
         (indices, line_numbers, forced_lines) = code_reduction_topformflat(\
                         lang, minimizer, file_manager, indices, tool, \
-                        line_numbers, forced_lines, description, classpath)
+                        line_numbers, forced_lines, description, classpath, sourcepath)
 
     indices = code_reduction(lang, minimizer, file_manager, indices, tool, \
-                       line_numbers, forced_lines, description, classpath=classpath)
+                       line_numbers, forced_lines, description, \
+                       classpath=classpath, sourcepath=sourcepath)
     tmp = []
     nocomments_indices = range(1, file_manager._get_file_num_lines(nocomments_fname) + 1)
     while tmp != forced_lines: # fix point algorithm
         tmp = forced_lines
         forced_lines = Utilities.sorted_union(forced_lines, indices)
         indices = code_reduction(lang, minimizer, file_manager, nocomments_indices, tool, \
-                       line_numbers, forced_lines, description, nocomments_fname, classpath=classpath) #, check_forced=False)
+                       line_numbers, forced_lines, description, nocomments_fname, \
+                       classpath=classpath, sourcepath=sourcepath) #, check_forced=False)
         forced_lines = __get_nested_lines(lang, indices, tool, file_manager, \
                                             package, True, nocomments_fname)
 
@@ -136,7 +135,8 @@ def disregard_comments(file_manager):
 
 
 def code_reduction(lang, minimizer, file_manager, indices, tool, line_numbers, \
-                   forced_lines, description, initial_fname=None, check_forced=True, classpath=None):
+                   forced_lines, description, initial_fname=None, check_forced=True, \
+                   classpath=None, sourcepath=None):
     """Performs the code reduction by the debugging algorith. 
 
     This means that it reduces the code and tests if the result works or not.
@@ -158,7 +158,8 @@ def code_reduction(lang, minimizer, file_manager, indices, tool, line_numbers, \
     # Let's keep it just to make sure
     #
     test_result = test(lang, file_manager, tool, line_numbers, forced_lines, \
-                       description, indices, initial_fname, check_forced, classpath=classpath)
+                       description, indices, initial_fname, check_forced, \
+                       classpath=classpath, sourcepath=sourcepath)
 
     if not test_result:
         minimization = minimizer.minimize(indices)
@@ -170,7 +171,8 @@ def code_reduction(lang, minimizer, file_manager, indices, tool, line_numbers, \
             file_manager.backup_trial_file()
             file_manager.write_subset_file(indices)
             test_result = test(lang ,file_manager, tool, line_numbers, \
-                                forced_lines, description, indices, classpath=classpath)
+                                forced_lines, description, indices, \
+                                classpath=classpath, sourcepath=sourcepath)
             test_result = minimizer.PASS if test_result else minimizer.FAIL
             minimizer.set_test_result(test_result)
 
@@ -185,7 +187,8 @@ def code_reduction(lang, minimizer, file_manager, indices, tool, line_numbers, \
 
 
 def code_reduction_topformflat(lang, minimizer, file_manager, indices, \
-                               tool, line_numbers, forced_lines, description, classpath=None):
+                               tool, line_numbers, forced_lines, description, \
+                               classpath=None, sourcepath=None):
     """Performs the code reduction by the debugging algorith using TopFormFlat.
 
     This means that it reduces the code and tests if the result works or not.
@@ -225,7 +228,8 @@ def code_reduction_topformflat(lang, minimizer, file_manager, indices, \
             file_manager.backup_trial_file()
             file_manager.write_subset_file(original_indices)
             test_result = test(lang, file_manager, tool, line_numbers, \
-                                forced_lines, description, original_indices, classpath=classpath)
+                                forced_lines, description, original_indices, \
+                                classpath=classpath, sourcepath=sourcepath)
             if test_result:
                 logging.error("ERROR: could not generate error when topformflating file [%s]" \
                       % file_manager.get_trial_source_path())
@@ -245,7 +249,8 @@ def code_reduction_topformflat(lang, minimizer, file_manager, indices, \
             file_manager.write_subset_file(original_indices)
             working_file = file_manager.get_next_backup_filename()
             test_result = test(lang, file_manager, tool, line_numbers, \
-                                forced_lines, description, original_indices, classpath=classpath)
+                                forced_lines, description, original_indices, \
+                                classpath=classpath, sourcepath=sourcepath)
             test_result = minimizer.PASS if test_result else minimizer.FAIL
             minimizer.set_test_result(test_result)
 
@@ -273,14 +278,13 @@ def __get_nested_lines(lang, line_numbers, tool, file_manager, package, \
         command += file_manager.get_trial_source_path() + " "
         # TODO
         command += str(line_numbers[0])
-        print command
         try:
             output = subprocess.check_output(command, \
                                              stderr=subprocess.STDOUT, \
                                              shell=True)
             # return (ast.literal_eval(output), package)
+            import ast
             if package_line:
-                import ast
                 res = [package_line] + ast.literal_eval(output)
                 res.sort()
             else:

@@ -73,13 +73,16 @@ def process_bug (configuration, tool, args, criteria, datapoint):
     linenumber = datapoint.getLine()
     info = datapoint.getInfo()
     package = datapoint.getPackage()
+    classpath = datapoint.getClasspath()
+    sourcepath = datapoint.getSourcepath()
 
     logging.info ('Running mangrove in directory [%s] and file [%s]. The warning to reproduce is in line [%s]' \
                   % (directory, filename, linenumber))
 
     try:
         Snippet.create_snippet (configuration, directory, filename, \
-                               [int(linenumber)], info, package, tool)
+                               [int(linenumber)], info, package, tool, \
+                               classpath, sourcepath)
     except Snippet.ProcessingError as e:
         logging.error(e.msg)
 

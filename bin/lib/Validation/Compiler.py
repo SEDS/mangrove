@@ -154,7 +154,8 @@ class JavaCompiler(Compiler):
                 return file_compilation['package']
         return None
 
-    def compile(self, original_fname, source_file, out_dir, classpath=None):
+    def compile(self, original_fname, source_file, out_dir, \
+                classpath=None, sourcepath=None):
         """Compile a file.
 
         Arguments:
@@ -175,7 +176,11 @@ class JavaCompiler(Compiler):
 
                 command = file_compilation['command']
                 if classpath:
+                    if ";" in classpath: classpath = "\"" + classpath + "\""
                     command += ' -cp ' + classpath
+                if sourcepath:
+                    if ";" in sourcepath: sourcepath = "\"" + sourcepath + "\""
+                    command += ' -sourcepath ' + sourcepath
                 # include original directory, just in case
                 # command += ' -cp ' + dirname
                 command += ' -d ' + out_dir
