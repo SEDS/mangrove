@@ -1,0 +1,20 @@
+add_clang_executable(clang-reduce
+  ClangReduce.cpp
+  )
+
+target_link_libraries(clang-reduce
+  clangAnalysis
+  clangAST
+  clangBasic
+  clangDriver
+  clangEdit
+  clangFrontend
+  clangLex
+  clangParse
+  clangRewrite
+  clangRewriteFrontend
+  clangSema
+  clangSerialization
+  clangStaticAnalyzerFrontend
+  clangTooling
+  )
