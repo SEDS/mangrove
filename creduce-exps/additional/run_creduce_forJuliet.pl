@@ -51,9 +51,16 @@ while(my($k, $v) = each %warnings) {
    $data =~ s/file-name/$fileName/g;
    write_file "$workDir/a_$testScript", {binmode => ':utf8'}, $data;
    
-   if (-e "$fileName.orig"){
-      `cd $workDir && mv $fileName $fileName.$fileLine[1].c && mv $fileName.orig $fileName`;
+   if (not (-e "$fileName.orig")){
+      #`cd $workDir && mv $fileName $fileName.$fileLine[1].c && mv $fileName.orig $fileName`;
+       `cd $workDir && chmod +x a_$testScript && creduce $flags ./a_$testScript $fileName >> $logFile 2>&1`;
+       `cd $workDir && echo "/* Warning description" >> $fileName 2>&1`;
+       `cd $workDir && echo "$v" >> $fileName 2>&1`;
+       `cd $workDir && echo "*/" >> $fileName 2>&1`;
+
+       `cd $workDir && echo "/* Warning description" >> $logFile 2>&1`;
+       `cd $workDir && echo "$v" >> $logFile 2>&1`;
+       `cd $workDir && echo "*/" >> $logFile 2>&1`;
    }
-   `cd $workDir && chmod +x a_$testScript && creduce $flags ./a_$testScript $fileName >> $logFile 2>&1`;
 }
 `rm -fr /tmp/*`;
