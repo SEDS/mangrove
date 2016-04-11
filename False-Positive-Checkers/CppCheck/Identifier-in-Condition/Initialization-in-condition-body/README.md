@@ -41,5 +41,5 @@ Build llvm using cmake to generate files
 Run the script run_clang-reduce.sh to use our new tool on some sample c source code:
 
 	$ cd static_analysis/setup
-	$ chmod +x run_clang-reduce.sh
-	$ ./run_clang-reduce.sh
+	$ chmod +x run_clang-tool.sh
+	$ ./run_clang-tool.sh
