@@ -1,0 +1,20 @@
+add_clang_executable(static-variable
+  StaticVariable.cpp
+  )
+
+target_link_libraries(static-variable
+  clangAnalysis
+  clangAST
+  clangBasic
+  clangDriver
+  clangEdit
+  clangFrontend
+  clangLex
+  clangParse
+  clangRewrite
+  clangRewriteFrontend
+  clangSema
+  clangSerialization
+  clangStaticAnalyzerFrontend
+  clangTooling
+  )
