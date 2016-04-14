@@ -4,7 +4,7 @@ Here are examples comparing C-Reduce code reduction to the minimal sample that s
 
 Overall the results show that, **for the transformations applied**, C-Reduce performs mostly trivial reduction and rarely reduces code within the function of interest. 
 
-In some cases, C-Reduce removes the `main()` function so that the original control flow is lost. The manually-reduced snippets preserve control flow, but these differences aren't very important. We are mainly concerned with reduction within the function of interest.
+In some cases, C-Reduce removes the `main()` function so that the original control flow is lost. The manually-reduced snippets preserve control flow, but these differences aren't very important. We are concerned mainly with reduction within the function of interest.
 
 Manual reduction consists of removing whole lines or comments. Further reduction is possible in some cases (e.g. replacing variables with literal values), but this is more aggressive. We cannot assume C-Reduce would do this.
 
