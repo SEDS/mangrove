@@ -1,2 +1,4 @@
 ## branch-selection FP
-Minimal reduction is possible within relevant function after running C-Reduce.
+**What more could be reduced manually:** `default` case at end of `switch` block (minor).
+
+**Note:** Manually reduced snippet (`branch-selection.c`) keeps other function to preserve the control flow.
