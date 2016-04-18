@@ -1,5 +1,4 @@
 #include "std_testcase.h"
-static int goodG2B2Static = 0;
 static char * goodG2B2Source(char * data)
 {
     return data;
