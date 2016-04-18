@@ -2,7 +2,6 @@
 static void goodG2B()
 {
     char * data;
-    char * *dataPtr1 = &data;
     char * *dataPtr2 = &data;
     data = new char[100];
     {
