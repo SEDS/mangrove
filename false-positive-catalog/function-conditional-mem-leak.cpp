@@ -1,0 +1,18 @@
+// Juliet CWE476_NULL_Pointer_Dereference__class_11.cpp
+// Structure: function-conditional-mem-leak
+
+// *** REQUIRES TEST CASE SUPPORT FILES ***
+
+#include "std_testcase.h"
+
+int main(void)
+{
+    int * data = new int;
+
+    if (globalReturnsTrue())
+    {
+        delete data;
+    }
+    // scan-build FP: warning: Potential leak of memory pointed to by 'data'
+    // Cppcheck FP: error: Memory leak: data
+}
