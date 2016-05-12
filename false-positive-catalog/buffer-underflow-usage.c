@@ -1,12 +1,14 @@
 // Juliet s01/CWE121_Stack_Based_Buffer_Overflow__CWE129_fgets_01.c
-// Structure: incomplete-buffer-use
+// Structure: buffer-underflow-usage
 
 #include <stdio.h> // stdin
 
+#define BUFFER_SIZE 10
+
 int main(void)
 {
-    char inputBuffer[10] = "";
+    char inputBuffer[BUFFER_SIZE] = "";
     // scan-build FP: None
     // Cppcheck FP: Error: Buffer is accessed out of bounds.
-    fgets(inputBuffer, 10, stdin);
+    fgets(inputBuffer, BUFFER_SIZE, stdin);
 }
