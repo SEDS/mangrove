@@ -13,8 +13,8 @@ int main(void)
         data = (int *)malloc(10*sizeof(int));
     }
 
-    // scan-build FP: warning: Array access (from variable 'data') results in a null pointer dereference
-    // Cppcheck: Possible null pointer dereference: data
+    // scan-build FP: (warning) Array access (from variable 'data') results in a null pointer dereference
+    // Cppcheck: (error) Possible null pointer dereference: data
     data[0] = 5;
     free(data);
 }

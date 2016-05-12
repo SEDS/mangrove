@@ -11,5 +11,5 @@ int main(void)
         delete [] data;
     }
     // scan-build FP: None
-    // Cppcheck FP: error: Memory leak: data
+    // Cppcheck FP: (error) Memory leak: data
 }

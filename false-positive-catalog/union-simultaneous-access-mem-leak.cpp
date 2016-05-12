@@ -22,7 +22,7 @@ int main(void)
     ClassType * myClass = new ClassType();
     myUnion.firstMember = myClass;
 
-    // scan-build FP: warning: Potential leak of memory pointed to by 'myUnion.firstMember'
+    // scan-build FP: (warning) Potential leak of memory pointed to by 'myUnion.firstMember'
     // Cppcheck FP: none
     ClassType * myClass2 = myUnion.secondMember;
     delete myClass2;

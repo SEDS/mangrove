@@ -4,7 +4,7 @@
 char * helper(char * data)
 {
 	// scan-build FP: None
-	// Cppcheck FP: error: Pointer to local array variable returned.
+	// Cppcheck FP: (error) Pointer to local array variable returned.
     return data;
 }
 

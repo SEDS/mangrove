@@ -9,6 +9,6 @@ int main(void)
 {
     char inputBuffer[BUFFER_SIZE] = "";
     // scan-build FP: None
-    // Cppcheck FP: Error: Buffer is accessed out of bounds.
+    // Cppcheck FP: (error) Buffer is accessed out of bounds.
     fgets(inputBuffer, BUFFER_SIZE, stdin);
 }

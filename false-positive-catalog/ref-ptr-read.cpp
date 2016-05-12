@@ -8,7 +8,7 @@ int main(void)
     char * data;
     char * &dataRef = data;
 
-    // scan-build FP: warning: Value stored to 'data' is never read
+    // scan-build FP: (warning) Value stored to 'data' is never read
     // Cppcheck FP: none
     data = "Good";
     printf("%c\n", dataRef[0]);

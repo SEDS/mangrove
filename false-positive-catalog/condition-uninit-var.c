@@ -14,7 +14,7 @@ int main(void)
         // Cppcheck does not flag FP if malloc is used instead of alloca
         data = (char *)alloca((10)*sizeof(char));
     }
-    // scan-build FP: warning: Function call argument is an uninitialized value
-    // Cppcheck FP: error: Uninitialized variable: data
+    // scan-build FP: (warning) Function call argument is an uninitialized value
+    // Cppcheck FP: (error) Uninitialized variable: data
     strcpy(data, "test");
 }

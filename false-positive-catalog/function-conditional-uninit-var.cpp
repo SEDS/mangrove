@@ -14,8 +14,8 @@ int main(void)
         data = new TwoIntsClass;
         data->intOne = 5;
     }
-    // scan-build FP: warning: Dereference of undefined pointer value
-    // Cppcheck FP: error: Uninitialized variable: data
+    // scan-build FP: (warning) Dereference of undefined pointer value
+    // Cppcheck FP: (error) Uninitialized variable: data
     printf("data: %d\n", data->intOne);
     delete data;
 }

@@ -26,7 +26,7 @@ int main(void)
 
     if(staticFive==5)
     {
-        // scan-build FP: warning: Dereference of undefined pointer value
+        // scan-build FP: (warning) Dereference of undefined pointer value
         // Cppcheck FP: none
         printf("%02x\n", data[0]);
     }
