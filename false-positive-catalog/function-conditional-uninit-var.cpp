@@ -1,5 +1,5 @@
 // Juliet CWE476_NULL_Pointer_Dereference__class_11.cpp
-// Structure: function-conditional-null-ptr
+// Structure: function-conditional-uninit-var
 
 // *** REQUIRES TEST CASE SUPPORT FILES ***
 
