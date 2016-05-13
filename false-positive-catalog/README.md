@@ -2,7 +2,7 @@
 
 Here are code samples of the FP structures listed on the [wiki](https://github.iu.edu/SEDS/mangrove/wiki/FP-Catalog).
 
-Each sample gives the minimized structure to reproduce the false warning. Samples are commented with the test cases from which they are obtained. We simplified the stuctures (e.g. replacing variables with literal constant values, combining variable declaration and initialization, etc.) as long as the FP did not go away or was converted to a TP.
+Each sample gives the minimized structure to reproduce the false warning. Samples are commented with the Juliet test cases from which they are obtained. We simplified the stuctures (e.g. replacing variables with literal constant values, combining variable declaration and initialization, etc.) as long as the FP did not go away or was converted to a TP.
 
 Samples are commented with the false warnings that the SCA tools gave.
 
@@ -18,4 +18,4 @@ Most of our work using Cppcheck was done by considering only *errors*. Other war
 
     cppcheck --enable=warnings,style filename.cpp
 
-This is importance because enabling these lower-severity messages in Cppcheck may be needed to produce warnings of the same severity as code-sonar. In the examples where Cppcheck did *not* give a FP, we  may need to retest after enabling other checks.
+This is importance because enabling these lower-severity messages in Cppcheck may be needed to produce warnings of the same severity as scan-build. In the examples where Cppcheck did *not* give a FP, we  may need to retest after enabling lower-severity checks.
