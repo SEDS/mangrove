@@ -1,5 +1,5 @@
-#ifndef _ARRAY_H_
-#define _ARRAY_H_
+#ifndef _CLASS_CONDITION_H_
+#define _CLASS_CONDITION_H_
 
 class ClassCondition {
 public:
