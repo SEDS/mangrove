@@ -26,7 +26,7 @@ using namespace clang;
 Rewriter rewriter;
 //Gets set when the 'if' condition statement has been traversed
 int if_bit = 0;
-//Gets set when a binary operator is encountered in the condition
+//Gets set when a function call is encountered after the condition
 int call_bit = 0;
 
 class FindNamedClassVisitor
