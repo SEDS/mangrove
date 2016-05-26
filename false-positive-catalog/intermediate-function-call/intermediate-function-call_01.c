@@ -1,9 +1,11 @@
 // Juliet CWE476_NULL_Pointer_Dereference__char_07.c
-// Variant: condition-uninit-var-chain_01
+// Parent structure: intermediate-function-call
 
-// *** REQUIRES TEST CASE SUPPORT FILES ***
+// #################################################################
+// ## Variant: condition-uninit-var-chain_01
+// ## CHANGE: No function call
+// #################################################################
 
-#include "std_testcase.h"
 #include <stdio.h>
 
 static int staticFive = 5;

@@ -1,5 +1,5 @@
 // Juliet CWE476_NULL_Pointer_Dereference__char_07.c
-// Structure: condition-uninit-var-chain
+// Structure: intermediate-function-call
 
 // *** REQUIRES TEST CASE SUPPORT FILES ***
 
