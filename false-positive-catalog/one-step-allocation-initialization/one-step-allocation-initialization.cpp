@@ -5,8 +5,9 @@
 
 int main(void)
 {
+    // NOTE: FP is flagged for all data types tested: int, char, short int, float.
     int * data = new int(7);
-    
+
     // scan-build FP: none
     // Cppcheck FP: (error) Memory is allocated but not initialized: data
     printf("int: %d\n", *data);
