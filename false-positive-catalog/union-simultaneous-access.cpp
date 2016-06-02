@@ -1,5 +1,5 @@
 // Juliet CWE476_NULL_Pointer_Dereference__class_34.cpp
-// Structure: union-simultaneous-access-mem-leak
+// Structure: union-simultaneous-access
 
 #include <stdio.h>
 
