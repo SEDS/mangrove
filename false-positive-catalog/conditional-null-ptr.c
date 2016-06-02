@@ -1,5 +1,5 @@
 // Juliet s01/CWE121_Stack_Based_Buffer_Overflow__CWE131_loop_05.c
-// Structure: condition-null-ptr
+// Structure: conditional-null-ptr
 
 #include <stdlib.h>
 

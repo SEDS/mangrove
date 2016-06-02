@@ -3,8 +3,6 @@
 
 // *** REQUIRES TEST CASE SUPPORT FILES ***
 
-// *** Possibly just a more complicated version of the `condition-uninit-var` structure ***
-
 #include "std_testcase.h"
 #include <stdio.h>
 

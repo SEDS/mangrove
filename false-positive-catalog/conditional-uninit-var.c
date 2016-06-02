@@ -1,5 +1,5 @@
 // Juliet s01/CWE121_Stack_Based_Buffer_Overflow__CWE193_char_alloca_cpy_05.orig.c
-// Structure: condition-uninit-var
+// Structure: conditional-uninit-var
 
 #include <stdlib.h> // alloca
 #include <string.h> // strcpy

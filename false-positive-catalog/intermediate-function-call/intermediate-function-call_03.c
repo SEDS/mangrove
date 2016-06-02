@@ -2,7 +2,7 @@
 // Parent structure: intermediate-function-call
 
 // #################################################################
-// ## Variant: condition-uninit-var-chain_03
+// ## Variant: intermediate-function-call_03
 // ## CHANGE: Call to printf() instead
 // #################################################################
 

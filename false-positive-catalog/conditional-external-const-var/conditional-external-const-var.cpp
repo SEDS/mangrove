@@ -1,5 +1,5 @@
 // Juliet CWE588_Attempt_to_Access_Child_of_Non_Structure_Pointer__class_09.cpp
-// Pattern: condition-external-const-var
+// Pattern: conditional-external-const-var
 
 // *** REQUIRES TEST CASE SUPPORT FILES ***
 

@@ -1,8 +1,8 @@
 // Juliet CWE588_Attempt_to_Access_Child_of_Non_Structure_Pointer__class_09.cpp
-// Parent structure: condition-external-const-var
+// Parent structure: conditional-external-const-var
 
 // #################################################################
-// ## Variant: condition-external-const-var_01
+// ## Variant: conditional-external-const-var_01
 // ## CHANGE: Condition variable defined within this file
 // #################################################################
 

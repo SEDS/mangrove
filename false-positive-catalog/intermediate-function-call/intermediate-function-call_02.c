@@ -2,7 +2,7 @@
 // Parent structure: intermediate-function-call
 
 // #################################################################
-// ## Variant: condition-uninit-var-chain_02
+// ## Variant: intermediate-function-call_02
 // ## CHANGE: Local function call
 // #################################################################
 
