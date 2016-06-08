@@ -1,6 +1,6 @@
 # False Positive Catalog
 
-Here are code samples of the FP structures listed on the [wiki](https://github.iu.edu/SEDS/mangrove/wiki/FP-Catalog).
+Here are code samples of the FP structures listed on the [wiki](https://github.iu.edu/SEDS/mangrove/wiki/FP-Hierarchy).
 
 Each sample gives the minimized structure to reproduce the false warning. Samples are commented with the Juliet test cases from which they are obtained. We simplified the stuctures (e.g. replacing variables with literal constant values, combining variable declaration and initialization, etc.) as long as the FP did not go away or was converted to a TP.
 
