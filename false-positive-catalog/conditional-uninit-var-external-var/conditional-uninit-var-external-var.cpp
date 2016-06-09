@@ -3,14 +3,12 @@
 
 // *** REQUIRES TEST CASE SUPPORT FILES ***
 
-// This pattern is a combination of "Global Variables" category and "Externally Defined Symbols" category.
-// If the global variable is defined within this file (still globally), the FPs go away (for scan-build and Cppcheck).
-
 #include "std_testcase.h"
 #include <stdio.h>
 
 // GLOBAL_CONST_TRUE is defined as follows in io.c
 // const int GLOBAL_CONST_TRUE = 1;
+// If the global variable is defined within this file (still globally), the FPs go away (for scan-build and Cppcheck).
 
 int main(void)
 {
