@@ -1,5 +1,5 @@
 // Juliet CWE476_NULL_Pointer_Dereference__class_11.cpp
-// Structure: function-conditional-uninit-var
+// Structure: conditional-uninit-var-external-function
 
 // *** REQUIRES TEST CASE SUPPORT FILES ***
 

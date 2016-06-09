@@ -1,5 +1,5 @@
 // Juliet CWE476_NULL_Pointer_Dereference__class_11.cpp
-// Structure: function-conditional-mem-leak
+// Structure: conditional-mem-leak-external-function
 
 // *** REQUIRES TEST CASE SUPPORT FILES ***
 
