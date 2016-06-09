@@ -1,20 +1,21 @@
-// Juliet CWE761_Free_Pointer_Not_at_Start_of_Buffer__wchar_t_file_01.c
+// Juliet CWE761_Free_Pointer_Not_at_Start_of_Buffer__char_t_file_01.c
 // Structure: null-array-access
 
 #include <stdlib.h>
-#include <wchar.h>
+#include <string.h>
 
 int main(void)
 {
-    wchar_t * data = (wchar_t *)malloc(100*sizeof(wchar_t));
+    char * data = (char *)malloc(100*sizeof(char));
     data[0] = L'\0';
 
     size_t i;
-    for (i=0; i < wcslen(data); i++)
+    for (i=0; i < strlen(data); i++)
     {
+        // Simplification from Juliet: We simply assign a value from `data` instead of use it in a comparison.
         // scan-build FP: (warning) Assigned value is garbage or undefined
         // Cppcheck FP: none
-        wchar_t c = data[i];
+        char c = data[i];
     }
     free(data);
 }
