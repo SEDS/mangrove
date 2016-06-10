@@ -7,12 +7,12 @@
 int main(void)
 {
     char * data = (char *)malloc(100*sizeof(char));
-    data[0] = L'\0';
+    data[0] = '\0';
 
     size_t i;
     for (i=0; i < strlen(data); i++)
     {
-        // Simplification from Juliet: We simply assign a value from `data` instead of use it in a comparison.
+        // Simplification from Juliet: We simply assign a value from `data` instead of using it in a comparison.
         // scan-build FP: (warning) Assigned value is garbage or undefined
         // Cppcheck FP: none
         char c = data[i];
