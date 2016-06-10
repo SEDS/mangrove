@@ -1,4 +1,4 @@
-// Juliet CWE761_Free_Pointer_Not_at_Start_of_Buffer__char_t_file_01.c
+// Juliet CWE761_Free_Pointer_Not_at_Start_of_Buffer__char_file_01.c
 // Structure: null-array-access
 
 #include <stdlib.h>
