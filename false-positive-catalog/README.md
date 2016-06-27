@@ -9,8 +9,8 @@ Samples are commented with the false warnings that the SCA tools gave.
 ### Current Toolset
 
 * Cppcheck v 1.72
-
 * scan-build (with Clang v 3.8.0 and gcc/g++ v 5.2.1) - from our observations, the gcc/g++ version seems to make a difference in the warnings that scan-build gives.
+* CodeSonar v 4.1p4 (in progress, but most patterns flagged by other tools have not been flagged by CodeSonar)
 
 ### Severity of Warnings
 
