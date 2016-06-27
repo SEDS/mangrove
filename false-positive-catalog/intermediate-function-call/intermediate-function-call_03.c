@@ -1,5 +1,5 @@
 // Juliet CWE476_NULL_Pointer_Dereference__char_07.c
-// Parent structure: intermediate-function-call
+// Original structure: intermediate-function-call
 
 // #################################################################
 // ## Variant: intermediate-function-call_03

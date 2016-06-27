@@ -1,5 +1,5 @@
 // Juliet CWE588_Attempt_to_Access_Child_of_Non_Structure_Pointer__class_09.cpp
-// Parent structure: conditional-uninit-var-external-var
+// Original structure: conditional-uninit-var-external-var
 
 // #################################################################
 // ## Variant: conditional-uninit-var-external-var_01

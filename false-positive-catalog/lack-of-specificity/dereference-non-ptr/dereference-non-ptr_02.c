@@ -1,5 +1,5 @@
 // Juliet CWE415_Double_Free__malloc_free_char_32.c
-// Parent structure: lack-of-specificity/dereference-non-ptr
+// Original structure: lack-of-specificity/dereference-non-ptr
 
 // #################################################################
 // ## Variant: dereference-non-ptr_02

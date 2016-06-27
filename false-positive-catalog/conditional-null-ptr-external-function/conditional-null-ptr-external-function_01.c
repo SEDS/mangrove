@@ -1,5 +1,5 @@
 // Juliet CWE590_Free_Memory_Not_on_Heap__delete_class_alloca_11.cpp
-// Parent structure: conditional-null-ptr-external-function
+// Original structure: conditional-null-ptr-external-function
 
 // #################################################################
 // ## Variant: conditional-null-ptr-external-function_01

@@ -1,5 +1,5 @@
 // NOT derived from Juliet
-// Parent structure: one-step-allocation-initialization
+// Original structure: one-step-allocation-initialization
 
 // #################################################################
 // ## Variant: one-step-allocation-initialization_01

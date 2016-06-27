@@ -1,5 +1,5 @@
 // Juliet CWE588_Attempt_to_Access_Child_of_Non_Structure_Pointer__class_01.cpp
-// Parent structure: lack-of-specificity/bad-cast-argument
+// Original structure: lack-of-specificity/bad-cast-argument
 
 // #################################################################
 // ## Variant: bad-cast-argument_01

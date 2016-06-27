@@ -1,5 +1,5 @@
 // Juliet CWE588_Attempt_to_Access_Child_of_Non_Structure_Pointer__class_33.cpp
-// Parent structure: ref-ptr-read
+// Original structure: ref-ptr-read
 
 // #################################################################
 // ## Variant: ref-ptr-read_02
