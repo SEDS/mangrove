@@ -1,5 +1,5 @@
 // Juliet CWE680_Integer_Overflow_to_Buffer_Overflow__malloc_rand_45.c
-// Structure: alloc-using-external-size
+// Structure: alloc-using-global-var
 
 #include <stdio.h>
 #include <stdlib.h>

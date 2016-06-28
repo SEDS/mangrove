@@ -1,8 +1,8 @@
 // Juliet CWE680_Integer_Overflow_to_Buffer_Overflow__malloc_rand_45.c
-// Original structure: alloc-using-external-size
+// Original structure: alloc-using-global-var
 
 // #################################################################
-// ## Variant: alloc-using-external-size_03
+// ## Variant: alloc-using-global-var_03
 // ## CHANGE: Global variable initialized at global scope
 // #################################################################
 
