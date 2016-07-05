@@ -1,5 +1,10 @@
 // Juliet CWE672_Operation_on_Resource_After_Expiration_or_Release__list_int_14.cpp
-// Structure: clear-list
+// Original structure: clear-list
+
+// #################################################################
+// ## Variant: clear-list_01
+// ## CHANGE: No call to clear the list
+// #################################################################
 
 #include <list>
 #include <stdio.h>
@@ -16,9 +21,9 @@ int main(void)
     {
         if (!*i)
         {
-            data.clear();
+            // CHANGE: Removed call to clear the list.
         }
-        // CodeSonar FP: Use After Free. The memory pointed to by *i was freed...and is read from here.
+        // CodeSonar FP: none
         // scan-build FP: none
         // Cppcheck FP: none
         printf("data: %d\n", *i);
