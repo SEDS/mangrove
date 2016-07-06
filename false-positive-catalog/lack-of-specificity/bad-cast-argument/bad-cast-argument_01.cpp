@@ -24,7 +24,9 @@ int main(void)
 
     void * data = &dataGoodBuffer;
 
-    // scan-build FP: none
-    // Cppcheck FP: none
+    // CodeSonar error: none
+    // scan-build error: none
+    // Cppcheck error: none
     printf("int: %d\n", (reinterpret_cast<TwoIntsClass *>(data))->intTwo);
+    return 0;
 }
