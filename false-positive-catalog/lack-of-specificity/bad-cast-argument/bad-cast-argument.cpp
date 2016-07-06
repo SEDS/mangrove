@@ -16,10 +16,10 @@ int main(void)
     void * data = &dataBadBuffer;
 
     // CodeSonar error: Buffer Overrun. This code reads past the end of the buffer pointed to by 'data'.
-	//   - 'data' evaluates to '&dataBadBuffer'.
-	//   - The first byte read is at offset 4 from the beginning of the buffer pointed to by 'data', whose capacity is 4 bytes.
-	//       - The offset exceeds the capacity.
-	//   - The overrun occurs in stack memory.
+    //   - 'data' evaluates to '&dataBadBuffer'.
+    //   - The first byte read is at offset 4 from the beginning of the buffer pointed to by 'data', whose capacity is 4 bytes.
+    //       - The offset exceeds the capacity.
+    //   - The overrun occurs in stack memory.
     // scan-build error: (warning) Function call argument is an uninitialized value
     // Cppcheck error: none
     printf("int: %d\n", (reinterpret_cast<TwoIntsClass *>(data))->intTwo);

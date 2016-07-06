@@ -17,7 +17,7 @@ class TwoIntsClass
 
 int main(void)
 {
-	// Cppcheck FP: (style) Variable 'dataBadBuffer' is assigned a value that is never used.
+    // Cppcheck FP: (style) Variable 'dataBadBuffer' is assigned a value that is never used.
     int dataBadBuffer = 100;
     void * data = &dataBadBuffer;
 
