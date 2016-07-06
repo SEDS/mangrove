@@ -12,6 +12,7 @@ int main(void)
     {
         free(data);
     }
+    // CodeSonar FP: none
     // scan-build FP: (warning) Potential leak of memory pointed to by 'data'
     // Cppcheck FP: (error) Memory leak: data
 }

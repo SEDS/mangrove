@@ -1,4 +1,4 @@
-// Juliet CWE690_NULL_Deref_From_Return__char_malloc_09.c
+// Juliet s01/CWE690_NULL_Deref_From_Return__char_malloc_09.c
 // Structure: conditional-mem-leak-external-var
 
 // *** REQUIRES TEST CASE SUPPORT FILES ***
@@ -15,6 +15,7 @@ int main(void)
     data = (char *)malloc(20*sizeof(char));
     if(GLOBAL_CONST_TRUE)
     {
+    	// CodeSonar FP: none
         // scan-build FP: (warning) Potential leak of memory pointed to by 'data'
         // Cppcheck FP: (error) Memory leak: data
         free(data);

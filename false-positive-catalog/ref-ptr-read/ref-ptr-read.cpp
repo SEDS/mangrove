@@ -8,6 +8,7 @@ int main(void)
     char * data;
     char * &dataRef = data;
 
+    // CodeSonar FP: none
     // scan-build FP: (warning) Value stored to 'data' is never read
     // Cppcheck FP: none
     data = "Good";

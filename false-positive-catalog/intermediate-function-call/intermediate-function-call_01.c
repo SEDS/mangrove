@@ -28,4 +28,5 @@ int main(void)
         // Cppcheck FP: none
         printf("%02x\n", data[0]);
     }
+    return 0;
 }

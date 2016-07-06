@@ -10,6 +10,7 @@ int main(void)
         char * data = *dataPtr2;
         delete [] data;
     }
-    // scan-build FP: None
+    // CodeSonar FP: none
+    // scan-build FP: none
     // Cppcheck FP: (error) Memory leak: data
 }

@@ -11,8 +11,9 @@ int main(void)
     // intend to read intArray[2] 
     // FLAW: sizeof() needed since pointer is a char*, not an int*
 
+    // CodeSonar FP: none
     // scan-build FP: (warning) Assigned value is garbage or undefined
-    // Cppcheck FP: None
+    // Cppcheck FP: none
     int toPrint = (int) (*(charPointer + 2));
     printf("intArray[2]: %d\n", toPrint);
 }

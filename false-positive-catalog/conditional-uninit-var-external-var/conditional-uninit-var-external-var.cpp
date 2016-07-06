@@ -20,6 +20,7 @@ int main(void)
         intPtr = &intVar;
     }
 
+    // CodeSonar FP: none
     // scan-build FP: (warning) Dereference of undefined pointer value
     // Cppcheck FP: (error) Uninitialized variable: intPtr
     printf("int: %d\n", *intPtr);

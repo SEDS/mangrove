@@ -8,7 +8,9 @@
 int main(void)
 {
     char inputBuffer[BUFFER_SIZE] = "";
-    // scan-build FP: None
+
+    // CodeSonar FP: none
+    // scan-build FP: none
     // Cppcheck FP: (error) Buffer is accessed out of bounds.
     fgets(inputBuffer, BUFFER_SIZE, stdin);
 }

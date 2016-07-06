@@ -13,6 +13,7 @@ int main(void)
         data = (int *)malloc(10*sizeof(int));
     }
 
+    // CodeSonar FP: none
     // scan-build FP: (warning) Array access (from variable 'data') results in a null pointer dereference
     // Cppcheck: (error) Possible null pointer dereference: data
     data[0] = 5;

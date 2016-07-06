@@ -3,7 +3,8 @@
 
 char * helper(char * data)
 {
-	// scan-build FP: None
+	// CodeSonar FP: none
+	// scan-build FP: none
 	// Cppcheck FP: (error) Pointer to local array variable returned.
     return data;
 }

@@ -1,4 +1,4 @@
-// Juliet CWE590_Free_Memory_Not_on_Heap__delete_class_alloca_11.cpp
+// Juliet s02/CWE590_Free_Memory_Not_on_Heap__delete_class_alloca_11.cpp
 // Structure: conditional-null-ptr-external-function
 
 #include <stdio.h>
@@ -15,9 +15,11 @@ int main(void)
         *myint = 5;
     }
 
+    // CodeSonar FP: none
     // scan-build FP: (warning) Dereference of null pointer (loaded from variable 'myint')
     // Cppcheck FP: (error) Possible null pointer dereference: myint
     printf("int: %d\n", *myint);
     
     free(myint);
+    return 0;
 }

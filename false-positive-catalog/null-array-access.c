@@ -13,6 +13,7 @@ int main(void)
     for (i=0; i < strlen(data); i++)
     {
         // Simplification from Juliet: We simply assign a value from `data` instead of using it in a comparison.
+        // CodeSonar FP: none
         // scan-build FP: (warning) Assigned value is garbage or undefined
         // Cppcheck FP: none
         char c = data[i];
