@@ -1,12 +1,19 @@
 # False Positive Catalog
 
-Here are code samples of the FP patterns listed on the [wiki](https://github.iu.edu/SEDS/mangrove/wiki/FP-Hierarchy).
+Here are source code samples of the FP patterns listed on the [FP Hierarchy page](https://github.iu.edu/SEDS/mangrove/wiki/FP-Hierarchy).
 
-Each sample gives the minimized structure to reproduce the false warning. Samples are commented with the Juliet test cases from which they are obtained. We simplified the stuctures (e.g. replacing variables with literal constant values, combining variable declaration and initialization, etc.) as long as the FP did not go away or was converted to a TP.
+Each sample gives the minimized structure to reproduce the false warning. We simplified the structures (e.g. replacing variables with literal constant values, combining variable declaration and initialization, etc.) as long as the FP did not go away or was converted to a TP.
 
-Samples are commented with the false warnings that the SCA tools gave.
+Each sample is annotated with the following details:
 
-Some FP patterns are organized in sub-directories. These patterns contain *changes*, which are small edits to the original FP pattern. The motiviation for *changes* is to try to alter the SCA tool result. The purpose of *changes* is to more closely identify what is causing the FP. Each change is numbered arbitrarily and described with a brief phrase (the latter being annotated in the source code). Each change is performed independently against the original code.
+* Juliet test case from which the sample is derived
+* Name of the FP structure
+* False warning for each SCA tool
+* For *changes* (see below), a description of what was changed in the code.
+
+Unless noted otherwise in the code, samples are self-contained and do not need external libraries to be compiled (e.g. Juliet test case support).
+
+Some FP patterns are organized in sub-directories. These patterns contain *changes*, which are small edits to the original FP pattern. The motivation for *changes* is to try to alter the SCA tool result. The purpose of *changes* is to more closely identify what is causing the FP. Each change is numbered arbitrarily and described with a brief phrase (the latter being annotated in the source code). Each change is performed independently against the original code.
 
 ### Current Toolset
 
