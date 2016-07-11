@@ -1,4 +1,4 @@
-// Juliet CWE675_Duplicate_Operations_on_Resource__open_81_goodG2B.cpp
+// Juliet CWE675_Duplicate_Operations_on_Resource__open_82_goodG2B.cpp
 
 #include "FileCloser.h"
 #include <unistd.h>
