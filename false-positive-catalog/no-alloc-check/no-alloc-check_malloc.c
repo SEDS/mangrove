@@ -5,7 +5,7 @@
 
 int main(void)
 {
-	// CodeSonar note: malloc() returns NULL.
+    // CodeSonar note: malloc() returns NULL.
     char * data = (char *)malloc(sizeof(char));
 
     // CodeSonar warning: Null Pointer Dereference. 'Data' is dereferenced here, but it is NULL.

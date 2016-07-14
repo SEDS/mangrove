@@ -5,7 +5,7 @@
 
 int main(void)
 {
-	// CodeSonar note: fopen() returns NULL.
+    // CodeSonar note: fopen() returns NULL.
     FILE * data = fopen("myfile.txt", "w+");
 
     // CodeSonar warning: Null Pointer Dereference. The body of fclose() dereferences 'data', but it is NULL.
