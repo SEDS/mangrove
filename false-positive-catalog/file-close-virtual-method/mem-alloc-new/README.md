@@ -1,4 +1,4 @@
-# File-Close-Virtual-Method FP
+# `mem-alloc-new` File-Close-Virtual-Method FP variation
 
 This `mem-alloc-new` version allocates memory using `new` and deletes it in the virtual method. **This version does not flag a FP.**
 
@@ -17,7 +17,7 @@ no | ptr | base | NON-pure | no | externally
 no | ptr | base | NON-pure | no | internally
 no | ptr | base | NON-pure | yes | internally
 
-**Update:** Note that if we remove the `delete` call in [Deallocator.cpp](https://github.iu.edu/zpreynol/file-close-virtual-method/blob/mem-alloc-new/Deallocator.cpp), CodeSonar flags the warning (now a TP) *only if* a user-defined (non-global) namespace is used (more specifically, if the *class which deletes the memory* is defined in the namespace). This behavior is similar to we observed in the [multi-class](https://github.iu.edu/zpreynol/file-close-virtual-method/tree/multi-class) example, where a namespace in the sink apparently obscured things from CodeSonar. **However, the only difference is that with this variation (where the resource is memory), a namespace does not cause a FP.**
+**Update:** Note that if we remove the `delete` call in [Deallocator.cpp](./Deallocator.cpp), CodeSonar flags the warning (now a TP) *only if* a user-defined (non-global) namespace is used (more specifically, if the *class which deletes the memory* is defined in the namespace). This behavior is similar to we observed in the [multi-class](../multi-class) example, where a namespace in the sink apparently obscured things from CodeSonar. **However, the only difference is that with this variation (where the resource is memory), a namespace does not cause a FP.**
 
 ## Other variations
 

@@ -1,4 +1,4 @@
-# File-Close-Virtual-Method FP
+# `no-namespace` File-Close-Virtual-Method FP variation
 
 **The no-namespace version (using `open()`) does *not* give a FP in CodeSonar.**
 

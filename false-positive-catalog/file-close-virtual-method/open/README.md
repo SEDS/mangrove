@@ -1,4 +1,4 @@
-# File-Close-Virtual-Method FP
+# `open` File-Close-Virtual-Method FP variation
 
 **`Open` variation: Original FP version that uses object inheritance and the `open()` function. This is the version present in Juliet.**
 
@@ -6,8 +6,8 @@ CodeSonar flags a "Leak" false positive error for the above code, assuming an op
 
 The FP pattern appears in OOP situations with and without inheritance.
 
-#### [Non-inheritance requirements (single class):](https://github.iu.edu/zpreynol/file-close-virtual-method/tree/no-inheritance)
-* Must define the sink of the resource (class that closes the file) in a user-defined namespace. ***(UPDATE: See the [multi-class](https://github.iu.edu/zpreynol/file-close-virtual-method/tree/multi-class) variation for details. This point seems to be the key requirement for the FP.)***
+#### [Non-inheritance requirements (single class):](../no-inheritance)
+* Must define the sink of the resource (class that closes the file) in a user-defined namespace. ***(UPDATE: See the [multi-class](../multi-class) variation for details. This point seems to be the key requirement for the FP.)***
 * Method **must** be defined in separate `cpp` file.
 * Method **must** be declared `virtual`.
 * Caller may use either a *pointer* or an *object* type to refer to the instance.
@@ -16,7 +16,7 @@ The FP pattern appears in OOP situations with and without inheritance.
 
 I assume the caller uses a *subclass* instance for the actual type. Otherwise, we revert to the single-class case above.
 
-* Must define the sink of the resource (class that closes the file) in a user-defined namespace. ***(UPDATE: See the [multi-class](https://github.iu.edu/zpreynol/file-close-virtual-method/tree/multi-class) variation for details. This point seems to be the key requirement for the FP.)***
+* Must define the sink of the resource (class that closes the file) in a user-defined namespace. ***(UPDATE: See the [multi-class](../multi-class) variation for details. This point seems to be the key requirement for the FP.)***
 * Method **must** be defined in separate `cpp` file.
 * Method must be declared `virtual` in base class (method may or may not be pure virtual).
 * (For *pointer* type in the caller) Caller may use either *base class* or *subclass* as the declared type.
@@ -40,7 +40,7 @@ Function | Namespace, dealloc | No namespace, dealloc | Namespace, no dealloc | 
 open | ***leak*** | none | ***leak*** | ***leak***
 open64 | ***leak*** | none | ***leak*** | ***leak***
 creat | ***leak*** | none | ***leak*** | ***leak***
-[fopen](https://github.iu.edu/zpreynol/file-close-virtual-method/tree/fopen) | none | none | none | ***leak***
+[fopen](../fopen) | none | none | none | ***leak***
 freopen | none | none | none | none
 popen | none | none | none | ***leak***
 dlopen | none | none | none | ***leak***

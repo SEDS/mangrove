@@ -1,4 +1,4 @@
-# File-Close-Virtual-Method FP
+# `no-inheritance` File-Close-Virtual-Method FP variation
 
 **CodeSonar *does* flag a FP for the no-inheritance version (using `open()`).**
 

@@ -1,4 +1,4 @@
-# File-Close-Virtual-Method FP
+# `multi-class` File-Close-Virtual-Method FP variation
 
 **Multi-class branch: Use a hierarchy of classes to understand the effect of namespaces on the `File-Close-Virtual-Method` FP pattern.**
 
