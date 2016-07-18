@@ -6,7 +6,7 @@ CodeSonar flags a "Leak" false positive error for the above code, assuming an op
 
 The FP pattern appears in OOP situations with and without inheritance.
 
-#### [Non-inheritance requirements (single class):](../no-inheritance)
+#### [No-inheritance requirements (single class):](../no-inheritance)
 * Must define the sink of the resource (class that closes the file) in a user-defined namespace. ***(UPDATE: See the [multi-class](../multi-class) variation for details. This point seems to be the key requirement for the FP.)***
 * Method **must** be defined in separate `cpp` file.
 * Method **must** be declared `virtual`.
