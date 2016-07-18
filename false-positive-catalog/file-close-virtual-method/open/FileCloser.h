@@ -1,4 +1,4 @@
-// Juliet CWE675_Duplicate_Operations_on_Resource__open_82.h
+// Juliet CWE675_Duplicate_Operations_on_Resource__open_81.h
 
 #include <unistd.h>  
 #include <stdio.h>
@@ -7,9 +7,7 @@ namespace test {
  
 class FileCloserBase
 {  
-public:
-	// Juliet uses a pure virtual method in the base class.
-	// Both a pure virtual method and a non-pure virtual method (below) give the FP.
+public:  
     virtual void action(int data) {};  
 };  
  
