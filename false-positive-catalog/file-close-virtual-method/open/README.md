@@ -1,4 +1,4 @@
-# `open` File-Close-Virtual-Method FP variation
+## `open` File-Close-Virtual-Method FP variation
 
 **`Open` variation: Original FP version that uses object inheritance and the `open()` function. This is the version present in Juliet.**
 

@@ -1,6 +1,6 @@
-# `multi-class` File-Close-Virtual-Method FP variation
+## `multi-class` File-Close-Virtual-Method FP variation
 
-**Multi-class branch: Use a hierarchy of classes to understand the effect of namespaces on the `File-Close-Virtual-Method` FP pattern.**
+**Multi-class variation: Use a hierarchy of classes to understand the effect of namespaces on the `File-Close-Virtual-Method` FP pattern.**
 
 ## Class hierarchy
 
@@ -10,7 +10,7 @@ I used a hierarchy of classes to test how changing the namespace affected the Co
 
 Each row of the table gives a "configuration," which shows the namespaces that classes were defined in. Either no user-defined namespace was used, or a `test` namespace was used. (The `client.cpp` program uses the default global namespace.) The `Declared type` and `Actual type` are the object types used by the client. (For this code, the declared type is B and the actual type is C.) The last field tells whether CodeSonar gave a `Leak` false positive.
 
-I simplified my analysis by ignoring other factors (e.g. pointer vs. object access in client, pure vs. non-pure virtual methods, defining methods in separate `cpp` file vs. in the header file, etc.). I studied some of these factors elsewhere (see other branches above). This study focuses on namespaces. Also, this experiment tests only the low-level `open()`/`close()` functions; I do not test other kinds of resources here.
+I simplified my analysis by ignoring other factors (e.g. pointer vs. object access in client, pure vs. non-pure virtual methods, defining methods in separate `cpp` file vs. in the header file, etc.). I studied some of these factors elsewhere ([see other variations](../)). This study focuses on namespaces. Also, this experiment tests only the low-level `open()`/`close()` functions; I do not test other kinds of resources here.
 
 A namespace | B namespace | C namespace | Declared type | Actual type | CodeSonar FP?
 --- | --- | --- | --- | --- | ---
