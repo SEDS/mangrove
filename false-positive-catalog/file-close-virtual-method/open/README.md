@@ -11,6 +11,7 @@ The FP pattern appears in OOP situations with and without inheritance.
 * Method **must** be defined in separate `cpp` file.
 * Method **must** be declared `virtual`.
 * Caller may use either a *pointer* or an *object* type to refer to the instance.
+* Client may either explicitly include the namespace or use the scope resolution operator.
 
 #### Inheritance requirements (two classes):
 
@@ -21,6 +22,7 @@ I assume the caller uses a *subclass* instance for the actual type. Otherwise, w
 * Method must be declared `virtual` in base class (method may or may not be pure virtual).
 * (For *pointer* type in the caller) Caller may use either *base class* or *subclass* as the declared type.
 *  Caller may use either a *pointer* or an *object* type to refer to the instance (although if using an object type, the object ***must*** be declared as the subclass type...otherwise, it is a TP).
+* Client may either explicitly include the namespace or use the scope resolution operator.
  
 ## Other functions
 
