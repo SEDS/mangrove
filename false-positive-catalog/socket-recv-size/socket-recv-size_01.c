@@ -1,5 +1,10 @@
 // Juliet CWE666_Operation_on_Resource_in_Wrong_Phase_of_Lifetime__listen_bind_accept_18.c
-// Structure: socket-recv-size
+// Original structure: socket-recv-size
+
+// #################################################################
+// ## Variant: socket-recv-size_01
+// ## CHANGE: Limit socket message size based on buffer size alone
+// #################################################################
 
 #include "std_testcase.h"
 
@@ -48,7 +53,8 @@ int main(void)
             break;
         }
         // Remember that 'dataLen' is 0.
-        recvResult = recv(acceptSocket, (char *)data+dataLen, (int)(SIZE-dataLen-1), 0);
+        // CHANGE: Limit size of message read into memory based on the buffer size alone (ignore used space in the buffer).
+        recvResult = recv(acceptSocket, (char *)data+dataLen, (int)(SIZE-1), 0);
         if (recvResult == SOCKET_ERROR || recvResult == 0)
         {
             break;
@@ -57,7 +63,7 @@ int main(void)
         // 'recvResult' can be at most 99.
         // Thus, 'recvResult' is in the bounds [1,99], which is valid for the 'data' memory block.
 
-        // CodeSonar FP: Tainted Buffer Access. This code could write past the end of 'data'.
+        // CodeSonar FP: none
         // scan-build FP: none
         // Cppcheck FP: none
         data[recvResult] = '\0';
