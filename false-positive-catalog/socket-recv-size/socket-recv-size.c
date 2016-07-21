@@ -1,4 +1,5 @@
 // Juliet CWE666_Operation_on_Resource_in_Wrong_Phase_of_Lifetime__listen_bind_accept_18.c
+// Structure: socket-recv-size
 
 #include "std_testcase.h"
 
@@ -58,6 +59,8 @@ int main(void)
         // Thus, 'recvResult' is in the bounds [1,99], which is valid for the 'data' memory block.
 
         // CodeSonar FP: Tainted Buffer Access. This code could write past the end of 'data'.
+        // scan-build FP: none
+        // Cppcheck FP: none
         data[recvResult] = '\0';
     } while (1);
     if (listenSocket != INVALID_SOCKET)
