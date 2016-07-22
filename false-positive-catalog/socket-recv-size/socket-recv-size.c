@@ -53,8 +53,8 @@ int main(void)
         {
             break;
         }
-        // We've established that 'recvResult' must be positive at this point.
-        // 'recvResult' can be at most 99.
+        // We've established that 'recvResult' must be positive at this point (see previous conditional).
+        // Also, 'recvResult' can be at most 99 (see third argument of `recv` above).
         // Thus, 'recvResult' is in the bounds [1,99], which is valid for the 'data' memory block.
 
         // CodeSonar FP: Tainted Buffer Access. This code could write past the end of 'data'.
