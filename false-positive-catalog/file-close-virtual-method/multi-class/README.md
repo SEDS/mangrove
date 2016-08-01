@@ -4,7 +4,7 @@
 
 ## Class hierarchy
 
-I used a hierarchy of classes to test how changing the namespace affected the CodeSonar warning message. Class C inherits from B, which inherits from A. For each class, the virtual `action()` method closes a file given a file descriptor. Thus, clients that depend on these classes should not have any leak errors (files not being closed). In this code everything is defined in the global namespace, but I made modifications to define certain classes in a different namespace (see next section).
+I used a hierarchy of classes to test how changing the namespace affected the CodeSonar warning message. Class C inherits from B, which inherits from A. For each class, the virtual `action()` method closes a file given a file descriptor. Thus, clients that depend on these classes should not have any leak errors (files not being closed). In the code above everything is defined in the global namespace, but I made modifications to define certain classes in a different namespace (see next section).
 
 ## Namespace configurations
 
