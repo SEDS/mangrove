@@ -1,8 +1,8 @@
 // Juliet CWE666_Operation_on_Resource_in_Wrong_Phase_of_Lifetime__listen_bind_accept_18.c
-// Structure: socket-recv-size
+// Structure: buffer-store-socket
 
-#include "std_testcase.h"
-
+#include <stdio.h>
+#include <string.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
