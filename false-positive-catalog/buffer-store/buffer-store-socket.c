@@ -49,6 +49,8 @@ int main(void)
         }
         // Remember that 'dataLen' is 0.
         recvResult = recv(acceptSocket, (char *)data+dataLen, (int)(SIZE-dataLen-1), 0);
+        printf("Message received. Size of message (bytes): %d\n", recvResult);
+
         if (recvResult == SOCKET_ERROR || recvResult == 0)
         {
             break;
