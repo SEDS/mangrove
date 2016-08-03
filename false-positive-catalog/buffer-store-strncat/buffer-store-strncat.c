@@ -1,5 +1,5 @@
 // Juliet CWE761_Free_Pointer_Not_at_Start_of_Buffer__char_environment_06.c
-// Structure: buffer-store
+// Structure: buffer-store-strncat
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -17,8 +17,11 @@ int main(void)
 
     if (environment != NULL)
     {
+        // (Side note: For `strncat` the length argument does NOT include the null character--that is always added regardless.)
+
         // CodeSonar FP: Tainted Buffer Access. This code could write past the end of the buffer pointed to by 'data'.
-        // (Side note: The length argument does NOT include the null character--that is always added regardless.)
+        // scan-build FP: none
+        // Cppcheck FP: none
         strncat(data+dataLen, environment, SIZE-dataLen-1);
     }
 

@@ -1,5 +1,5 @@
 // Juliet CWE761_Free_Pointer_Not_at_Start_of_Buffer__char_console_22a.c
-// Structure: buffer-store
+// Structure: buffer-store-fgets
 
 #include <stdio.h>
 #include <stdlib.h>
