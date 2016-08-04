@@ -1,6 +1,6 @@
 # False Positive Catalog
 
-Here are source code samples of the FP patterns listed on the [FP Catalog page](https://github.iu.edu/SEDS/mangrove/wiki/FP-Hierarchy). Rather than browsing the repo above, we recommend that you let the wiki page guide you through the patterns.
+Here are source code samples of the FP patterns listed on the [FP Catalog page](https://github.iu.edu/SEDS/mangrove/wiki/FP-Catalog). Rather than browsing the repo above, we recommend that you let the wiki page guide you through the patterns.
 
 We use a flat organization structure for storing the code samples. Code samples for a pattern reside in a directory of the same name as the pattern. Each code sample is the minimized structure to reproduce the false warning. We simplified the structures (e.g. replacing variables with literal constant values, combining variable declaration and initialization, etc.) as long as the FP did not go away or was converted to a TP.
 
