@@ -1,4 +1,6 @@
-#include "ClassCondition.h"
+// Custom code
+
+#include "class-condition.h"
 
 int main(void) {
 	ClassCondition * myClass = new ClassCondition();

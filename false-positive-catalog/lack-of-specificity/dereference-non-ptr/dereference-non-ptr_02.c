@@ -6,7 +6,6 @@
 // ## CHANGE: Assign allocated, non-dangling pointer
 // #################################################################
 
-
 #include <stdlib.h>
 
 int main(void)
@@ -21,9 +20,12 @@ int main(void)
     *something = 'a';
 
     // CHANGE: Use allocated, non-dangling pointer on RHS of assignment.
+
+    // CodeSonar FP: none
     // scan-build FP: none
     // Cppcheck FP: none
     *dataPtr = something;
 
     free(something);
+    return 0;
 }

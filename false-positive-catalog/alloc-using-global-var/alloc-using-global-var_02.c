@@ -20,7 +20,7 @@ static void goodG2BSink()
     intPointer = (int*)malloc(data * sizeof(int));
     for (i = 0; i < (size_t)data; i++)
     {
-        intPointer[i] = 0; /* Potentially writes beyond the boundary of intPointer */
+        intPointer[i] = 7; /* Potentially writes beyond the boundary of intPointer */
     }
     // CodeSonar FP: none
     // scan-build FP: none

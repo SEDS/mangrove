@@ -6,19 +6,20 @@
 // ## CHANGE: Use pointer as recipient of assignment
 // #################################################################
 
-
 #include <stdlib.h>
 
 int main(void)
 {
     char * data;
-    // CHANGE: Use another ordinary pointer, not pointer-to-pointer, on LHS of assignment.
+    // CHANGE: Use another ordinary pointer (instead of pointer-to-pointer) on LHS of assignment.
     char * dataPtr = data;
 
     data = (char *)malloc(100*sizeof(char));
     free(data);
 
+    // CodeSonar FP: none
     // scan-build FP: none
     // Cppcheck FP: none
     dataPtr = data;
+    return 0;
 }

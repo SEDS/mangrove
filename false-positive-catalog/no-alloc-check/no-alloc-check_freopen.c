@@ -1,5 +1,5 @@
 // Juliet CWE675_Duplicate_Operations_on_Resource__freopen_43.cpp
-// Structure: no-alloc-check_freopen
+// Structure: no-alloc-check_freopen (potentially a FP)
 
 #include <stdio.h>
 

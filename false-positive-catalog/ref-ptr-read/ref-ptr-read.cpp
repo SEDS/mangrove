@@ -13,5 +13,5 @@ int main(void)
     // Cppcheck FP: none
     data = "Good";
     printf("%c\n", dataRef[0]);
-
+    return 0;
 }

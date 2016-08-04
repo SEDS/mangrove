@@ -9,14 +9,12 @@
 #include <list>
 #include <stdio.h>
 
-using namespace std;
-
 int main(void)
 {
-    list<int> data;
+    std::list<int> data;
     data.push_back(7);
 
-    list<int> ::iterator i;
+    std::list<int> ::iterator i;
     for(i = data.begin(); i != data.end(); i++)
     {
         if (!*i)

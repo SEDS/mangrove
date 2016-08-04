@@ -1,5 +1,5 @@
 // Juliet CWE416_Use_After_Free__malloc_free_struct_18.c
-// Structure: no-alloc-check_malloc
+// Structure: no-alloc-check_malloc (potentially a FP)
 
 #include <stdlib.h>
 

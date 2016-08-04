@@ -28,5 +28,5 @@ int main(void)
     dataList.push_back(str);
 
     good(dataList);
-    return(0);
+    return 0;
 }

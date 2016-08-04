@@ -1,3 +1,6 @@
+// Custom code
+// Structure: loop-flag
+
 int helper (void) {
     bool flag = false;
     for (int i = 0; i < 10; i++) {

@@ -24,6 +24,7 @@ int main(void)
 
     if(staticFive==5)
     {
+        // CodeSonar FP: none
         // scan-build FP: none
         // Cppcheck FP: none
         printf("%02x\n", data[0]);

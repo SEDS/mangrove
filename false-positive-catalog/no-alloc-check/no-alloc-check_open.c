@@ -1,5 +1,5 @@
 // Juliet CWE675_Duplicate_Operations_on_Resource__open_03.c
-// Structure: no-alloc-check_open
+// Structure: no-alloc-check_open (potentially a FP)
 
 #include <fcntl.h>
 #include <sys/stat.h>

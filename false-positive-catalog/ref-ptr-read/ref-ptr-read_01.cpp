@@ -18,9 +18,11 @@ int main(void)
     // Cppcheck FP: (style) Variable 'dataBadBuffer' is assigned a value that is never used.
     int dataBadBuffer = 7;
 
+    // CodeSonar FP: none
     // scan-build FP: (warning) Value stored to 'data' is never read
     // Cppcheck FP: (style) Variable 'data' is assigned a value that is never used.
     data = &dataBadBuffer;
     
     printf("int: %d\n", *dataRef);
+    return 0;
 }

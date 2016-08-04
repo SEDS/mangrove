@@ -15,6 +15,8 @@ int main(void)
     int * &dataRef = data;
 
     // CHANGE: Data allocated on stack
+    
+    // CodeSonar FP: none
     // scan-build FP: none
     // Cppcheck FP: none
     data = new int(15);
@@ -23,4 +25,5 @@ int main(void)
     printf("int: %d\n", *dataRef);
 
     delete data;
+    return 0;
 }

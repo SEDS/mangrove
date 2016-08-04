@@ -24,4 +24,5 @@ int main(void)
     // scan-build FP: (warning) Dereference of undefined pointer value
     // Cppcheck FP: (error) Uninitialized variable: intPtr
     printf("int: %d\n", *intPtr);
+    return 0;
 }

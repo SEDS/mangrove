@@ -11,7 +11,9 @@ int main(void)
     data = (char *)malloc(100*sizeof(char));
     free(data);
 
+    // CodeSonar FP: none
     // scan-build FP: none
     // Cppcheck FP: (error) Dereferencing 'data' after it is deallocated / released
     *dataPtr = data;
+    return 0;
 }

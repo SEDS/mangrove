@@ -10,13 +10,15 @@
 
 int main(void)
 {
-	// CHANGE: Moved initialization to a separate line.
+    // CHANGE: Moved initialization to a separate line.
     int * data = new int;
     *data = 7;
     
+    // CodeSonar FP: none
     // scan-build FP: none
     // Cppcheck FP: none
     printf("int: %d\n", *data);
 
     delete data;
+    return 0;
 }

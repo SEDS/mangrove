@@ -7,25 +7,5 @@ A class constructor sets a private variable to true, which is never changed in t
 ### Results
 
 * **CodeSonar:** Flags FP
-* **scan-build:** Flags FP*
+* **scan-build:** Flags FP
 * **Cppcheck:** Flags FP
-
-*For some reason, scan-build flags the FP only if the `ClassCondition.cpp` file is tested individually (i.e. not by testing against `make`). That is, the following command gives the FP:
-
-```
-$ scan-build g++ -c ClassCondition.cpp
-ClassCondition.cpp:22:26: warning: Dereference of null pointer (loaded from variable 'data')
-    printf("Data: %d\n", *data);
-                         ^~~~~
-1 warning generated.
-scan-build: 1 bug found.
-
-```
-
-However, this command gives no FP:
-
-```
-scan-build make
-```
-
-**This scan-build behavior is important to document so that we are careful in the future when running scan-build. Even if scan-build does not issue a warning when running against `make`, scan-build *could* issue warnings when running against files individually.**

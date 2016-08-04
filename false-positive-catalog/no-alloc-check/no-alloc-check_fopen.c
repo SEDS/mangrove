@@ -1,5 +1,5 @@
 // Juliet CWE675_Duplicate_Operations_on_Resource__fopen_18.c
-// Structure: no-alloc-check_fopen
+// Structure: no-alloc-check_fopen (potentially a FP)
 
 #include <stdio.h>
 

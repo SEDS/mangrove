@@ -25,8 +25,9 @@ int main(void)
     }
 
     // scan-build FP: none
-    // Cppcheck FP: (error) Possible null pointer dereference: myint
+    // Cppcheck FP: (error) Possible null pointer dereference: 'myint'
     printf("int: %d\n", *myint);
     
     free(myint);
+    return 0;
 }

@@ -21,7 +21,9 @@ int main(void)
         intPtr = &intVar;
     }
 
+    // CodeSonar FP: none
     // scan-build FP: none
     // Cppcheck FP: none
     printf("int: %d\n", *intPtr);
+    return 0;
 }
