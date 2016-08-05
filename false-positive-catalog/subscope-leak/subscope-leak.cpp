@@ -1,5 +1,5 @@
 // Juliet s04/CWE122_Heap_Based_Buffer_Overflow__cpp_CWE806_char_memcpy_32.cpp
-// Structure: sub-scope-leak
+// Structure: subscope-leak
 
 int main(void)
 {
