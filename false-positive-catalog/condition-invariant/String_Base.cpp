@@ -18,8 +18,7 @@ ACE_String_Base<ACE_CHAR_T>::ACE_String_Base(const ACE_CHAR_T *s, size_t len, bo
 template <class ACE_CHAR_T> void
 ACE_String_Base<ACE_CHAR_T>::set(const ACE_CHAR_T *s, size_t len, bool release)
 {
-    size_t new_buf_len = len + 1;
-    if (s != 0 && len != 0 && release && this->buf_len_ < new_buf_len)
+    if (s != 0 && len != 0 && release && this->buf_len_ < len + 1)
     {
         // Assuming that the 'else if' clause below is executed (as CodeSonar believes),
         // this 'if' clause would have had to have been executed, causing the clause below
