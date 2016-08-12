@@ -1,4 +1,4 @@
-// NOT derived from Juliet
+// Custom code
 // FP structure: one-step-allocation-initialization
 
 #include <stdio.h>
