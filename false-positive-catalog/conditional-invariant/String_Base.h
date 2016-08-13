@@ -1,5 +1,5 @@
 // ACE ace/String_Base.h
-// Structure: condition-invariant
+// Structure: conditional-invariant
 
 #ifndef ACE_STRING_BASE_H
 #define ACE_STRING_BASE_H

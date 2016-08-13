@@ -1,5 +1,10 @@
 // ACE ace/String_Base.cpp
-// Structure: condition-invariant
+// Original structure: conditional-invariant
+
+// #######################################
+// ## Variant: conditional-invariant_01
+// ## Change: Tighten inequality check
+// #######################################
 
 #ifndef ACE_STRING_BASE_CPP
 #define ACE_STRING_BASE_CPP
@@ -18,7 +23,9 @@ ACE_String_Base<ACE_CHAR_T>::ACE_String_Base(const ACE_CHAR_T *s, size_t len, bo
 template <class ACE_CHAR_T> void
 ACE_String_Base<ACE_CHAR_T>::set(const ACE_CHAR_T *s, size_t len, bool release)
 {
-    if (s != 0 && len != 0 && release && this->buf_len_ < len + 1)
+    // CHANGE: Tighten inequality check on 'buf_len_' to check for less than 1 (instead of len + 1).
+    // This inequality is less likely to be satisfied, since 'len' as a size_t type must be >= 0.
+    if (s != 0 && len != 0 && release && this->buf_len_ < 1)
     {
         // Assuming that the 'else if' clause below is executed (as CodeSonar believes),
         // this 'if' clause would have had to have been executed, causing the clause below
@@ -31,7 +38,7 @@ ACE_String_Base<ACE_CHAR_T>::set(const ACE_CHAR_T *s, size_t len, bool release)
     }
     else if (s != 0 && len != 0 && release)
     {
-        // CodeSonar FP: Null Pointer Dereference. The body of memcpy() dereferences 'rep_', but it is NULL.
+        // CodeSonar FP: none
         // scan-build FP: none
         // Cppcheck FP: none
         memcpy(this->rep_, s, len * sizeof(ACE_CHAR_T));
