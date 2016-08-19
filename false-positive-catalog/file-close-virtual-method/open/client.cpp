@@ -1,4 +1,5 @@
 // Juliet CWE675_Duplicate_Operations_on_Resource__open_81a.cpp
+// Structure: file-close-virtual-method
 
 #include "FileCloser.h"
 #include <fcntl.h>
@@ -9,17 +10,14 @@ namespace test {
  
 void createFile(void)
 {  
-    int data = open("GoodSource_open.txt", O_RDWR|O_CREAT, S_IREAD|S_IWRITE);
-    FileCloserBase * closeObj = new FileCloserSubclass();
+    int fildes = open("file.txt", O_RDWR|O_CREAT, S_IREAD|S_IWRITE);
+    FileCloserBase * fileCloser = new FileCloserSubclass();
  
-    closeObj->action(data);  
-    delete closeObj;  
+    fileCloser->action(fildes);  
+    delete fileCloser;  
 }
 
 }  
-
-
-//using namespace test;
 
 int main(void) {
     test::createFile();

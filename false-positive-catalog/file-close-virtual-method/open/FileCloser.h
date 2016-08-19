@@ -1,4 +1,5 @@
 // Juliet CWE675_Duplicate_Operations_on_Resource__open_81.h
+// Structure: file-close-virtual-method
 
 #include <unistd.h>  
 #include <stdio.h>
