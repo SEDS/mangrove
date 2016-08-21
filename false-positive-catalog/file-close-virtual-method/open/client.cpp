@@ -10,14 +10,16 @@ namespace test {
  
 void createFile(void)
 {  
+    // CodeSonar FP: Leak
     int fildes = open("file.txt", O_RDWR|O_CREAT, S_IREAD|S_IWRITE);
     FileCloserBase * fileCloser = new FileCloserSubclass();
  
     fileCloser->action(fildes);  
     delete fileCloser;  
 }
-
-}  
+// CodeSonar event: 'fildes' has gone out of scope and no longer
+// references the resource of interest.
+}
 
 int main(void) {
     test::createFile();
