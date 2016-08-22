@@ -6,9 +6,9 @@
  
 namespace test { 
 
-void FileCloserSubclass::action(int data)  
+void FileCloserSubclass::action(int fildes)  
 {  
-    close(data);  
+    close(fildes);  
 }
   
 }

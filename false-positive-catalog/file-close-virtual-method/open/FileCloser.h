@@ -9,13 +9,13 @@ namespace test {
 class FileCloserBase
 {  
 public:  
-    virtual void action(int data) {};  
+    virtual void action(int fildes) {};  
 };  
  
 class FileCloserSubclass : public FileCloserBase
 {  
 public:  
-    void action(int data);  
+    void action(int fildes);  
 };  
  
 } 
