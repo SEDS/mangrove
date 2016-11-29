@@ -3,8 +3,8 @@
 
 // ###################################################################
 // ## Variant: array-resize_02
-// ## CHANGE 1: Allocate and initialize array inside helper function
-// ## CHANGE 2: Initialize to string of maximum length
+// ## CHANGE A: Allocate and initialize array inside helper function
+// ## CHANGE B: Initialize to string of maximum length
 // ###################################################################
 
 #include <stdio.h>
@@ -15,10 +15,10 @@
 
 void helper() 
 {
-    // CHANGE 1: Allocate and initialize the array inside the helper function (instead of in main function).
+    // CHANGE A: Allocate and initialize the array inside the helper function (instead of in main function).
     char * data;
     data = (char *)malloc(SIZE*sizeof(char));
-    // CHANGE 2: Initialize to string of maximum length within the capacity.
+    // CHANGE B: Initialize to string of maximum length within the capacity.
     strcpy(data, "abcd");
 
     size_t dataLen = strlen(data);
