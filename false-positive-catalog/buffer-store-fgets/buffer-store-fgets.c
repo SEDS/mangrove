@@ -19,7 +19,7 @@ int main(void)
     {
         dataLen = strlen(data);
         // 'dataLen' is now at most SIZE-1. Thus, 'dataLen-1' is at most SIZE-2,
-        // which is in the bounds of the array (unless the index would be negative,
+        // which is within bounds of the array (unless the index would be negative,
         // but this conditional eliminates that case.)
         if (dataLen > 0 && data[dataLen-1] == '\n')
         {
