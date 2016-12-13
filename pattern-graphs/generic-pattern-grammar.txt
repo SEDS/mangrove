@@ -1,0 +1,51 @@
+<pattern> ::= <name> <body>
+<name> ::= <identifier>
+<identifier> ::= (A-Za-z0-9)+
+<integer-literal> ::= (0-9)+
+<storage-class-specifier> ::= static | typedef
+<type-qualifier> ::= const
+<type-specifier> ::= void | char | int | bool | size_t | <identifier>
+<comparison-operator> ::= '<' | '<=' | '>' | '>=' | '==' | '!='
+<character-sequence> ::= (A-Za-z0-9`!@#$%^&*\\\(\)+=\{\[\}\]\|:;\"\',\<.\>/?)*
+<inbuilt-function> ::= malloc | alloca | sizeof | printf | free | delete | fgets | strlen | strcpy | strncat | break | getenv | open | close
+<file-operation> ::= O_RDWR | O_CREAT | S_IREAD | S_IWRITE
+<assignment-rhs> ::= <integer-literal> | 'NULL' | <memory-allocation> | ['*']['&']<identifier>['\['<identifier>'\]'] | <character-sequence> | <member-operation> | [<identifier> '*'] <function-call>
+<access-specifier> ::= public | private
+<member-operation> ::= <identifier>'.'<identifier> | <identifier>'-\>'<identifier>
+<body> ::= (<declaration>)+
+
+<declaration> ::= <variable-declaration> | <function-definition> | <function-declaration> | <class-declaration> | <union-declaration>
+
+<variable-declaration> ::= [<storage-class-specifier>] [<type-qualifier>] <type-specifier> [('*')*] ['&']<identifier>['\['<identifier>'\]'] ['=' <assignment-rhs>] ';' | '#define' <identifier> [<integer-literal>][<character-sequence>]
+
+<function-definition> ::= ['namespace' <identifier> '{'] ['virtual'] [<storage-class-specifier>] [<type-specifier>] ['*'] <identifier>['\::']['~'][<identifier>] '\(' (<argument>)* '\)' '{' (<statement>)* (<construct>)* (<statement>)* [<return-statement>] '}'[';'] ['}']
+
+<function-declaration> ::= ['virtual'] [<storage-class-specifier>] [<type-specifier>] ['*'] ['~']<identifier> '(' (<argument>)* ');'
+
+<construct> ::= <if-construct> | <for-construct> | <while-construct>
+
+<if-construct> ::= 'if' '\('(<condition>)+'\)' ['{'] (<statement>)+ ['}'] ['else' ['{'] (<statement>)+ ['}']]
+
+<for-construct> ::= 'for' '\('(<assignment-statement>)*';' (<condition>)+';' (<update>)*'\)' ['{'] (<statement>)+ ['}']
+
+<while-construct> ::= 'while' '('(<condition>)+')' ['{'] (<statement>)+ ['}']
+
+<argument> ::= [''] | <type-specifier> | [['\(']<type-specifier>['\)']] ['*']['\(']['&']<identifier>['+'<identifier>]['-'<identifier>]['-'<integer-literal>]['\)'][','] | <integer-literal>[','] | <character-sequence>[','] ['*'] [<identifier>]['-\>'<identifier>]['\['<integer-literal>'\]'] | <identifier>'('<type-specifier>')' | 'stdin'[','] | <file-operation>['\|'<file-operation>][',']
+
+<statement> ::= <declaration>';' | <function-call>';' | <assignment-statement>';'
+
+<return-statement> ::= 'return' [<identifier>][<integer-literal>]';'
+
+<condition> ::= <integer-literal> | <integer-literal> <comparison-operator> <integer-literal> | <integer-literal> <comparison-operator> <identifier> | <identifier> <comparison-operator> <integer-literal> | <identifier>['\['<identifier>'\]']  <comparison-operator> ['('<type-specifier>')']<identifier> | <function-call> [<comparison-operator> 'NULL']| <identifier> [<comparison-operator> <function-call>][<comparison-operator> 'NULL'] | <identifier>'\['<identifier>'-'<integer-literal>'\]' <comparison=operator> <character-sequence> | <condition> '&&' <condition>
+
+<assignment-statement> ::= [<type-specifier>]['*'] <identifier>['\['<identifier>'\]']['\['<integer-literal>'\]']['\['<identifier>'-'<integer-literal>'\]'] '=' <assignment-rhs> | <identifier> '=' <assignment-rhs> | <identifier> '=' <assignment-rhs> | <member-operation> '=' <assignment-rhs> | <identifier> '=' <assignment-rhs> | <identifier> '=' <function-call>
+
+<memory-allocation> ::= '('<type-specifier>'*)' <inbuilt-function>'('[<integer-literal>][<identifier>]['*']<inbuilt-function>'('<type-specifier>'))' | 'new' <identifier> | 'new' <type-specifier>['\['<integer-literal'\]'] | '('<type-specifier>'*) new' <type-specifier>'\['<identifier>'\]' | 'new' <function-call> | <identifier> '*' <function-call>
+
+<update> ::= <identifier>'++' | <identifier>'--'
+
+<function-call> ::= [<identifier>]['\::']['-\>']<identifier>'('(<argument>)*')' | <inbuilt-function> ['\[\]'] ['('](<argument>)*[')']
+
+<class-declaration> ::= ['namespace' <identifier> '{'] 'class' <identifier> [':'<access-specifier> <identifier>]'{' ([<access-specifier>:] (<statement>)*)* '};' ['}']
+
+<union-declaration> ::= <storage-class-specifier> 'union {' (<statement>)* '}'<identifier>';'
