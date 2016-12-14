@@ -1,3 +1,4 @@
+// @flow
 // JavaScript version of conditional-uninit-var FP pattern
 
 var globalTrue = true;

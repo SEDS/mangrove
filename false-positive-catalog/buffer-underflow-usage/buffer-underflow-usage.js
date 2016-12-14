@@ -1,3 +1,4 @@
+// @flow
 // JavaScript version of buffer-underflow-usage FP pattern
 
 /* global require */

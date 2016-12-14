@@ -1,3 +1,4 @@
+// @flow
 // JavaScript version of alloc-using-global-var FP pattern
 
 /* global Buffer */

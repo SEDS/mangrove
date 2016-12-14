@@ -1,3 +1,4 @@
+// @flow
 // JavaScript version of list-overrun FP pattern
 
 function good(dataArray) {
