@@ -1,2 +1,2 @@
 #!/bin/bash
-../build/bin/initialization-in-condition condition-mem-leak.c --
+../build/bin/condition-mem-leak condition-mem-leak.c --
