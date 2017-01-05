@@ -1,0 +1,20 @@
+add_clang_executable(null-array-access
+  NullArrayAccess.cpp
+  )
+
+target_link_libraries(null-array-access
+  clangAnalysis
+  clangAST
+  clangBasic
+  clangDriver
+  clangEdit
+  clangFrontend
+  clangLex
+  clangParse
+  clangRewrite
+  clangRewriteFrontend
+  clangSema
+  clangSerialization
+  clangStaticAnalyzerFrontend
+  clangTooling
+  )
