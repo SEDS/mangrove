@@ -52,11 +52,11 @@ class PatternFinder : public MatchFinder::MatchCallback
     public :
         virtual void run(const MatchFinder::MatchResult &Result)
         {
-            if(const Stmt *latest_naa = Result.Nodes.getNodeAs<clang::Stmt>("bin_op"))
+            if(const Stmt *bin_op_node = Result.Nodes.getNodeAs<clang::Stmt>("bin_op"))
             {
-                if(Result.Context->getSourceManager().isWrittenInMainFile(latest_naa->getLocStart()))
+                if(Result.Context->getSourceManager().isWrittenInMainFile(bin_op_node->getLocStart()))
                 {
-                    FullSourceLoc FullLocation1 = Result.Context->getFullLoc(latest_naa->getLocStart());
+                    FullSourceLoc FullLocation1 = Result.Context->getFullLoc(bin_op_node->getLocStart());
                     binOp_start_line = FullLocation1.getSpellingLineNumber();
                     if(const NamedDecl *var_decl = Result.Nodes.getNodeAs<clang::NamedDecl>("var_decl"))
                     {
@@ -65,11 +65,11 @@ class PatternFinder : public MatchFinder::MatchCallback
                 }
             }
  
-            if(const Stmt *latest_forma = Result.Nodes.getNodeAs<clang::Stmt>("for_stmt"))
+            if(const Stmt *for_stmt_node = Result.Nodes.getNodeAs<clang::Stmt>("for_stmt"))
             {
-                if(Result.Context->getSourceManager().isWrittenInMainFile(latest_forma->getLocStart()))
+                if(Result.Context->getSourceManager().isWrittenInMainFile(for_stmt_node->getLocStart()))
                 {
-                    FullSourceLoc FullLocation1 = Result.Context->getFullLoc(latest_forma->getLocStart());
+                    FullSourceLoc FullLocation1 = Result.Context->getFullLoc(for_stmt_node->getLocStart());
                     for_start_line = FullLocation1.getSpellingLineNumber();
 
                     if(const NamedDecl *var_use = Result.Nodes.getNodeAs<clang::NamedDecl>("var_use"))
