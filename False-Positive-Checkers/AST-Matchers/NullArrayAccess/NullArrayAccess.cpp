@@ -94,16 +94,6 @@ class PatternFinder : public MatchFinder::MatchCallback
             return First && Second && First->getCanonicalDecl() == Second->getCanonicalDecl();
         }
 
-        static bool areSameExpr(ASTContext *Context, const Stmt *First, const Stmt *Second)
-        {
-            if (!First || !Second)
-            return false;
-            llvm::FoldingSetNodeID FirstID, SecondID;
-            First->Profile(FirstID, *Context, true);
-            Second->Profile(SecondID, *Context, true);
-            return FirstID == SecondID;
-        }
-
     private:
         ASTContext *Context;
 };
