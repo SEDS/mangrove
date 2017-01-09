@@ -122,12 +122,6 @@ class PatternFinder : public MatchFinder::MatchCallback
             }
         }
 
-        // Function to check if the two variable nodes are the same
-        static bool areSameVariable(const NamedDecl *First, const NamedDecl *Second)
-        {
-            return First && Second && First->getCanonicalDecl() == Second->getCanonicalDecl();
-        }
-
     private:
         ASTContext *Context;
 };
