@@ -1,0 +1,20 @@
+add_clang_executable(condition-uninit-var-external-var
+  ConditionUninitVarExternalVar.cpp
+  )
+
+target_link_libraries(condition-uninit-var-external-var
+  clangAnalysis
+  clangAST
+  clangBasic
+  clangDriver
+  clangEdit
+  clangFrontend
+  clangLex
+  clangParse
+  clangRewrite
+  clangRewriteFrontend
+  clangSema
+  clangSerialization
+  clangStaticAnalyzerFrontend
+  clangTooling
+  )
