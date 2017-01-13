@@ -38,5 +38,5 @@ svn co $llvm/compiler-rt/$version/ $projects/compiler-rt
 
 mkdir llvm/tools/clang/tools/ArrayResize
 mv setup/Makefile llvm/tools/clang/tools/ArrayResize
-mv setup/RefPtrRead.cpp llvm/tools/clang/tools/ArrayResize
+mv setup/ArrayResize.cpp llvm/tools/clang/tools/ArrayResize
 mv setup/CMakeLists.txt llvm/tools/clang/tools/ArrayResize
