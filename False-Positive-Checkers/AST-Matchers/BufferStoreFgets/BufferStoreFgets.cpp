@@ -16,11 +16,6 @@
 #include "clang/ASTMatchers/ASTMatchFinder.h"
 #include "llvm/Support/raw_ostream.h"
 #include "llvm/Support/CommandLine.h"
-#include "varDeclASTMatcher.h"
-#include "memAllocASTMatcher.h"
-#include "ifGlobAssignASTMatcher.h"
-#include "ifGlobConstASTMatcher.h"
-#include "useStmtASTMatcher.h"
 
 using namespace clang::ast_matchers;
 using namespace std;
@@ -48,24 +43,24 @@ const NamedDecl *index_var;
 static llvm::cl::OptionCategory MyToolCategory("my-tool options");
 
 // AST matcher to identify data[0] = '\0'
-StatementMatcher assignStmtMatcher1 = binaryOperator( hasLHS(arraySubscriptExpr( has(declRefExpr(to(varDecl().bind("char_lit_var")))),
+StatementMatcher assignStmtMatcher1 = binaryOperator( hasLHS(arraySubscriptExpr( hasDescendant(declRefExpr(to(varDecl().bind("char_lit_var")))),
                                                                                  has(integerLiteral(equals(0))) )),
                                                       hasRHS(implicitCastExpr(has(characterLiteral(equals(0))))) ).bind("assign_stmt1");
 
 // AST matcher to identify variable declaration statement with a function's return value as initializer
-StatementMatcher declStmtMatcher = stmt(has(varDecl(hasInitializer(callExpr( has(declRefExpr(to(functionDecl().bind("init_func")))),
-                                                                 hasAnyArgument(declRefExpr(to(varDecl().bind("parm_var")))) ))).bind("var_decl") )).bind("decl_stmt");
+StatementMatcher declStmtMatcher = stmt(has(varDecl(hasInitializer(callExpr( hasDescendant(declRefExpr(to(functionDecl().bind("init_func")))),
+                                                                 hasAnyArgument(implicitCastExpr(hasDescendant(declRefExpr(to(varDecl().bind("parm_var")))))) ))).bind("var_decl") )).bind("decl_stmt");
 
 
 // AST matcher to identify variable assignment statement with a function's return value as RHS value
 StatementMatcher assignStmtMatcher2 = binaryOperator( hasLHS(declRefExpr(to(varDecl().bind("var_lhs")))),
-                                        hasRHS(callExpr( has(declRefExpr(to(functionDecl().bind("assign_func")))),
-                                        hasAnyArgument(declRefExpr(to(varDecl().bind("parm_var_assign")))) )),
+                                        hasRHS(callExpr( hasDescendant(declRefExpr(to(functionDecl().bind("assign_func")))),
+                                        hasAnyArgument(implicitCastExpr(hasDescendant(declRefExpr(to(varDecl().bind("parm_var_assign")))))) )),
                                         hasAncestor(ifStmt()) ).bind("assign_stmt2");
 
 // AST matcher to identify data[dataLen-1] = '\0'
 StatementMatcher assignStmtMatcher3 = ifStmt(has(compoundStmt(hasDescendant(binaryOperator( hasOperatorName("="),
-                                                                                                 hasLHS(arraySubscriptExpr( has(declRefExpr(to(varDecl().bind("parm_array_var")))),
+                                                                                                 hasLHS(arraySubscriptExpr( hasDescendant(declRefExpr(to(varDecl().bind("parm_array_var")))),
                                                                                                                             has(binaryOperator( hasOperatorName("-"),
                                                                                                                                                 hasLHS(implicitCastExpr(has(declRefExpr(to(varDecl().bind("index_var")))))),
                                                                                                                                                 hasRHS(implicitCastExpr(has(integerLiteral(equals(1))))) )) )),
