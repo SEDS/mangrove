@@ -24,12 +24,12 @@ using namespace clang::tooling;
 using namespace llvm;
 using namespace clang;
 
+string File_Name;
 int enter_bit = 1;
 int if_end_line = 0;
 int call_start_line = 0;
 int if_flag = 0;
 int call_flag = 0;
-std::string File_Name;
 const NamedDecl *lhs_var;
 const NamedDecl *assign_lhs;
 const NamedDecl *use_var;

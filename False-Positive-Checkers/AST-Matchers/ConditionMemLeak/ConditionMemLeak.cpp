@@ -25,10 +25,10 @@ using namespace clang::tooling;
 using namespace llvm;
 using namespace clang;
 
+string fileName;
 const Stmt *IfS1;
 const Stmt *IfS2;
 int enter_bit = 1;
-std::string fileName;
 
 static llvm::cl::OptionCategory MyToolCategory("my-tool options");
 

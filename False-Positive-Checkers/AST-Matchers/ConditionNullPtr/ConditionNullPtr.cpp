@@ -24,7 +24,7 @@ using namespace clang::tooling;
 using namespace llvm;
 using namespace clang;
 
-std::string File_Name;
+string File_Name;
 int enter_bit = 1;
 int if_end_line1 = 0;
 int if_end_line2 = 0;

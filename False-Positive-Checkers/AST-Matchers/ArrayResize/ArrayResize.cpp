@@ -24,8 +24,8 @@ using namespace clang::tooling;
 using namespace llvm;
 using namespace clang;
 
+string File_Name;
 int enter_bit = 1;
-std::string File_Name;
 const NamedDecl *var_decl;
 const NamedDecl *init_func;
 const NamedDecl *parm_var;
