@@ -16,11 +16,6 @@
 #include "clang/ASTMatchers/ASTMatchFinder.h"
 #include "llvm/Support/raw_ostream.h"
 #include "llvm/Support/CommandLine.h"
-#include "varDeclASTMatcher.h"
-#include "memAllocASTMatcher.h"
-#include "ifGlobAssignASTMatcher.h"
-#include "ifGlobConstASTMatcher.h"
-#include "useStmtASTMatcher.h"
 
 using namespace clang::ast_matchers;
 using namespace std;
@@ -45,16 +40,16 @@ const NamedDecl *use_var;
 static llvm::cl::OptionCategory MyToolCategory("my-tool options");
 
 // AST matcher to identify 'if' statement that contains a memory allocation using 'malloc' and variable initialization
-StatementMatcher ifMatcher = ifStmt( hasCondition(callExpr(has(declRefExpr(to(functionDecl()))))),
-                               has(compoundStmt( hasDescendant(binaryOperator( hasOperatorName("="),
-                                                                               hasLHS(declRefExpr(to(varDecl().bind("lhs_var")))),
-                                                                               hasRHS(cStyleCastExpr(has(callExpr(has(declRefExpr(to(functionDecl(hasName("malloc"))))))))) )),
-                                                 hasDescendant(binaryOperator( hasOperatorName("="),
-                                                                               hasLHS(unaryOperator(hasOperatorName("*"), has(declRefExpr(to(varDecl().bind("assign_lhs")))))) )) )) ).bind("if_matcher");
+StatementMatcher ifMatcher = ifStmt( hasCondition(callExpr(hasDescendant(declRefExpr(to(functionDecl()))))),
+                                     has(compoundStmt( hasDescendant(binaryOperator( hasOperatorName("="),
+                                                                                     hasLHS(declRefExpr(to(varDecl().bind("lhs_var")))),
+                                                                                     hasRHS(cStyleCastExpr(has(callExpr(hasDescendant(declRefExpr(to(functionDecl(hasName("malloc"))))))))) )),
+                                                       hasDescendant(binaryOperator( hasOperatorName("="),
+                                                                                     hasLHS(unaryOperator(hasOperatorName("*"), hasDescendant(declRefExpr(to(varDecl().bind("assign_lhs")))))) )) )) ).bind("if_matcher");
 
 // AST matcher to identify function call using the previously initialized variable
-StatementMatcher funcCallMatcher = callExpr(hasAnyArgument(unaryOperator( hasOperatorName("*"),
-                                                                        has(declRefExpr(to(varDecl().bind("use_var")))) ))).bind("func_call_matcher");
+StatementMatcher funcCallMatcher = callExpr(hasAnyArgument(implicitCastExpr(has(unaryOperator( hasOperatorName("*"),
+                                                                                               hasDescendant(declRefExpr(to(varDecl().bind("use_var")))) ))))).bind("func_call_matcher");
 
 class PatternFinder : public MatchFinder::MatchCallback
 {
