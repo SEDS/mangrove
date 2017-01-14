@@ -16,11 +16,6 @@
 #include "clang/ASTMatchers/ASTMatchFinder.h"
 #include "llvm/Support/raw_ostream.h"
 #include "llvm/Support/CommandLine.h"
-#include "varDeclASTMatcher.h"
-#include "memAllocASTMatcher.h"
-#include "ifGlobAssignASTMatcher.h"
-#include "ifGlobConstASTMatcher.h"
-#include "useStmtASTMatcher.h"
 
 using namespace clang::ast_matchers;
 using namespace std;
@@ -74,10 +69,12 @@ class PatternFinder : public MatchFinder::MatchCallback
                     if_end_line1 = FullLocation1.getSpellingLineNumber();
                     if(const NamedDecl *var_assign_node = Result.Nodes.getNodeAs<clang::NamedDecl>("var_assign"))
                     {
-                        const NamedDecl *decl_name_node1 = Result.Nodes.getNodeAs<clang::NamedDecl>("decl_name1");
-                        decl_name1 = decl_name_node1;
-                        var_name1 = var_assign_node;
-                        ifMatcher1_flag = 1;
+                        if(const NamedDecl *decl_name_node1 = Result.Nodes.getNodeAs<clang::NamedDecl>("decl_name1"))
+                        {
+                            decl_name1 = decl_name_node1;
+                            var_name1 = var_assign_node;
+                            ifMatcher1_flag = 1;
+                        }
                     }
                 }
             }
@@ -89,10 +86,12 @@ class PatternFinder : public MatchFinder::MatchCallback
                     if_end_line2 = FullLocation1.getSpellingLineNumber();
                     if(const NamedDecl *var_init_node = Result.Nodes.getNodeAs<clang::NamedDecl>("var_init"))
                     {
-                        const NamedDecl *decl_name_node2 = Result.Nodes.getNodeAs<clang::NamedDecl>("decl_name2");
-                        decl_name2 = decl_name_node2;
-                        var_name2 = var_init_node;
-                        ifMatcher2_flag = 1;
+                        if(const NamedDecl *decl_name_node2 = Result.Nodes.getNodeAs<clang::NamedDecl>("decl_name2"))
+                        {
+                            decl_name2 = decl_name_node2;
+                            var_name2 = var_init_node;
+                            ifMatcher2_flag = 1;
+                        }
                     }
                 }
             }
@@ -104,10 +103,12 @@ class PatternFinder : public MatchFinder::MatchCallback
                     use_start_line1 = FullLocation1.getSpellingLineNumber();
                     if(const NamedDecl *var_use_node = Result.Nodes.getNodeAs<clang::NamedDecl>("var_use"))
                     {
-                        const NamedDecl *decl_name_node3 = Result.Nodes.getNodeAs<clang::NamedDecl>("decl_name3");
-                        decl_name3 = decl_name_node3;
-                        var_name3 = var_use_node;
-                        useMatcher1_flag = 1;
+                        if(const NamedDecl *decl_name_node3 = Result.Nodes.getNodeAs<clang::NamedDecl>("decl_name3"))
+                        {
+                            decl_name3 = decl_name_node3;
+                            var_name3 = var_use_node;
+                            useMatcher1_flag = 1;
+                        }
                     }
                 }
             }
