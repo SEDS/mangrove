@@ -16,11 +16,6 @@
 #include "clang/ASTMatchers/ASTMatchFinder.h"
 #include "llvm/Support/raw_ostream.h"
 #include "llvm/Support/CommandLine.h"
-#include "varDeclASTMatcher.h"
-#include "memAllocASTMatcher.h"
-#include "ifGlobAssignASTMatcher.h"
-#include "ifGlobConstASTMatcher.h"
-#include "useStmtASTMatcher.h"
 
 using namespace clang::ast_matchers;
 using namespace std;
@@ -29,6 +24,7 @@ using namespace clang::tooling;
 using namespace llvm;
 using namespace clang;
 
+string File_Name;
 int enter_bit = 1;
 int if_end_line1 = 0;
 int if_end_line2 = 0;
@@ -45,16 +41,15 @@ static llvm::cl::OptionCategory MyToolCategory("my-tool options");
 
 // AST matcher to find an 'if' statement with a memory allocation to a variable
 StatementMatcher ifMatcher1 = ifStmt( hasCondition(has(declRefExpr(to(varDecl(hasGlobalStorage(), hasType(isConstQualified())).bind("cond_var"))))),
-                                     hasDescendant(compoundStmt(hasDescendant(binaryOperator( hasLHS(declRefExpr(to(varDecl().bind("var_assign")))),
-                                                                                              hasRHS(cStyleCastExpr(has(callExpr(hasDescendant(declRefExpr(to(functionDecl(hasName("__builtin_alloca"))))))))) )))) ).bind("if_stmt1");
+                                      hasDescendant(compoundStmt(hasDescendant(binaryOperator( hasLHS(declRefExpr(to(varDecl().bind("var_assign")))),
+                                                                                               hasRHS(cStyleCastExpr(has(callExpr(hasDescendant(declRefExpr(to(functionDecl(hasName("__builtin_alloca"))))))))) )))) ).bind("if_stmt1");
 
 // AST matcher to find an 'if' statement with a variable initialization
 StatementMatcher ifMatcher2 = ifStmt(hasDescendant(compoundStmt(hasDescendant(binaryOperator( hasDescendant(declRefExpr(to(varDecl(hasInitializer(anything())).bind("var_init")))) ))))).bind("if_stmt2");
 
 // AST matcher to find a statement with a function call
-StatementMatcher useMatcher1 = callExpr(hasAnyArgument(declRefExpr(to(varDecl().bind("var_use")))), unless(hasAncestor(ifStmt()))).bind("use_stmt");
-
-std::string File_Name;
+StatementMatcher useMatcher1 = callExpr(hasAnyArgument(implicitCastExpr(has(declRefExpr(to(varDecl().bind("var_use")))))),
+                                        unless(hasAncestor(ifStmt()))).bind("use_stmt");
 
 
 class PatternFinder : public MatchFinder::MatchCallback
@@ -105,7 +100,7 @@ class PatternFinder : public MatchFinder::MatchCallback
                 }
             }
             // Checking if the function call is written after the 'if' statement, the enter_bit is set and the matchers have matched the expression
-            if(if_end_line1 < use_start_line1 && enter_bit == 1 && (ifMatcher1_flag == 1 || ifMatcher2_flag == 1) && useMatcher1_flag == 1)
+            if(if_end_line1 < use_start_line1 && enter_bit == 1 && ifMatcher1_flag == 1 && useMatcher1_flag == 1)
             {
                 errs() << "\n" << File_Name;
                 errs() << "\n" << "FP Located" << "\n";
@@ -113,7 +108,7 @@ class PatternFinder : public MatchFinder::MatchCallback
                 enter_bit = 0;
             }
             // Checking if the function call is written after the 'if' statement, the enter_bit is set and the matchers have matched the expression
-            else if(if_end_line2 < use_start_line1 && enter_bit == 1 && (ifMatcher1_flag == 1 || ifMatcher2_flag == 1) && useMatcher1_flag == 1)
+            else if(if_end_line2 < use_start_line1 && enter_bit == 1 && ifMatcher2_flag == 1 && useMatcher1_flag == 1)
             {
                 errs() << "\n" << File_Name;
                 errs() << "\n" << "FP Located" << "\n";
