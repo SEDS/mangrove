@@ -1,3 +1,4 @@
+// Condition-Mem-Leak pattern checker
 #include <string>
 #include "clang/AST/ASTConsumer.h"
 #include "clang/AST/RecursiveASTVisitor.h"
@@ -33,16 +34,10 @@ static llvm::cl::OptionCategory MyToolCategory("my-tool options");
 
 // AST Matcher expressions to match the FP pattern
 // Matches an 'if' statement which has a memory free in it's body
-StatementMatcher IfMatcher = ifStmt(hasDescendant(
-                                 compoundStmt(hasDescendant(
-                                 callExpr(has(declRefExpr(
-                                 to(functionDecl(hasName("free")))))))))).bind("ifStmt");
+StatementMatcher IfMatcher = ifStmt(hasDescendant(compoundStmt(hasDescendant(callExpr(hasDescendant(declRefExpr(to(functionDecl(hasName("free")))))))))).bind("ifStmt");
 
 // Matches an 'if' statement which has a constatn global variable as it's condition expression
-StatementMatcher if_global_const = ifStmt(hasCondition(
-                                       has(declRefExpr(
-                                       to(varDecl(
-                                       hasGlobalStorage(), hasType(isConstQualified()))))))).bind("if_glob_const");
+StatementMatcher if_global_const = ifStmt(hasCondition(implicitCastExpr(has(declRefExpr(to(varDecl(hasGlobalStorage(), hasType(isConstQualified())))))))).bind("if_glob_const");
 
 // Callback for the AST matchers
 class PatternFinder : public MatchFinder::MatchCallback {
