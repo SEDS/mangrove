@@ -16,11 +16,6 @@
 #include "clang/ASTMatchers/ASTMatchFinder.h"
 #include "llvm/Support/raw_ostream.h"
 #include "llvm/Support/CommandLine.h"
-#include "varDeclASTMatcher.h"
-#include "memAllocASTMatcher.h"
-#include "ifGlobAssignASTMatcher.h"
-#include "ifGlobConstASTMatcher.h"
-#include "useStmtASTMatcher.h"
 
 using namespace clang::ast_matchers;
 using namespace std;
@@ -44,14 +39,14 @@ static llvm::cl::OptionCategory MyToolCategory("my-tool options");
 
 
 // AST matcher to identify variable declaration statement with a function's return value as initializer
-StatementMatcher declStmtMatcher = stmt(has(varDecl(hasInitializer(callExpr( has(declRefExpr(to(functionDecl().bind("init_func")))),
-                                                                 hasAnyArgument(declRefExpr(to(parmVarDecl().bind("parm_var")))) ))).bind("var_decl") )).bind("decl_stmt");
+StatementMatcher declStmtMatcher = declStmt(has(varDecl(hasInitializer(callExpr( hasDescendant(declRefExpr(to(functionDecl().bind("init_func")))),
+                                                                                 hasAnyArgument(implicitCastExpr(hasDescendant(declRefExpr(to(parmVarDecl().bind("parm_var")))))) ))).bind("var_decl") )).bind("decl_stmt");
 
 // AST matcher to identify variable assignment statement with a function's return value as RHS value
 StatementMatcher assignStmtMatcher = binaryOperator( hasLHS(declRefExpr(to(varDecl().bind("var_lhs")))),
-                                        hasRHS(callExpr( has(declRefExpr(to(functionDecl().bind("assign_func")))),
-                                        hasAnyArgument(declRefExpr(to(parmVarDecl().bind("parm_var_assign")))) )),
-                                        hasAncestor(ifStmt()) ).bind("assign_stmt");
+                                                     hasRHS(callExpr( hasDescendant(declRefExpr(to(functionDecl().bind("assign_func")))),
+                                                                      hasAnyArgument(implicitCastExpr(hasDescendant(declRefExpr(to(parmVarDecl().bind("parm_var_assign")))))) )),
+                                                     hasAncestor(ifStmt()) ).bind("assign_stmt");
 
 
 class PatternFinder : public MatchFinder::MatchCallback
