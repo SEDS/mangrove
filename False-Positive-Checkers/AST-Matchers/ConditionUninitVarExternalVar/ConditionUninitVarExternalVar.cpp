@@ -16,11 +16,6 @@
 #include "clang/ASTMatchers/ASTMatchFinder.h"
 #include "llvm/Support/raw_ostream.h"
 #include "llvm/Support/CommandLine.h"
-#include "varDeclASTMatcher.h"
-#include "memAllocASTMatcher.h"
-#include "ifGlobAssignASTMatcher.h"
-#include "ifGlobConstASTMatcher.h"
-#include "useStmtASTMatcher.h"
 
 using namespace clang::ast_matchers;
 using namespace std;
@@ -29,17 +24,17 @@ using namespace clang::tooling;
 using namespace llvm;
 using namespace clang;
 
-std::string File_Name;
+string File_Name;
 int enter_bit = 1;
 
 static llvm::cl::OptionCategory MyToolCategory("my-tool options");
 
 // AST matcher to find a function declaration that contains a variable being initialized a reference in an 'if' body and used outside the 'if' body
-DeclarationMatcher functionMatcher = functionDecl( has(compoundStmt( hasDescendant(ifStmt( hasCondition(implicitCastExpr(has(declRefExpr(to(varDecl( hasGlobalStorage(), hasType(isConstQualified()) ).bind("cond_var")))))),                                          has(compoundStmt(hasDescendant(binaryOperator( hasOperatorName("="),
-                                                                                                           hasLHS(declRefExpr(to(varDecl().bind("lhs_var")))),
-                                                                                                           hasRHS(unaryOperator( hasOperatorName("&"),
-                                                                                                                                 has(declRefExpr(to(varDecl().bind("rhs_var")))) )) )))) )),                                              hasDescendant(callExpr( hasAnyArgument(unaryOperator( hasOperatorName("*"),
-                                                                                                     has(declRefExpr(to(varDecl(equalsBoundNode("lhs_var")).bind("var_use")))) )) )) )) ).bind("func_matcher");
+DeclarationMatcher functionMatcher = functionDecl( has(compoundStmt( hasDescendant(ifStmt( hasCondition(opaqueValueExpr(hasType(booleanType()))),                                                                                     has(compoundStmt(hasDescendant(binaryOperator( hasOperatorName("="),
+                                                                                                                                          hasLHS(declRefExpr(to(varDecl().bind("lhs_var")))),
+                                                                                                                                          hasRHS(unaryOperator( hasOperatorName("&"),
+                                                                                                                                                                has(declRefExpr(to(varDecl().bind("rhs_var")))) )) )))) )),                            hasDescendant(callExpr( hasAnyArgument(implicitCastExpr(has(unaryOperator( hasOperatorName("*"),
+                                                                                                                                                hasDescendant(declRefExpr(to(varDecl(equalsBoundNode("lhs_var")).bind("var_use")))) )))) )) )) ).bind("func_matcher");
 
 
 
