@@ -30,7 +30,8 @@ int enter_bit = 1;
 static llvm::cl::OptionCategory MyToolCategory("my-tool options");
 
 // AST matcher to find a function declaration that contains a variable being initialized a reference in an 'if' body and used outside the 'if' body
-DeclarationMatcher functionMatcher = functionDecl( has(compoundStmt( hasDescendant(ifStmt( hasCondition(opaqueValueExpr(hasType(booleanType()))),                                                                                     has(compoundStmt(hasDescendant(binaryOperator( hasOperatorName("="),
+DeclarationMatcher functionMatcher = functionDecl( has(compoundStmt( hasDescendant(ifStmt( hasCondition(opaqueValueExpr(hasType(booleanType()))),
+                                                                                           has(compoundStmt(hasDescendant(binaryOperator( hasOperatorName("="),
                                                                                                                                           hasLHS(declRefExpr(to(varDecl().bind("lhs_var")))),
                                                                                                                                           hasRHS(unaryOperator( hasOperatorName("&"),
                                                                                                                                                                 has(declRefExpr(to(varDecl().bind("rhs_var")))) )) )))) )),                            hasDescendant(callExpr( hasAnyArgument(implicitCastExpr(has(unaryOperator( hasOperatorName("*"),
