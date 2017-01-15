@@ -1,3 +1,4 @@
+// Null-Array-Access pattern checker
 #include <string>
 #include "clang/AST/ASTConsumer.h"
 #include "clang/AST/RecursiveASTVisitor.h"
@@ -15,11 +16,6 @@
 #include "clang/ASTMatchers/ASTMatchFinder.h"
 #include "llvm/Support/raw_ostream.h"
 #include "llvm/Support/CommandLine.h"
-#include "varDeclASTMatcher.h"
-#include "memAllocASTMatcher.h"
-#include "ifGlobAssignASTMatcher.h"
-#include "ifGlobConstASTMatcher.h"
-#include "useStmtASTMatcher.h"
 
 using namespace clang::ast_matchers;
 using namespace std;
@@ -28,7 +24,7 @@ using namespace clang::tooling;
 using namespace llvm;
 using namespace clang;
 
-std::string File_Name;
+string File_Name;
 int for_start_line;
 int binOp_start_line;
 int enter_bit = 1;
@@ -39,12 +35,12 @@ const NamedDecl *var_name2;
 static llvm::cl::OptionCategory MyToolCategory("my-tool options");
 
 // Statement matcher to match the statement data[0] = '\0'
-StatementMatcher nullArrayAccess = binaryOperator( hasLHS(arraySubscriptExpr(has(declRefExpr(to(varDecl().bind("var_decl")))),
-                                                                              has(integerLiteral(equals(0))) )),
+StatementMatcher nullArrayAccess = binaryOperator( hasLHS(arraySubscriptExpr(hasDescendant(declRefExpr(to(varDecl().bind("var_decl")))),
+                                                                             has(integerLiteral(equals(0))) )),
                                                    hasRHS(implicitCastExpr(has(characterLiteral(equals(0))))) ).bind("bin_op");
 // Statement matcher to match a 'for' statement with data[i] being used in the body
-StatementMatcher forMatcher = forStmt( hasDescendant(compoundStmt(hasDescendant(arraySubscriptExpr( hasDescendant(implicitCastExpr(has(declRefExpr(to(varDecl().bind("var_use"))))))
-                                                                                                     )))) ).bind("for_stmt");
+StatementMatcher forMatcher = forStmt( hasDescendant(compoundStmt(hasDescendant(arraySubscriptExpr( has(implicitCastExpr(has(declRefExpr(to(varDecl().bind("var_use")))))) )))) ).bind("for_stmt");
+
 
 // Callback for the AST matchers
 class PatternFinder : public MatchFinder::MatchCallback
