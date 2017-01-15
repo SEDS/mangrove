@@ -16,11 +16,6 @@
 #include "clang/ASTMatchers/ASTMatchFinder.h"
 #include "llvm/Support/raw_ostream.h"
 #include "llvm/Support/CommandLine.h"
-#include "varDeclASTMatcher.h"
-#include "memAllocASTMatcher.h"
-#include "ifGlobAssignASTMatcher.h"
-#include "ifGlobConstASTMatcher.h"
-#include "useStmtASTMatcher.h"
 
 using namespace clang::ast_matchers;
 using namespace std;
@@ -30,28 +25,69 @@ using namespace llvm;
 using namespace clang;
 
 
-
+string File_Name;
+int enter_bit = 1;
+int decl_start_line = 0;
+int use_start_line = 0;
+int decl_flag = 0;
+int use_flag = 0;
+const NamedDecl *var_decl;
+const NamedDecl *var_use;
 
 static llvm::cl::OptionCategory MyToolCategory("my-tool options");
 
-// AST matcher to find a function declaration that contains a pointer reference but no dereference
-DeclarationMatcher refPtrMatcher = functionDecl( hasDescendant(varDecl(hasType(asString("char *&"))).bind("var_decl")), hasDescendant(declRefExpr( to(varDecl(equalsBoundNode("var_decl")).bind("var_use")), unless(hasParent(implicitCastExpr(hasParent(unaryOperator(hasOperatorName("*")))))) )) ).bind("ref_ptr");
+// AST matcher to find a variable declaration that has the type char *&
+StatementMatcher refDeclMatcher = declStmt(has(varDecl(hasType(asString("char *&"))).bind("var_decl"))).bind("ref_decl");
 
-std::string File_Name;
+// AST matcher to find a function call that has the previously declared variable as an argument with an array subscriptor
+StatementMatcher refUseMatcher = callExpr(hasAnyArgument(implicitCastExpr(hasDescendant(arraySubscriptExpr(hasDescendant(declRefExpr(to(varDecl().bind("var_use"))))))))).bind("ref_use");
 
 class PatternFinder : public MatchFinder::MatchCallback
 {
     public :
         virtual void run(const MatchFinder::MatchResult &Result)
         {
-            if(const Decl *ref_ptr_node = Result.Nodes.getNodeAs<clang::Decl>("ref_ptr"))
+            // Isolating the declaration statement
+            if(const Stmt *ref_decl_node = Result.Nodes.getNodeAs<clang::Stmt>("ref_decl"))
             {
-                if(Result.Context->getSourceManager().isWrittenInMainFile(ref_ptr_node->getLocStart()))
+                if(Result.Context->getSourceManager().isWrittenInMainFile(ref_decl_node->getLocStart()))
                 {
-                    errs() << File_Name;
-                    errs() << "\n" << "FP Located" << "\n";
+                    if(const NamedDecl *var_decl_node = Result.Nodes.getNodeAs<clang::NamedDecl>("var_decl"))
+                    {
+                        var_decl = var_decl_node;
+                        FullSourceLoc FullLocation1 = Result.Context->getFullLoc(ref_decl_node->getLocEnd());
+                        decl_start_line = FullLocation1.getSpellingLineNumber();
+                        decl_flag = 1;
+                    }
                 }
             }
+
+            // Isolating the use statement
+            if(const Stmt *ref_use_node = Result.Nodes.getNodeAs<clang::Stmt>("ref_use"))
+            {
+                if(Result.Context->getSourceManager().isWrittenInMainFile(ref_use_node->getLocStart()))
+                {
+                    if(const NamedDecl *var_use_node = Result.Nodes.getNodeAs<clang::NamedDecl>("var_use"))
+                    {
+                        var_use = var_use_node;
+                        FullSourceLoc FullLocation1 = Result.Context->getFullLoc(ref_use_node->getLocEnd());
+                        use_start_line = FullLocation1.getSpellingLineNumber();
+                        use_flag = 1;
+                    }
+                }
+            }
+            if(enter_bit == 1 && decl_flag == 1 && use_flag == 1 && decl_start_line < use_start_line && areSameVariable(var_decl, var_use))
+            {
+                errs() << File_Name;
+                errs() << "\n" << "FP Located" << "\n";
+                enter_bit = 0;
+            }
+        }
+
+        // Function to check if the two variable nodes are the same
+        static bool areSameVariable(const NamedDecl *First, const NamedDecl *Second)
+        {
+            return First && Second && First->getCanonicalDecl() == Second->getCanonicalDecl();
         }
 
     private:
@@ -65,7 +101,7 @@ int main(int argc, const char **argv)
     File_Name = argv[1];
     PatternFinder Printer;
     MatchFinder Finder;
-    Finder.addMatcher(refPtrMatcher, &Printer);
-
+    Finder.addMatcher(refDeclMatcher, &Printer);
+    Finder.addMatcher(refUseMatcher, &Printer);
     return Tool.run(newFrontendActionFactory(&Finder).get());
 }
