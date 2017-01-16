@@ -37,6 +37,12 @@ Build llvm using cmake to generate files
 	$ cmake -DCMAKE_BUILD_TYPE=RELEASE ../llvm/
 	$ make -j4
 
+If running against Juliet Test Suite, add the path to the Juliet testcasesupport folder in the run_clang-tool.sh file
+
+	$ cd static_analysis/setup
+
+	add -I /path/to/Juliet/testcasesupport in the file run_clang-tool.sh file
+
 Run the script run_clang-reduce.sh to use our new tool on some sample c source code:
 
 	$ cd static_analysis/setup
