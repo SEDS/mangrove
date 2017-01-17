@@ -1,0 +1,20 @@
+add_clang_executable(return-local-param
+  ReturnLocalParam.cpp
+  )
+
+target_link_libraries(return-local-param
+  clangAnalysis
+  clangAST
+  clangBasic
+  clangDriver
+  clangEdit
+  clangFrontend
+  clangLex
+  clangParse
+  clangRewrite
+  clangRewriteFrontend
+  clangSema
+  clangSerialization
+  clangStaticAnalyzerFrontend
+  clangTooling
+  )
