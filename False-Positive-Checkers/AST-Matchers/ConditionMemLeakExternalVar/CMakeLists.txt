@@ -1,0 +1,20 @@
+add_clang_executable(condition-mem-leak-external-var
+  ConditionMemLeakExternalVar.cpp
+  )
+
+target_link_libraries(condition-mem-leak-external-var
+  clangAnalysis
+  clangAST
+  clangBasic
+  clangDriver
+  clangEdit
+  clangFrontend
+  clangLex
+  clangParse
+  clangRewrite
+  clangRewriteFrontend
+  clangSema
+  clangSerialization
+  clangStaticAnalyzerFrontend
+  clangTooling
+  )

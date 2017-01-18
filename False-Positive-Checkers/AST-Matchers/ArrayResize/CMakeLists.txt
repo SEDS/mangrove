@@ -1,0 +1,20 @@
+add_clang_executable(array-resize
+  ArrayResize.cpp
+  )
+
+target_link_libraries(array-resize
+  clangAnalysis
+  clangAST
+  clangBasic
+  clangDriver
+  clangEdit
+  clangFrontend
+  clangLex
+  clangParse
+  clangRewrite
+  clangRewriteFrontend
+  clangSema
+  clangSerialization
+  clangStaticAnalyzerFrontend
+  clangTooling
+  )

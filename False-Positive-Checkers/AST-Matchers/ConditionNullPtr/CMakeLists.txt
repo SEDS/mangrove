@@ -1,0 +1,20 @@
+add_clang_executable(condition-null-ptr
+  ConditionNullPtr.cpp
+  )
+
+target_link_libraries(condition-null-ptr
+  clangAnalysis
+  clangAST
+  clangBasic
+  clangDriver
+  clangEdit
+  clangFrontend
+  clangLex
+  clangParse
+  clangRewrite
+  clangRewriteFrontend
+  clangSema
+  clangSerialization
+  clangStaticAnalyzerFrontend
+  clangTooling
+  )

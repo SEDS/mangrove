@@ -1,0 +1,20 @@
+add_clang_executable(buffer-underflow-usage
+  BufferUnderflowUsage.cpp
+  )
+
+target_link_libraries(buffer-underflow-usage
+  clangAnalysis
+  clangAST
+  clangBasic
+  clangDriver
+  clangEdit
+  clangFrontend
+  clangLex
+  clangParse
+  clangRewrite
+  clangRewriteFrontend
+  clangSema
+  clangSerialization
+  clangStaticAnalyzerFrontend
+  clangTooling
+  )

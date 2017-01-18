@@ -1,4 +1,4 @@
-// Condition-Mem-Leak pattern checker
+// Condition-Mem-Leak-External-Var pattern checker
 #include <string>
 #include "clang/AST/ASTConsumer.h"
 #include "clang/AST/RecursiveASTVisitor.h"
@@ -37,7 +37,7 @@ static llvm::cl::OptionCategory MyToolCategory("my-tool options");
 StatementMatcher IfMatcher = ifStmt(hasDescendant(compoundStmt(hasDescendant(callExpr(hasDescendant(declRefExpr(to(functionDecl(hasName("free")))))))))).bind("ifStmt");
 
 // Matches an 'if' statement which has a constatn global variable as it's condition expression
-StatementMatcher if_global_const = ifStmt(hasCondition(implicitCastExpr(has(declRefExpr(to(varDecl(hasGlobalStorage(), hasType(isConstQualified())))))))).bind("if_glob_const");
+StatementMatcher if_global_const = ifStmt(hasCondition(opaqueValueExpr(hasType(booleanType())))).bind("if_glob_const");
 
 // Callback for the AST matchers
 class PatternFinder : public MatchFinder::MatchCallback {
@@ -58,7 +58,10 @@ class PatternFinder : public MatchFinder::MatchCallback {
         // Isolate the node identified by the AST matcher named 'if_global_const'
         if(const Stmt *var2 = Result.Nodes.getNodeAs<clang::Stmt>("ifStmt"))
         {
-            IfS2 = var2;
+            if(Result.Context->getSourceManager().isWrittenInMainFile(var2->getLocStart()))
+            {
+                IfS2 = var2;
+            }
         }
         // If both the statement matchers match the same statement we conclude that the FP pattern has been found
         if(areSameExpr(Context,IfS1,IfS2) && enter_bit == 1)
@@ -74,7 +77,8 @@ class PatternFinder : public MatchFinder::MatchCallback {
     }
 
     // Function to check if the expressions are the same
-    static bool areSameExpr(ASTContext *Context, const Stmt *First, const Stmt *Second) {
+    static bool areSameExpr(ASTContext *Context, const Stmt *First, const Stmt *Second)
+    {
         if (!First || !Second)
             return false;
         llvm::FoldingSetNodeID FirstID, SecondID;
