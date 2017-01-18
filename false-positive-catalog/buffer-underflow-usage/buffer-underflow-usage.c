@@ -7,7 +7,7 @@
 
 int main(void)
 {
-    char inputBuffer[BUFFER_SIZE] = "asdfasdfs";
+    char inputBuffer[BUFFER_SIZE] = "";
 
     // CodeSonar FP: none
     // scan-build FP: none
