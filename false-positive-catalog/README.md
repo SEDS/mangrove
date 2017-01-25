@@ -28,10 +28,10 @@ Some directories have more than one code sample. In this case, the additional
 code samples are called *changes*. These changes are numbered arbitrarily, and 
 the number is given in the code sample's filename.
 
-For example, the 
+For example, here are two of the files in the "list-overrun" directory:
 
 * `list-overrun.cpp` - reduced code containing the false positive
-* `list-overrun_01.cpp` - modified version that no longer contains the false positive
+* `list-overrun_01.cpp` - modified version that introduces a change that causes the false positive to go away
 
 Changes are small edits to the original false positive pattern in an effort to 
 identify what is causing the false positive. (A typical change ends up simplifying 
@@ -57,3 +57,11 @@ all style checks:
 This is importance because enabling these lower-severity messages in Cppcheck may 
 be needed to produce warnings of the same severity that other tools report by 
 default.
+
+## False Positive Hierarchy Graph
+
+Here is a visualization of the hierarchical nature of the catalog. Some patterns 
+are variations of one another, causing them to be leaves of the same "parent" 
+false positive pattern.
+
+![FP Hierarchy Graph](./fp-graph.png)
