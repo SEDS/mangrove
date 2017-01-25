@@ -62,6 +62,7 @@ default.
 
 Here is a visualization of the hierarchical nature of the catalog. Some patterns 
 are variations of one another, causing them to be leaves of the same "parent" 
-false positive pattern.
+false positive pattern. Asterisks denote false positive patterns that we found 
+in code other than the Juliet test suite (see wiki page for details).
 
 ![FP Hierarchy Graph](./fp-graph.png)
