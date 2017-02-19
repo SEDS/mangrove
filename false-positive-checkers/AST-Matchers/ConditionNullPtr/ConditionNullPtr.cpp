@@ -17,6 +17,9 @@
 #include "llvm/Support/raw_ostream.h"
 #include "llvm/Support/CommandLine.h"
 
+// Name of this false positive checker.
+#define CHECKER_NAME "ConditionNullPtr"
+
 using namespace clang::ast_matchers;
 using namespace std;
 using namespace clang::driver;
@@ -25,7 +28,6 @@ using namespace llvm;
 using namespace clang;
 
 string File_Name;
-int enter_bit = 1;
 int if_end_line1 = 0;
 int if_end_line2 = 0;
 int use_start_line1 = 0;
@@ -112,22 +114,22 @@ class PatternFinder : public MatchFinder::MatchCallback
                     }
                 }
             }
-            // Checking if the use statement is written after the 'if' statement, the enter_bit is set and the matchers have matched the expression
-            if(if_end_line1 < use_start_line1 && enter_bit == 1 && ifMatcher1_flag == 1 && useMatcher1_flag == 1 && areSameVariable(decl_name1, decl_name3))
+            // Checking if the use statement is written after the 'if' statement and the matchers have matched the expression
+            if(if_end_line1 < use_start_line1 && ifMatcher1_flag == 1 && useMatcher1_flag == 1 && areSameVariable(decl_name1, decl_name3))
             {
-                errs() << "\n" << File_Name;
-                errs() << "\n" << "FP Located" << "\n";
-                // Resetting the enter_bit in order to exit the program after the first instance of the pattern has been identified
-                enter_bit = 0;
+                flagPattern(use_start_line1);
             }
-            // Checking if the use statement is written after the 'if' statement, the enter_bit is set and the matchers have matched the expression
-            else if(if_end_line2 < use_start_line1 && enter_bit == 1 && ifMatcher2_flag == 1 && useMatcher1_flag == 1 && areSameVariable(decl_name2, decl_name3))
+            // Checking if the use statement is written after the 'if' statement and the matchers have matched the expression
+            else if(if_end_line2 < use_start_line1 && ifMatcher2_flag == 1 && useMatcher1_flag == 1 && areSameVariable(decl_name2, decl_name3))
             {
-                errs() << "\n" << File_Name;
-                errs() << "\n" << "FP Located" << "\n";
-                // Resetting the enter_bit in order to exit the program after the first instance of the pattern has been identified
-                enter_bit = 0;
+                flagPattern(use_start_line1);
             }
+        }
+
+        // Print out the location where this false positive pattern is flagged.
+        // Include checker name, filename, and line number.
+        void flagPattern(unsigned int lineNum) {
+            errs() << "False positive detected:" << CHECKER_NAME << ":" << File_Name << ":" << lineNum << "\n";
         }
 
         // Function to check if the two variable nodes are the same
