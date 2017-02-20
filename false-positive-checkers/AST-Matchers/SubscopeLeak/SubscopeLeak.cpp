@@ -24,9 +24,9 @@ using namespace clang::tooling;
 using namespace llvm;
 using namespace clang;
 
+#define CHECKER_NAME "SubscopeLeak"
 
 string File_Name;
-int enter_bit = 1;
 
 static llvm::cl::OptionCategory MyToolCategory("my-tool options");
 
@@ -43,12 +43,9 @@ class PatternFinder : public MatchFinder::MatchCallback
             {
                 if(Result.Context->getSourceManager().isWrittenInMainFile(scope_stmt_node->getLocStart()))
                 {
-                    if(enter_bit == 1)
-                    {
-                        errs() << "\n" << File_Name;
-                        errs() << "\n" << "FP Located" << "\n";
-                        enter_bit = 0;
-                    }
+                    // Get line number of flagged pattern.
+		            unsigned int lineNum = Result.Context->getSourceManager().getPresumedLineNumber(scope_stmt_node->getLocStart());
+        		    errs() << "False positive detected:" << CHECKER_NAME << ":" << File_Name << ":" << lineNum << "\n";
                 }
             }
         }

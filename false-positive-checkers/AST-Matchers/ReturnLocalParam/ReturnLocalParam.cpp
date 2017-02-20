@@ -17,6 +17,10 @@
 #include "llvm/Support/raw_ostream.h"
 #include "llvm/Support/CommandLine.h"
 
+
+// Name of this false positive checker.
+#define CHECKER_NAME "ReturnLocalParam"
+
 using namespace clang::ast_matchers;
 using namespace std;
 using namespace clang::driver;
@@ -25,7 +29,6 @@ using namespace llvm;
 using namespace clang;
 
 string File_Name;
-int enter_bit = 1;
 
 static llvm::cl::OptionCategory MyToolCategory("my-tool options");
 
@@ -42,12 +45,8 @@ class PatternFinder : public MatchFinder::MatchCallback
             {
                 if(Result.Context->getSourceManager().isWrittenInMainFile(return_stmt_node->getLocStart()))
                 {
-                    if(enter_bit == 1)
-                    {
-                        errs() << "\n" << File_Name;
-                        errs() << "\n" << "FP Located" << "\n";
-                        enter_bit = 0;
-                    }
+                    unsigned int lineNum = Result.Context->getSourceManager().getPresumedLineNumber(return_stmt_node->getLocStart());
+                    errs() << "False positive detected:" << CHECKER_NAME << ":" << File_Name << ":" << lineNum << "\n";
                 }
             }
         }
