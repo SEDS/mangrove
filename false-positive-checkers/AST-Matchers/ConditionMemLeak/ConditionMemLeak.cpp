@@ -17,6 +17,9 @@
 #include "llvm/Support/raw_ostream.h"
 #include "llvm/Support/CommandLine.h"
 
+// Name of this false positive checker.
+#define CHECKER_NAME "ConditionMemLeak"
+
 using namespace clang::ast_matchers;
 using namespace std;
 using namespace clang::driver;
@@ -24,20 +27,19 @@ using namespace clang::tooling;
 using namespace llvm;
 using namespace clang;
 
-string fileName;
+string File_Name;
 const Stmt *IfS1;
 const Stmt *IfS2;
-int enter_bit = 1;
 const NamedDecl *var_free;
 
 static llvm::cl::OptionCategory MyToolCategory("my-tool options");
 
 // AST Matcher expressions to match the FP pattern
-// Matches an 'if' statement which has a memory free or delete in it's body
+// Matches an 'if' statement which has a memory free or delete in its body
 StatementMatcher IfMatcher = ifStmt(hasDescendant(compoundStmt( anyOf(hasDescendant(callExpr(hasAnyArgument(ignoringParenImpCasts(declRefExpr(to(varDecl().bind("var_free"))))), hasDescendant(declRefExpr(to(functionDecl(hasName("free")))))) ), hasDescendant(cxxDeleteExpr()) )))).bind("ifStmt");
 
 
-// Matches an 'if' statement which has a global variable as it's condition expression
+// Matches an 'if' statement which has a global variable as its condition expression
 StatementMatcher if_global_const = ifStmt(anyOf(hasCondition(ignoringParenImpCasts(declRefExpr(to(varDecl( anyOf((hasGlobalStorage(), hasInitializer(integerLiteral(unless(equals(0))))), (hasGlobalStorage(), hasExternalFormalLinkage())) ))))), hasCondition(binaryOperator(has(ignoringParenImpCasts(declRefExpr(to(varDecl( anyOf((hasGlobalStorage(), hasInitializer(integerLiteral(unless(equals(0))))), (hasGlobalStorage(), hasExternalFormalLinkage())) ))))))))).bind("if_glob_const");
 
 // Callback for the AST matchers
@@ -65,13 +67,13 @@ class PatternFinder : public MatchFinder::MatchCallback
                 }
             }
             // If both the statement matchers match the same statement we conclude that the FP pattern has been found
-            if(areSameExpr(Context,IfS1,IfS2) && enter_bit == 1)
+            if(areSameExpr(Context,IfS1,IfS2))
             {
-                errs() << "\n\n" << fileName << "\n";
-                errs() << "FP Located" << "\n";
+                unsigned int lineNum = Result.Context->getSourceManager().getPresumedLineNumber(IfS1->getLocStart());
+                errs() << "False positive detected:" << CHECKER_NAME << ":" << File_Name << ":" << lineNum << " (IF statement located)\n";
+
                 IfS1 = 0;
                 IfS2 = 0;
-                enter_bit = 0;
                 return;
             }
         }
@@ -95,7 +97,7 @@ int main(int argc, const char **argv)
 {
     CommonOptionsParser OptionsParser(argc, argv, MyToolCategory);
     ClangTool Tool(OptionsParser.getCompilations(), OptionsParser.getSourcePathList());
-    fileName = argv[1];
+    File_Name = argv[1];
     PatternFinder PatFinder;
     MatchFinder Finder;
 

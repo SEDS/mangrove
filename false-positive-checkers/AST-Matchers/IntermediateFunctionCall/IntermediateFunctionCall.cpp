@@ -17,6 +17,9 @@
 #include "llvm/Support/raw_ostream.h"
 #include "llvm/Support/CommandLine.h"
 
+// Name of this false positive checker.
+#define CHECKER_NAME "IntermediateFunctionCall"
+
 using namespace clang::ast_matchers;
 using namespace std;
 using namespace clang::driver;
@@ -26,7 +29,6 @@ using namespace clang;
 
 
 string File_Name;
-int enter_bit = 1;
 int if_end_line = 0;
 int call_start_line = 0;
 int if_flag = 0;
@@ -76,11 +78,9 @@ class PatternFinder : public MatchFinder::MatchCallback
                     }
                 }
             }
-            if(enter_bit == 1 && if_flag == 1 && call_flag == 1 && if_end_line < call_start_line && areSameVariable(var_assign, var_use))
+            if(if_flag == 1 && call_flag == 1 && if_end_line < call_start_line && areSameVariable(var_assign, var_use))
             {
-                errs() << "\n" << File_Name;
-                errs() << "\n" << "FP Located" << "\n";
-                enter_bit = 0;
+                errs() << "False positive detected:" << CHECKER_NAME << ":" << File_Name << ":" << if_end_line << "," << call_start_line << "(end of 'if/else' block, use statement)\n";
             }
 
         }
