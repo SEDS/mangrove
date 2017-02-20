@@ -1,8 +1,8 @@
-add_clang_executable(intermediate-function-call
+add_clang_executable(cker-intermediate-function-call
   IntermediateFunctionCall.cpp
   )
 
-target_link_libraries(intermediate-function-call
+target_link_libraries(cker-intermediate-function-call
   clangAnalysis
   clangAST
   clangBasic

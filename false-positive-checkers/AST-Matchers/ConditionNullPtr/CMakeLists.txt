@@ -1,8 +1,8 @@
-add_clang_executable(condition-null-ptr
+add_clang_executable(cker-condition-null-ptr
   ConditionNullPtr.cpp
   )
 
-target_link_libraries(condition-null-ptr
+target_link_libraries(cker-condition-null-ptr
   clangAnalysis
   clangAST
   clangBasic

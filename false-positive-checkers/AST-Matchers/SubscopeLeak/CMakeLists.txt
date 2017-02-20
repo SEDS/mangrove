@@ -1,8 +1,8 @@
-add_clang_executable(subscope-leak
+add_clang_executable(cker-subscope-leak
   SubscopeLeak.cpp
   )
 
-target_link_libraries(subscope-leak
+target_link_libraries(cker-subscope-leak
   clangAnalysis
   clangAST
   clangBasic

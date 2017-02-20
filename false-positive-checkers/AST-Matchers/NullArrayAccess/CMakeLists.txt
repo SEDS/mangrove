@@ -1,8 +1,8 @@
-add_clang_executable(null-array-access
+add_clang_executable(cker-null-array-access
   NullArrayAccess.cpp
   )
 
-target_link_libraries(null-array-access
+target_link_libraries(cker-null-array-access
   clangAnalysis
   clangAST
   clangBasic

@@ -1,6 +1,6 @@
 CLANG_LEVEL := ../..
 
-TOOLNAME = condition-null-ptr
+TOOLNAME = cker-condition-null-ptr
 
 SOURCES := ConditionNullPtr.cpp  
 

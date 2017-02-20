@@ -1,6 +1,6 @@
 CLANG_LEVEL := ../..
 
-TOOLNAME = condition-uninit-var
+TOOLNAME = cker-condition-uninit-var
 
 SOURCES := ConditionUninitVar.cpp  
 

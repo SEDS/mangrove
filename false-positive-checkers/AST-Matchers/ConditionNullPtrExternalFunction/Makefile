@@ -1,6 +1,6 @@
 CLANG_LEVEL := ../..
 
-TOOLNAME = condition-null-ptr-external-function
+TOOLNAME = cker-condition-null-ptr-external-function
 
 SOURCES := ConditionNullPtrExternalFunction.cpp  
 

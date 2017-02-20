@@ -1,6 +1,6 @@
 CLANG_LEVEL := ../..
 
-TOOLNAME = condition-mem-leak
+TOOLNAME = cker-condition-mem-leak
 
 SOURCES := ConditionMemLeak.cpp  
 

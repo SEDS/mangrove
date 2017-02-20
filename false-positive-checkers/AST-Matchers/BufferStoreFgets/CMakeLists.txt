@@ -1,8 +1,8 @@
-add_clang_executable(buffer-store-fgets
+add_clang_executable(cker-buffer-store-fgets
   BufferStoreFgets.cpp
   )
 
-target_link_libraries(buffer-store-fgets
+target_link_libraries(cker-buffer-store-fgets
   clangAnalysis
   clangAST
   clangBasic

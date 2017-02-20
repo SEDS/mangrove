@@ -1,6 +1,6 @@
 CLANG_LEVEL := ../..
 
-TOOLNAME = intermediate-function-call
+TOOLNAME = cker-intermediate-function-call
 
 SOURCES := IntermediateFunctionCall.cpp  
 

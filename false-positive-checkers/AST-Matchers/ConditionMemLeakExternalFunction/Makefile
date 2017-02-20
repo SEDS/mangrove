@@ -1,6 +1,6 @@
 CLANG_LEVEL := ../..
 
-TOOLNAME = condition-mem-leak-external-function
+TOOLNAME = cker-condition-mem-leak-external-function
 
 SOURCES := ConditionMemLeakExternalFunction.cpp  
 

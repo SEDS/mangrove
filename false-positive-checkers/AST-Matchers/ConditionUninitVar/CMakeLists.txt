@@ -1,8 +1,8 @@
-add_clang_executable(condition-uninit-var
+add_clang_executable(cker-condition-uninit-var
   ConditionUninitVar.cpp
   )
 
-target_link_libraries(condition-uninit-var
+target_link_libraries(cker-condition-uninit-var
   clangAnalysis
   clangAST
   clangBasic

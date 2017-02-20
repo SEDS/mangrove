@@ -1,6 +1,6 @@
 CLANG_LEVEL := ../..
 
-TOOLNAME = return-local-param
+TOOLNAME = cker-return-local-param
 
 SOURCES := ReturnLocalParam.cpp  
 

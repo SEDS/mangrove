@@ -1,8 +1,8 @@
-add_clang_executable(array-resize
+add_clang_executable(cker-array-resize
   ArrayResize.cpp
   )
 
-target_link_libraries(array-resize
+target_link_libraries(cker-array-resize
   clangAnalysis
   clangAST
   clangBasic

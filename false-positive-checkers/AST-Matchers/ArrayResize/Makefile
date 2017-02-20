@@ -1,6 +1,6 @@
 CLANG_LEVEL := ../..
 
-TOOLNAME = array-resize
+TOOLNAME = cker-array-resize
 
 SOURCES := ArrayResize.cpp  
 

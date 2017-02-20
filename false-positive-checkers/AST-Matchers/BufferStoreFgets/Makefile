@@ -1,6 +1,6 @@
 CLANG_LEVEL := ../..
 
-TOOLNAME = buffer-store-fgets
+TOOLNAME = cker-buffer-store-fgets
 
 SOURCES := BufferStoreFgets.cpp  
 

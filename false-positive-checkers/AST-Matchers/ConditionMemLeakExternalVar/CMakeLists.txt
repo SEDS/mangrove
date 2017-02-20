@@ -1,8 +1,8 @@
-add_clang_executable(condition-mem-leak-external-var
+add_clang_executable(cker-condition-mem-leak-external-var
   ConditionMemLeakExternalVar.cpp
   )
 
-target_link_libraries(condition-mem-leak-external-var
+target_link_libraries(cker-condition-mem-leak-external-var
   clangAnalysis
   clangAST
   clangBasic

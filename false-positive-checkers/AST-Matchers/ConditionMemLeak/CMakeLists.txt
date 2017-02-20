@@ -1,8 +1,8 @@
-add_clang_executable(condition-mem-leak
+add_clang_executable(cker-condition-mem-leak
   ConditionMemLeak.cpp
   )
 
-target_link_libraries(condition-mem-leak
+target_link_libraries(cker-condition-mem-leak
   clangAnalysis
   clangAST
   clangBasic

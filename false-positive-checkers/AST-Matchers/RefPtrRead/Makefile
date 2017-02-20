@@ -1,6 +1,6 @@
 CLANG_LEVEL := ../..
 
-TOOLNAME = ref-ptr-read
+TOOLNAME = cker-ref-ptr-read
 
 SOURCES := RefPtrRead.cpp  
 

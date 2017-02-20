@@ -1,6 +1,6 @@
 CLANG_LEVEL := ../..
 
-TOOLNAME = buffer-underflow-usage
+TOOLNAME = cker-buffer-underflow-usage
 
 SOURCES := BufferUnderflowUsage.cpp  
 

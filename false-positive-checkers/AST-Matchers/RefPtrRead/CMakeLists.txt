@@ -1,8 +1,8 @@
-add_clang_executable(ref-ptr-read
+add_clang_executable(cker-ref-ptr-read
   RefPtrRead.cpp
   )
 
-target_link_libraries(ref-ptr-read
+target_link_libraries(cker-ref-ptr-read
   clangAnalysis
   clangAST
   clangBasic

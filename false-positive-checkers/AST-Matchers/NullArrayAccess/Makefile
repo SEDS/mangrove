@@ -1,6 +1,6 @@
 CLANG_LEVEL := ../..
 
-TOOLNAME = null-array-access
+TOOLNAME = cker-null-array-access
 
 SOURCES := NullArrayAccess.cpp  
 

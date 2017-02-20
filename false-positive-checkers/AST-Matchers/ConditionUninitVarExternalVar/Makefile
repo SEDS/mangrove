@@ -1,6 +1,6 @@
 CLANG_LEVEL := ../..
 
-TOOLNAME = condition-uninit-var-external-var
+TOOLNAME = cker-condition-uninit-var-external-var
 
 SOURCES := ConditionUninitVarExternalVar.cpp  
 

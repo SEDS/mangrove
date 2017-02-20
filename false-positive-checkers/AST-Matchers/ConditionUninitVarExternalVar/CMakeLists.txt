@@ -1,8 +1,8 @@
-add_clang_executable(condition-uninit-var-external-var
+add_clang_executable(cker-condition-uninit-var-external-var
   ConditionUninitVarExternalVar.cpp
   )
 
-target_link_libraries(condition-uninit-var-external-var
+target_link_libraries(cker-condition-uninit-var-external-var
   clangAnalysis
   clangAST
   clangBasic

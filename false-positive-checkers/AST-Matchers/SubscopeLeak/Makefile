@@ -1,6 +1,6 @@
 CLANG_LEVEL := ../..
 
-TOOLNAME = subscope-leak
+TOOLNAME = cker-subscope-leak
 
 SOURCES := SubscopeLeak.cpp  
 

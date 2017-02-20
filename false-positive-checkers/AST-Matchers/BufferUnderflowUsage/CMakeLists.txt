@@ -1,8 +1,8 @@
-add_clang_executable(buffer-underflow-usage
+add_clang_executable(cker-buffer-underflow-usage
   BufferUnderflowUsage.cpp
   )
 
-target_link_libraries(buffer-underflow-usage
+target_link_libraries(cker-buffer-underflow-usage
   clangAnalysis
   clangAST
   clangBasic

@@ -1,8 +1,8 @@
-add_clang_executable(condition-null-ptr-external-function
+add_clang_executable(cker-condition-null-ptr-external-function
   ConditionNullPtrExternalFunction.cpp
   )
 
-target_link_libraries(condition-null-ptr-external-function
+target_link_libraries(cker-condition-null-ptr-external-function
   clangAnalysis
   clangAST
   clangBasic

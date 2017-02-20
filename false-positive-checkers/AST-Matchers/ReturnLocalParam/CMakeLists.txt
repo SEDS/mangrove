@@ -1,8 +1,8 @@
-add_clang_executable(return-local-param
+add_clang_executable(cker-return-local-param
   ReturnLocalParam.cpp
   )
 
-target_link_libraries(return-local-param
+target_link_libraries(cker-return-local-param
   clangAnalysis
   clangAST
   clangBasic
