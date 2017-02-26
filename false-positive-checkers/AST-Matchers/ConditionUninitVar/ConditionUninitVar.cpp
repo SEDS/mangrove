@@ -17,9 +17,6 @@
 #include "llvm/Support/raw_ostream.h"
 #include "llvm/Support/CommandLine.h"
 
-// Name of this false positive checker.
-#define CHECKER_NAME "ConditionUninitVar"
-
 using namespace clang::ast_matchers;
 using namespace std;
 using namespace clang::driver;
@@ -29,30 +26,33 @@ using namespace clang;
 
 string File_Name;
 int enter_bit = 1;
-int if_end_line1 = 0;
-int if_end_line2 = 0;
 int use_start_line1 = 0;
-int ifMatcher1_flag = 0;
-int ifMatcher2_flag = 0;
 int useMatcher1_flag = 0;
-const NamedDecl *var_name1;
-const NamedDecl *var_name2;
 const NamedDecl *var_name3;
-
+int decl_assign_start_line;
+const NamedDecl *decl_assign_var;
+int decl_assign_flag = 0;
+int if_start_line;
+int if_end_line;
+const NamedDecl *rhs_var;
+int if_flag = 0;
+const NamedDecl *lhs_var;
+const NamedDecl *fDecl1;
+const NamedDecl *fDecl2;
+const NamedDecl *fDecl3;
 
 static llvm::cl::OptionCategory MyToolCategory("my-tool options");
 
-// AST matcher to find an 'if' statement with a memory allocation to a variable
-StatementMatcher ifMatcher1 = ifStmt( hasCondition(has(declRefExpr(to(varDecl(hasGlobalStorage(), hasType(isConstQualified())).bind("cond_var"))))),
-                                      hasDescendant(compoundStmt(hasDescendant(binaryOperator( hasLHS(declRefExpr(to(varDecl().bind("var_assign")))),
-                                                                                               hasRHS(cStyleCastExpr(has(callExpr(hasDescendant(declRefExpr(to(functionDecl(hasName("__builtin_alloca"))))))))) )))) ).bind("if_stmt1");
+// AST matcher to find statement with a memory allocation to a variable
+StatementMatcher declAssignment = declStmt(hasAncestor(functionDecl().bind("fDecl1")), anyOf(has(varDecl(has(cStyleCastExpr(has(callExpr(has(ignoringParenImpCasts(declRefExpr(to(functionDecl(hasAnyName("__builtin_alloca","ALLOCA"))))))))))).bind("decl_assign_var")), has(varDecl().bind("decl_assign_var")) )).bind("decl_assign_stmt");
 
 // AST matcher to find an 'if' statement with a variable initialization
-StatementMatcher ifMatcher2 = ifStmt(hasDescendant(compoundStmt(hasDescendant(binaryOperator( hasDescendant(declRefExpr(to(varDecl(hasInitializer(anything())).bind("var_init")))) ))))).bind("if_stmt2");
+StatementMatcher ifMatcher = ifStmt(hasAncestor(functionDecl().bind("fDecl2")), hasCondition( anyOf(ignoringParenImpCasts(declRefExpr(to(varDecl(hasGlobalStorage())))), binaryOperator(has(ignoringParenImpCasts(declRefExpr(to(varDecl(hasGlobalStorage()))))))) ),
+                                     anyOf(hasDescendant(compoundStmt(hasDescendant(binaryOperator(hasLHS(ignoringParenImpCasts(declRefExpr(to(varDecl().bind("lhs_var"))))),hasRHS(ignoringParenImpCasts(declRefExpr(to(varDecl().bind("rhs_var"))))))))), hasElse(compoundStmt(hasDescendant(binaryOperator(hasLHS(ignoringParenImpCasts(declRefExpr(to(varDecl().bind("lhs_var"))))),hasRHS(ignoringParenImpCasts(declRefExpr(to(varDecl().bind("rhs_var"))))) )))), hasDescendant(compoundStmt(hasDescendant(binaryOperator( hasLHS(ignoringParenImpCasts(declRefExpr(to(varDecl().bind("lhs_var"))))), hasRHS(ignoringParenImpCasts(unaryOperator(hasDescendant(declRefExpr(to(varDecl().bind("rhs_var"))))))) )))) ) ).bind("if_stmt");
 
 // AST matcher to find a statement with a function call
-StatementMatcher useMatcher1 = callExpr(hasAnyArgument(implicitCastExpr(has(declRefExpr(to(varDecl().bind("var_use")))))),
-                                        unless(hasAncestor(ifStmt()))).bind("use_stmt");
+StatementMatcher useMatcher1 = stmt(anyOf(callExpr(hasAncestor(functionDecl().bind("fDecl3")), anyOf( hasArgument(1, ignoringParenImpCasts(declRefExpr(to(varDecl().bind("var_use"))))), hasAnyArgument(ignoringParenImpCasts(declRefExpr(to(varDecl().bind("var_use"))))), hasAnyArgument(ignoringParenImpCasts(memberExpr(hasDescendant(declRefExpr(to(varDecl().bind("var_use"))))))), hasAnyArgument(ignoringParenImpCasts(hasDescendant(declRefExpr(to(varDecl().bind("var_use")))))) )
+                                        ), binaryOperator(hasRHS(ignoringParenImpCasts(hasDescendant(declRefExpr(to(varDecl().bind("var_use"))))))) )).bind("use_stmt");
 
 
 class PatternFinder : public MatchFinder::MatchCallback
@@ -60,31 +60,43 @@ class PatternFinder : public MatchFinder::MatchCallback
     public :
         virtual void run(const MatchFinder::MatchResult &Result)
         {
-            if(const Stmt *if_stmt_node1 = Result.Nodes.getNodeAs<clang::Stmt>("if_stmt1"))
+            if(const Stmt *decl_assign_stmt_node = Result.Nodes.getNodeAs<clang::Stmt>("decl_assign_stmt"))
             {
-                if(Result.Context->getSourceManager().isWrittenInMainFile(if_stmt_node1->getLocStart()))
+                if(Result.Context->getSourceManager().isWrittenInMainFile(decl_assign_stmt_node->getLocStart()))
                 {
-                    FullSourceLoc FullLocation1 = Result.Context->getFullLoc(if_stmt_node1->getLocEnd());
-                    if_end_line1 = FullLocation1.getSpellingLineNumber();
-
-                    if(const NamedDecl *var_assign_node = Result.Nodes.getNodeAs<clang::NamedDecl>("var_assign"))
+                    FullSourceLoc FullLocation1 = Result.Context->getFullLoc(decl_assign_stmt_node->getLocStart());
+                    decl_assign_start_line = FullLocation1.getSpellingLineNumber();
+                    if(const NamedDecl *decl_assign_var_node = Result.Nodes.getNodeAs<clang::NamedDecl>("decl_assign_var"))
                     {
-                        var_name1 = var_assign_node;
-                        ifMatcher1_flag = 1;
+                        decl_assign_var = decl_assign_var_node;
+                        decl_assign_flag = 1;
+                    }
+                    if(const NamedDecl *fDecl1_node = Result.Nodes.getNodeAs<clang::NamedDecl>("fDecl1"))
+                    {
+                        fDecl1 = fDecl1_node;
                     }
                 }
             }
-            else if(const Stmt *if_stmt_node2 = Result.Nodes.getNodeAs<clang::Stmt>("if_stmt2"))
+            if(const Stmt *if_stmt_node = Result.Nodes.getNodeAs<clang::Stmt>("if_stmt"))
             {
-                if(Result.Context->getSourceManager().isWrittenInMainFile(if_stmt_node2->getLocStart()))
+                if(Result.Context->getSourceManager().isWrittenInMainFile(if_stmt_node->getLocStart()))
                 {
-                    FullSourceLoc FullLocation1 = Result.Context->getFullLoc(if_stmt_node2->getLocEnd());
-                    if_end_line2 = FullLocation1.getSpellingLineNumber();
-
-                    if(const NamedDecl *var_init_node = Result.Nodes.getNodeAs<clang::NamedDecl>("var_init"))
+                    FullSourceLoc FullLocation1 = Result.Context->getFullLoc(if_stmt_node->getLocStart());
+                    if_start_line = FullLocation1.getSpellingLineNumber();
+                    FullSourceLoc FullLocation2 = Result.Context->getFullLoc(if_stmt_node->getLocEnd());
+                    if_end_line = FullLocation2.getSpellingLineNumber();
+                    if(const NamedDecl *lhs_var_node = Result.Nodes.getNodeAs<clang::NamedDecl>("lhs_var"))
                     {
-                        var_name2 = var_init_node;
-                        ifMatcher2_flag = 1;
+                        lhs_var = lhs_var_node;
+                    }
+                    if(const NamedDecl *rhs_var_node = Result.Nodes.getNodeAs<clang::NamedDecl>("rhs_var"))
+                    {
+                        rhs_var = rhs_var_node;
+                        if_flag = 1;
+                    }
+                    if(const NamedDecl *fDecl2_node = Result.Nodes.getNodeAs<clang::NamedDecl>("fDecl2"))
+                    {
+                        fDecl2 = fDecl2_node;
                     }
                 }
             }
@@ -94,33 +106,32 @@ class PatternFinder : public MatchFinder::MatchCallback
                 {
                     FullSourceLoc FullLocation1 = Result.Context->getFullLoc(use_stmt_node->getLocStart());
                     use_start_line1 = FullLocation1.getSpellingLineNumber();
-
                     if(const NamedDecl *var_use_node = Result.Nodes.getNodeAs<clang::NamedDecl>("var_use"))
                     {
                         var_name3 = var_use_node;
                         useMatcher1_flag = 1;
                     }
+                    if(const NamedDecl *fDecl3_node = Result.Nodes.getNodeAs<clang::NamedDecl>("fDecl3"))
+                    {
+                        fDecl3 = fDecl3_node;
+                    }
                 }
             }
-            // Checking if the function call is written after the 'if' statement and the matchers have matched the expression
-            if(if_end_line1 < use_start_line1 && ifMatcher1_flag == 1 && useMatcher1_flag == 1)
+            if(enter_bit == 1 && decl_assign_flag == 1 && if_flag == 1 && useMatcher1_flag == 1 && if_end_line < use_start_line1 && areSameVariable(fDecl1, fDecl2) && areSameVariable(fDecl1, fDecl3) && areSameVariable(lhs_var, var_name3))
             {
-                flagPattern(if_end_line1, if_end_line2, use_start_line1);
-            }
-            // Checking if the function call is written after the 'if' statement and the matchers have matched the expression
-            else if(if_end_line2 < use_start_line1 && ifMatcher2_flag == 1 && useMatcher1_flag == 1)
-            {
-                flagPattern(if_end_line1, if_end_line2, use_start_line1);
+                errs() << "\n" << File_Name;
+                errs() << "\n" << "FP Located" << "\n";
+                // Resetting the enter_bit in order to exit the program after the first instance of the pattern has been identified
+                enter_bit = 0;
             }
         }
 
-        // Print out the location in source code where this false positive pattern is flagged.
-        // Include checker name, filename, and line numbers. All three line numbers are included that are used above. Not all of
-        // these might be used at any given time (i.e. one line number might be 0).
-        void flagPattern(unsigned int lineNum1, unsigned int lineNum2, unsigned int lineNum3) {
-            errs() << "False positive detected:" << CHECKER_NAME << ":" << File_Name << ":" << lineNum1 << "," << lineNum2 << "," << lineNum3 << "\n";
+        // Function to check if the two variable nodes are the same
+        // Used the example provided by: http://clang.llvm.org/docs/LibASTMatchersTutorial.html
+        static bool areSameVariable(const NamedDecl *First, const NamedDecl *Second)
+        {
+            return First && Second && First->getCanonicalDecl() == Second->getCanonicalDecl();
         }
-
 
     private:
         ASTContext *Context;
@@ -133,9 +144,10 @@ int main(int argc, const char **argv)
     File_Name = argv[1];
     PatternFinder Printer;
     MatchFinder Finder;
+
+    Finder.addMatcher(declAssignment, &Printer);
+    Finder.addMatcher(ifMatcher, &Printer);
     Finder.addMatcher(useMatcher1, &Printer);
-    Finder.addMatcher(ifMatcher1, &Printer);
-    Finder.addMatcher(ifMatcher2, &Printer);
 
     return Tool.run(newFrontendActionFactory(&Finder).get());
 }
