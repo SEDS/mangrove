@@ -24,8 +24,11 @@ using namespace clang::tooling;
 using namespace llvm;
 using namespace clang;
 
+
+// Name of this false positive checker.
+#define CHECKER_NAME "ConditionUninitVar"
+
 string File_Name;
-int enter_bit = 1;
 int use_start_line1 = 0;
 int useMatcher1_flag = 0;
 const NamedDecl *var_name3;
@@ -117,12 +120,9 @@ class PatternFinder : public MatchFinder::MatchCallback
                     }
                 }
             }
-            if(enter_bit == 1 && decl_assign_flag == 1 && if_flag == 1 && useMatcher1_flag == 1 && if_end_line < use_start_line1 && areSameVariable(fDecl1, fDecl2) && areSameVariable(fDecl1, fDecl3) && areSameVariable(lhs_var, var_name3))
+            if(decl_assign_flag == 1 && if_flag == 1 && useMatcher1_flag == 1 && if_end_line < use_start_line1 && areSameVariable(fDecl1, fDecl2) && areSameVariable(fDecl1, fDecl3) && areSameVariable(lhs_var, var_name3))
             {
-                errs() << "\n" << File_Name;
-                errs() << "\n" << "FP Located" << "\n";
-                // Resetting the enter_bit in order to exit the program after the first instance of the pattern has been identified
-                enter_bit = 0;
+                errs() << "False positive detected:" << CHECKER_NAME << ":" << File_Name << ":" << if_end_line << "," <<  use_start_line1 << "\n"; 
             }
         }
 
