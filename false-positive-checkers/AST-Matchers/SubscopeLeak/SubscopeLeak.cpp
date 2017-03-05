@@ -24,9 +24,10 @@ using namespace clang::tooling;
 using namespace llvm;
 using namespace clang;
 
+// False positive pattern name.
+#define CHECKER_NAME "SubscopeLeak" 
 
 string File_Name;
-int enter_bit = 1;
 int new_start_line;
 int new_flag = 0;
 int scope_start_line;
@@ -81,11 +82,10 @@ class PatternFinder : public MatchFinder::MatchCallback
                     scope_start_line = FullLocation1.getSpellingLineNumber();
                 }
             }
-            if(enter_bit == 1 && areSameVariable(lhs_var, del_var) && new_flag == 1 && scope_flag == 1)
+            if(areSameVariable(lhs_var, del_var) && new_flag == 1 && scope_flag == 1)
             {
-                errs() << "\n" << File_Name;
-                errs() << "\n" << "FP Located" << "\n";
-                enter_bit = 0;
+                unsigned int lineNum = Result.Context->getSourceManager().getPresumedLineNumber(scope_stmt_node->getLocStart());
+                errs() << "False positive detected:" << CHECKER_NAME << ":" << File_Name << ":" << lineNum << "\n";
             }
         }
 
