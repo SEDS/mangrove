@@ -84,8 +84,8 @@ class PatternFinder : public MatchFinder::MatchCallback
             }
             if(areSameVariable(lhs_var, del_var) && new_flag == 1 && scope_flag == 1)
             {
-                unsigned int lineNum = Result.Context->getSourceManager().getPresumedLineNumber(scope_stmt_node->getLocStart());
-                errs() << "False positive detected:" << CHECKER_NAME << ":" << File_Name << ":" << lineNum << "\n";
+                //unsigned int lineNum = Result.Context->getSourceManager().getPresumedLineNumber(scope_stmt_node->getLocStart());
+                errs() << "False positive detected:" << CHECKER_NAME << ":" << File_Name << ":" << scope_start_line << "," << del_var_line << "\n";
             }
         }
 
