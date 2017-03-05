@@ -24,8 +24,10 @@ using namespace clang::tooling;
 using namespace llvm;
 using namespace clang;
 
+// Name of this false positive checker.
+#define CHECKER_NAME "ConditionNullPtr" 
+
 string File_Name;
-int enter_bit = 1;
 int if_end_line1 = 0;
 int use_start_line1 = 0;
 int ifMatcher1_flag = 0;
@@ -86,12 +88,9 @@ class PatternFinder : public MatchFinder::MatchCallback
                     }
                 }
             }
-            if(enter_bit == 1 && ifMatcher1_flag == 1 && useMatcher1_flag == 1 && if_end_line1 < use_start_line1 && areSameVariable(decl_name1, decl_name2))
+            if(ifMatcher1_flag == 1 && useMatcher1_flag == 1 && if_end_line1 < use_start_line1 && areSameVariable(decl_name1, decl_name2))
             {
-                errs() << "\n" << File_Name;
-                errs() << "\n" << "FP Located" << "\n";
-                // Resetting the enter_bit in order to exit the program after the first instance of the pattern has been identified
-                enter_bit = 0;
+                errs() << "False positive detected:" << CHECKER_NAME << ":" << File_Name << ":" << if_end_line1 << "," << use_start_line1 << "\n";
             }
         }
 
