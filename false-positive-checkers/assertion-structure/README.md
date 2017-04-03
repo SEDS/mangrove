@@ -50,7 +50,7 @@ that the allocation occurs before the `if` statement. We should be able to
 modify the checker with this simple fix, so we should be able to represent this 
 variation structurally, without assertions.
 
-### `condition-mem-leak_checker-FP4.cpp`
+### `condition-mem-leak_checker-FP4.c`
 
 Here the global variable is declared with a `const` declaration, causing neither
 Cppcheck nor scan-build to flag the false positive. The simple assertion we
