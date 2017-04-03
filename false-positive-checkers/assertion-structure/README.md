@@ -15,8 +15,10 @@ represent false positive patterns.
 
 ## `condition-mem-leak` checker false positives
 
-Here are three *checker* false positives in minimized form. Here is how we had
-defined the structure of this pattern: 
+Below are four *checker* false positives in minimized form that we obtained from
+sampling. From these checker false positives, we hope to glean assertions that
+will help us better represent the *tool* false positive patterns. Here is how we
+had defined the structure of this pattern:
 [condition-mem-leak](https://github.iu.edu/SEDS/mangrove/wiki/Conditional-Mem-Leak-FP).
 
 ### `condition-mem-leak_checker-FP1.cpp`
@@ -47,3 +49,10 @@ structure as a false positive pattern. The checker does not seem to be checking
 that the allocation occurs before the `if` statement. We should be able to
 modify the checker with this simple fix, so we should be able to represent this 
 variation structurally, without assertions.
+
+### `condition-mem-leak_checker-FP4.cpp`
+
+Here the global variable is declared with a `const` declaration, causing neither
+Cppcheck nor scan-build to flag the false positive. The simple assertion we
+conclude for this example is that the global variable cannot be declared with a
+`const` declaration.
