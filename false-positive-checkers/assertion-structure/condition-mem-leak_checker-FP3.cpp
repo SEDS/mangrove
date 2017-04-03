@@ -1,22 +1,19 @@
-// Juliet: CWE762_Mismatched_Memory_Management_Routines__new_array_delete_int64_t_14.cpp
+// Juliet: CWE416_Use_After_Free__new_delete_array_char_07.cpp
 
 #include "std_testcase.h"
+static int staticFive = 5;
 
 int main()
 {
-    int64_t * data = NULL;
-    // Moving the allocation code outside of the `if` statement introduces the FP for 
-    // Cppcheck and scan-build.
-    if(globalFive==5)
-    {
-        data = new int64_t[100];
-    }
+    char * data = NULL;
     // condition-mem-leak pattern flagged (false positive)
-    // Cppcheck FP: none
     // scan-build FP: none
-    if(globalFive==5)
+    // Cppcheck FP: none
+    if(staticFive==5)
     {
+        // Moving this allocation statement before the `if` statement introduces the 
+        // FP for both Cppcheck and scan-build.
+        data = new char[100];
         delete [] data;
     }
 }
-

@@ -1,19 +1,26 @@
-// Juliet: CWE416_Use_After_Free__new_delete_array_char_07.cpp
+// Juliet: CWE401_Memory_Leak__new_array_twointsStruct_10.cpp
 
 #include "std_testcase.h"
-static int staticFive = 5;
 
 int main()
 {
-    char * data = NULL;
+    twoIntsStruct * data = NULL;
+    // Bringing the allocation code outside the `if` statement AND removing
+    // the printStructLine() call introduces the Cppcheck FP.
+    if(globalTrue)
+    {
+        data = new twoIntsStruct[100];
+        // Removing the printStructLine() call introduces the scan-build FP.
+        printStructLine(&data[0]);
+    }
     // condition-mem-leak pattern flagged (false positive)
     // scan-build FP: none
     // Cppcheck FP: none
-    if(staticFive==5)
+    if(globalFalse)
     {
-        // Moving this allocation statement before the `if` statement introduces the 
-        // FP for both Cppcheck and scan-build.
-        data = new char[100];
-        delete [] data;
+    }
+    else
+    {
+        delete[] data;
     }
 }
