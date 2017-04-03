@@ -7,6 +7,9 @@ int main()
     twoIntsStruct * data = NULL;
     // Bringing the allocation code outside the `if` statement AND removing
     // the printStructLine() call introduces the Cppcheck FP.
+    // OR
+    // Replacing the `twoIntsStruct` data type with `int` and removing the 
+    // printStructLine() call introduces the Cppcheck FP.
     if(globalTrue)
     {
         data = new twoIntsStruct[100];
