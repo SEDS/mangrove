@@ -33,26 +33,28 @@ occur outside an `if` statement body.
 ### `condition-mem-leak_checker-FP2.cpp`
 
 The structure is a complicated version of FP1. It seems that user-defined types
-and methods can cause tools *not* to flag the false positive, so that the
-checker warning is a false positive. (One difference in this FP2 structure is
-that the two global variables in conditions are different, and the deallocation
-happens in the `else` clause. Interestingly, the allocation code does *not* have
-to be moved out before the first `if` statement because deallocation happens in
-the `else` clause.) We still need to design an assertion from this example--perhaps 
-it will involve restrictions on user-defined types and methods.
+and methods have caused the tools *not* to flag the false positive, so the
+checker warning is a false positive. (One difference in this FP2 structure from
+FP1 is that the two global variables in conditions are different, and the
+deallocation happens in the `else` clause. Interestingly, the allocation code
+does *not* have to be moved before the first `if` statement to introduce the
+tool false positive. This is because deallocation happens in the `else` clause,
+unlike FP1.) We still need to design an assertion from this example--perhaps it
+will involve restrictions on user-defined types and methods.
 
 ### `condition-mem-leak_checker-FP3.cpp`
 
 Here the allocation happens within the *same* `if` statement body where the
 memory is freed. No memory leak can occur. The checker still flags this
 structure as a false positive pattern. The checker does not seem to be checking
-that the allocation occurs before the `if` statement. We should be able to
-modify the checker with this simple fix, so we should be able to represent this 
-variation structurally, without assertions.
+that the allocation occurs before the `if` statement, as the structure of this
+pattern specifies. We should be able to modify the checker with this simple fix.
+Therefore, we should be able to represent this variation structurally, without
+assertions.
 
 ### `condition-mem-leak_checker-FP4.c`
 
 Here the global variable is declared with a `const` declaration, causing neither
-Cppcheck nor scan-build to flag the false positive. The simple assertion we
-conclude for this example is that the global variable cannot be declared with a
-`const` declaration.
+Cppcheck nor scan-build to flag the false positive. The simple assertion we come
+up with when analyzing this example is that the global variable cannot be
+declared with a `const` declaration.
