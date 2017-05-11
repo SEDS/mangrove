@@ -1,0 +1,20 @@
+add_clang_executable(cker-condition-mem-leak-mid-buf
+  ConditionMemLeakMidBuf.cpp
+  )
+
+target_link_libraries(cker-condition-mem-leak-mid-buf
+  clangAnalysis
+  clangAST
+  clangBasic
+  clangDriver
+  clangEdit
+  clangFrontend
+  clangLex
+  clangParse
+  clangRewrite
+  clangRewriteFrontend
+  clangSema
+  clangSerialization
+  clangStaticAnalyzerFrontend
+  clangTooling
+  )
