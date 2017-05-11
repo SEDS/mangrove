@@ -69,8 +69,19 @@ class PatternFinder : public MatchFinder::MatchCallback
             // If both the statement matchers match the same statement we conclude that the FP pattern has been found
             if(areSameExpr(Context,IfS1,IfS2))
             {
-                unsigned int lineNum = Result.Context->getSourceManager().getPresumedLineNumber(IfS1->getLocStart());
-                errs() << "False positive detected:" << CHECKER_NAME << ":" << File_Name << ":" << lineNum << " (IF statement located)\n";
+                // Get line number of the end of scope for the IF statement's parent.
+                unsigned int scopeEndLine = 0;
+                auto it = Context->getParents(*IfS1).begin();
+                if (it != Context->getParents(*IfS1).end()) {
+                    const clang::Stmt *parentStmt = it->get<clang::Stmt>();
+                    scopeEndLine = Result.Context->getSourceManager().getPresumedLineNumber(parentStmt->getLocEnd());
+                }
+
+                // Get line number for the IF statement.
+                unsigned int ifStmtLine = Result.Context->getSourceManager().getPresumedLineNumber(IfS1->getLocStart());
+                // Print just the end of scope line number for now.
+                //errs() << "False positive detected:" << CHECKER_NAME << ":" << File_Name << ":" << ifStmtLine << "," << scopeEndLine << " (IF statement, end of scope)\n";
+                errs() << "False positive detected:" << CHECKER_NAME << ":" << File_Name << ":" << scopeEndLine << " (end of scope)\n";
 
                 IfS1 = 0;
                 IfS2 = 0;
