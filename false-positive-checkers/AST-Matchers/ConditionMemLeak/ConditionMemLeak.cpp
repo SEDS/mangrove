@@ -28,93 +28,100 @@ using namespace llvm;
 using namespace clang;
 
 string File_Name;
-const Stmt *IfS1;
-const Stmt *IfS2;
-const NamedDecl *var_free;
 
 static llvm::cl::OptionCategory MyToolCategory("my-tool options");
 
 // AST Matcher expressions to match the FP pattern
-// Matches an 'if' statement which has a memory free or delete in its body
-StatementMatcher IfMatcher = ifStmt(hasDescendant(compoundStmt( anyOf(hasDescendant(callExpr(hasAnyArgument(ignoringParenImpCasts(declRefExpr(to(varDecl().bind("var_free"))))), hasDescendant(declRefExpr(to(functionDecl(hasName("free")))))) ), hasDescendant(cxxDeleteExpr()) )))).bind("ifStmt");
+StatementMatcher IfMatcher = ifStmt(allOf(
+                                // Check that the IF condition contains a global variable expression.
+                                anyOf(
+                                    hasCondition(ignoringParenImpCasts(
+                                        declRefExpr(to(varDecl(
+                                            anyOf(
+                                                (
+                                                    hasGlobalStorage(),
+                                                    hasInitializer(integerLiteral(unless(equals(0))))
+                                                ),
+                                                (
+                                                    hasGlobalStorage(),
+                                                    hasExternalFormalLinkage()
+                                                )
+                                            )
+                                        )))
+                                    )),
+                                    hasCondition(binaryOperator(
+                                        has(ignoringParenImpCasts(
+                                            declRefExpr(to(varDecl(
+                                                anyOf(
+                                                    (
+                                                        hasGlobalStorage(),
+                                                        hasInitializer(integerLiteral(unless(equals(0))))
+                                                    ),
+                                                    (
+                                                        hasGlobalStorage(),
+                                                        hasExternalFormalLinkage()
+                                                    )
+                                                )
+                                            )))
+                                        ))
+                                    ))
+                                ),
+                                // Check that the IF body has a memory free or delete.
+                                hasDescendant(compoundStmt(
+                                    anyOf(
+                                        hasDescendant(callExpr(
+                                            hasAnyArgument(ignoringParenImpCasts(
+                                                declRefExpr(to(varDecl().bind("var_free")))
+                                            )),
+                                            hasDescendant(declRefExpr(
+                                                to(functionDecl(hasName("free")))
+                                            ))
+                                        )),
+                                        hasDescendant(cxxDeleteExpr())
+                                    )
+                                ))
+                            )).bind("ifStmt");
 
 
-// Matches an 'if' statement which has a global variable as its condition expression
-StatementMatcher if_global_const = ifStmt(anyOf(hasCondition(ignoringParenImpCasts(declRefExpr(to(varDecl( anyOf((hasGlobalStorage(), hasInitializer(integerLiteral(unless(equals(0))))), (hasGlobalStorage(), hasExternalFormalLinkage())) ))))), hasCondition(binaryOperator(has(ignoringParenImpCasts(declRefExpr(to(varDecl( anyOf((hasGlobalStorage(), hasInitializer(integerLiteral(unless(equals(0))))), (hasGlobalStorage(), hasExternalFormalLinkage())) ))))))))).bind("if_glob_const");
 
 // Callback for the AST matchers
-class PatternFinder : public MatchFinder::MatchCallback
-{
+class PatternFinder : public MatchFinder::MatchCallback {
     public :
-        virtual void run(const MatchFinder::MatchResult &Result)
-        {
+        virtual void run(const MatchFinder::MatchResult &Result) {
             Context = Result.Context;
 
             // Isolate the node identified by the AST matcher named 'IfMatcher'
-            if(const Stmt *var1 = Result.Nodes.getNodeAs<clang::Stmt>("if_glob_const"))
-            {
-                if(Result.Context->getSourceManager().isWrittenInMainFile(var1->getLocStart()))
-                {
-                    IfS1 = var1;
+            if (const Stmt *ifStmt = Result.Nodes.getNodeAs<clang::Stmt>("ifStmt")) {
+                if (Context->getSourceManager().isWrittenInMainFile(ifStmt->getLocStart())) {
+                    // Get line number of the end of scope for the IF statement's parent.
+                    unsigned int scopeEndLine = 0;
+                    auto it = Context->getParents(*ifStmt).begin();
+                    if (it != Context->getParents(*ifStmt).end()) {
+                        const clang::Stmt *parentStmt = it->get<clang::Stmt>();
+                        scopeEndLine = Context->getSourceManager().getPresumedLineNumber(parentStmt->getLocEnd());
+                    }
+
+                    // Print the end of scope line number.
+                    errs() << "False positive detected:" << CHECKER_NAME << ":" << File_Name << ":" << scopeEndLine << " (end of scope)\n";
+
+                    return;
                 }
             }
-            // Isolate the node identified by the AST matcher named 'if_global_const'
-            if(const Stmt *var2 = Result.Nodes.getNodeAs<clang::Stmt>("ifStmt"))
-            {
-                if(Result.Context->getSourceManager().isWrittenInMainFile(var2->getLocStart()))
-                {
-                    IfS2 = var2;
-                }
-            }
-            // If both the statement matchers match the same statement we conclude that the FP pattern has been found
-            if(areSameExpr(Context,IfS1,IfS2))
-            {
-                // Get line number of the end of scope for the IF statement's parent.
-                unsigned int scopeEndLine = 0;
-                auto it = Context->getParents(*IfS1).begin();
-                if (it != Context->getParents(*IfS1).end()) {
-                    const clang::Stmt *parentStmt = it->get<clang::Stmt>();
-                    scopeEndLine = Result.Context->getSourceManager().getPresumedLineNumber(parentStmt->getLocEnd());
-                }
-
-                // Get line number for the IF statement.
-                unsigned int ifStmtLine = Result.Context->getSourceManager().getPresumedLineNumber(IfS1->getLocStart());
-                // Print just the end of scope line number for now.
-                //errs() << "False positive detected:" << CHECKER_NAME << ":" << File_Name << ":" << ifStmtLine << "," << scopeEndLine << " (IF statement, end of scope)\n";
-                errs() << "False positive detected:" << CHECKER_NAME << ":" << File_Name << ":" << scopeEndLine << " (end of scope)\n";
-
-                IfS1 = 0;
-                IfS2 = 0;
-                return;
-            }
-        }
-
-        // Function to check if the expressions are the same
-        static bool areSameExpr(ASTContext *Context, const Stmt *First, const Stmt *Second)
-        {
-            if (!First || !Second)
-                return false;
-            llvm::FoldingSetNodeID FirstID, SecondID;
-            First->Profile(FirstID, *Context, true);
-            Second->Profile(SecondID, *Context, true);
-            return FirstID == SecondID;
         }
 
     private:
         ASTContext *Context;
 };
 
-int main(int argc, const char **argv)
-{
+int main(int argc, const char **argv) {
     CommonOptionsParser OptionsParser(argc, argv, MyToolCategory);
     ClangTool Tool(OptionsParser.getCompilations(), OptionsParser.getSourcePathList());
     File_Name = argv[1];
     PatternFinder PatFinder;
     MatchFinder Finder;
 
-    // Add the AST matcher expressions to the match callback
+    // Add the AST matcher expression to the match callback
     Finder.addMatcher(IfMatcher, &PatFinder);
-    Finder.addMatcher(if_global_const, &PatFinder);
 
     return Tool.run(newFrontendActionFactory(&Finder).get());
 }
