@@ -33,54 +33,63 @@ static llvm::cl::OptionCategory MyToolCategory("my-tool options");
 
 // AST Matcher expressions to match the FP pattern
 StatementMatcher IfMatcher = ifStmt(allOf(
-                                // Check that the IF condition contains a global variable expression.
-                                anyOf(
-                                    hasCondition(ignoringParenImpCasts(
-                                        declRefExpr(to(varDecl(
-                                            anyOf(
-                                                (
-                                                    hasGlobalStorage(),
-                                                    hasInitializer(integerLiteral(unless(equals(0))))
-                                                ),
-                                                (
-                                                    hasGlobalStorage(),
-                                                    hasExternalFormalLinkage()
-                                                )
-                                            )
-                                        )))
-                                    )),
-                                    hasCondition(binaryOperator(
-                                        has(ignoringParenImpCasts(
-                                            declRefExpr(to(varDecl(
-                                                anyOf(
-                                                    (
-                                                        hasGlobalStorage(),
-                                                        hasInitializer(integerLiteral(unless(equals(0))))
-                                                    ),
-                                                    (
-                                                        hasGlobalStorage(),
-                                                        hasExternalFormalLinkage()
-                                                    )
-                                                )
-                                            )))
-                                        ))
-                                    ))
-                                ),
-                                // Check that the IF body has a memory free or delete.
-                                hasDescendant(compoundStmt(
-                                    anyOf(
-                                        hasDescendant(callExpr(
-                                            hasAnyArgument(ignoringParenImpCasts(
-                                                declRefExpr(to(varDecl().bind("var_free")))
-                                            )),
-                                            hasDescendant(declRefExpr(
-                                                to(functionDecl(hasName("free")))
-                                            ))
-                                        )),
-                                        hasDescendant(cxxDeleteExpr())
-                                    )
-                                ))
-                            )).bind("ifStmt");
+								// Check that the IF condition contains a global variable expression.
+								anyOf(
+									hasCondition(ignoringParenImpCasts(
+										declRefExpr(to(varDecl(
+											anyOf(
+												(
+													hasGlobalStorage(),
+													hasInitializer(integerLiteral(unless(equals(0))))
+												),
+												(
+													hasGlobalStorage(),
+													hasExternalFormalLinkage()
+												)
+											)
+										)))
+									)),
+									hasCondition(binaryOperator(
+										has(ignoringParenImpCasts(
+											declRefExpr(to(varDecl(
+												anyOf(
+													(
+														hasGlobalStorage(),
+														hasInitializer(integerLiteral(unless(equals(0))))
+													),
+													(
+														hasGlobalStorage(),
+														hasExternalFormalLinkage()
+													)
+												)
+											)))
+										))
+									))
+								),
+								// Check that the IF body has a memory free or delete.
+								hasDescendant(compoundStmt(
+									anyOf(
+										hasDescendant(callExpr(
+											hasAnyArgument(ignoringParenImpCasts(
+												declRefExpr().bind("var_free")
+											)),
+											hasDescendant(declRefExpr(
+												to(functionDecl(hasName("free")))
+											))
+										)),
+										hasDescendant(cxxDeleteExpr())
+									)
+								)),
+								// Check that the IF statement body modifies the pointer variable 
+								// (the invoked code ensures this variable is the one that is freed).
+								forEachDescendant(unaryOperator(
+									hasOperatorName("++"),
+									hasDescendant(
+										declRefExpr().bind("var_modified")
+									)
+								))
+								
+							)).bind("ifStmt");
 
 
 
@@ -91,26 +100,39 @@ class PatternFinder : public MatchFinder::MatchCallback {
             Context = Result.Context;
 
             // Isolate the node identified by the AST matcher named 'IfMatcher'
-            if (const Stmt *ifStmt = Result.Nodes.getNodeAs<clang::Stmt>("ifStmt")) {
-                if (Context->getSourceManager().isWrittenInMainFile(ifStmt->getLocStart())) {
-                    // Get line number of the end of scope for the IF statement's parent.
-                    unsigned int scopeEndLine = 0;
-                    auto it = Context->getParents(*ifStmt).begin();
-                    if (it != Context->getParents(*ifStmt).end()) {
-                        const clang::Stmt *parentStmt = it->get<clang::Stmt>();
-                        scopeEndLine = Context->getSourceManager().getPresumedLineNumber(parentStmt->getLocEnd());
-                    }
+			const Stmt *ifStmt = Result.Nodes.getNodeAs<clang::Stmt>("ifStmt");
+			const DeclRefExpr *varFree = Result.Nodes.getNodeAs<clang::DeclRefExpr>("var_free");
+			const DeclRefExpr *varModified = Result.Nodes.getNodeAs<clang::DeclRefExpr>("var_modified");
+			
+			// Verify that the two variables are the same and the modification happens BEFORE the free.
+			if (areSameVariable(varModified, varFree) && happensBefore(varModified, varFree)) {
+				// Get line number of the end of scope for the IF statement's parent.
+				unsigned int scopeEndLine = 0;
+				auto it = Context->getParents(*ifStmt).begin();
+				if (it != Context->getParents(*ifStmt).end()) {
+					const clang::Stmt *parentStmt = it->get<clang::Stmt>();
+					scopeEndLine = Context->getSourceManager().getPresumedLineNumber(parentStmt->getLocEnd());
+				}
 
-                    // Print the end of scope line number.
-                    errs() << "False positive detected:" << CHECKER_NAME << ":" << File_Name << ":" << scopeEndLine << " (end of scope)\n";
-
-                    return;
-                }
-            }
+				// Print the end of scope line number.
+				errs() << "False positive detected:" << CHECKER_NAME << ":" << File_Name << ":" << scopeEndLine << " (end of scope)\n";
+			}
         }
-
+		
     private:
         ASTContext *Context;
+		
+		// Check that the given two declarations are the same.
+		bool areSameVariable(const DeclRefExpr *first, const DeclRefExpr *second) {
+			return first && second && first->getDecl()->getCanonicalDecl() == second->getDecl()->getCanonicalDecl();
+		}
+		
+		// Check that the first declaration appears before the second one in the source code. 
+		bool happensBefore(const DeclRefExpr *first, const DeclRefExpr *second) {
+			unsigned int firstLine = Context->getSourceManager().getPresumedLineNumber(first->getLocStart());
+			unsigned int secondLine = Context->getSourceManager().getPresumedLineNumber(second->getLocStart());
+			return firstLine < secondLine;
+		}
 };
 
 int main(int argc, const char **argv) {
