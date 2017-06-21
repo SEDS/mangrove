@@ -3,29 +3,24 @@
 
 #include <stdio.h>
 
-class ClassType 
-{
-    public:
-        int num;
-};
-
+// Note: The data types of the union's members have been simplified from user-
+// defined classes to integers.
 typedef union
 {
-    ClassType * firstMember;
-    ClassType * secondMember;
+    int * firstMember;
+    int * secondMember;
 } unionType;
-
 
 int main(void)
 {
     unionType myUnion;
-    ClassType * myClass = new ClassType();
+    int * myClass = new int();
     myUnion.firstMember = myClass;
 
     // CodeSonar FP: none
     // scan-build FP: (warning) Potential leak of memory pointed to by 'myUnion.firstMember'
     // Cppcheck FP: none
-    ClassType * myClass2 = myUnion.secondMember;
+    int * myClass2 = myUnion.secondMember;
     delete myClass2;
     return 0;
 }
