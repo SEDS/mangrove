@@ -21,7 +21,7 @@ AllocUsingProperty::~AllocUsingProperty()
 
     // CodeSonar FP: Uninitialized variable. *intPointer was not initialized
     // scan-build FP: none
-    // Cppcheck: none
+    // Cppcheck FP: none
     printf("int: %d\n", intPointer[0]);
     delete [] intPointer;
 }
