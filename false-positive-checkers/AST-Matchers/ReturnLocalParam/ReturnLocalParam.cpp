@@ -28,25 +28,35 @@ using namespace clang::tooling;
 using namespace llvm;
 using namespace clang;
 
-string File_Name;
+string fileName;
 
 static llvm::cl::OptionCategory MyToolCategory("my-tool options");
 
-// AST matcher for a return statement that returns a parameter variable
-StatementMatcher returnMatcher = returnStmt(has(ignoringParenImpCasts(declRefExpr(to(parmVarDecl(hasType(isAnyPointer())).bind("parm_var")))))).bind("return_stmt");
+// AST matcher for a return statement that returns a parameter variable.
+StatementMatcher returnMatcher = 
+    returnStmt(
+        has(
+            ignoringParenImpCasts(
+                declRefExpr(
+                    to(
+                        parmVarDecl(
+                            hasType(isAnyPointer())
+                        ).bind("param_var")
+                    )
+                )
+            )
+        )
+    ).bind("return_stmt");
 
-class PatternFinder : public MatchFinder::MatchCallback
-{
+
+class PatternFinder : public MatchFinder::MatchCallback {
     public :
-        virtual void run(const MatchFinder::MatchResult &Result)
-        {
-            // Isolating the return statement node
-            if(const Stmt *return_stmt_node = Result.Nodes.getNodeAs<clang::Stmt>("return_stmt"))
-            {
-                if(Result.Context->getSourceManager().isWrittenInMainFile(return_stmt_node->getLocStart()))
-                {
-                    unsigned int lineNum = Result.Context->getSourceManager().getPresumedLineNumber(return_stmt_node->getLocStart());
-                    errs() << "False positive detected:" << CHECKER_NAME << ":" << File_Name << ":" << lineNum << "\n";
+        virtual void run(const MatchFinder::MatchResult &Result) {
+            // Isolate the return statement node.
+            if (const Stmt *returnStmtNode = Result.Nodes.getNodeAs<clang::Stmt>("return_stmt")) {
+                if (Result.Context->getSourceManager().isWrittenInMainFile(returnStmtNode->getLocStart())) {
+                    unsigned int lineNum = Result.Context->getSourceManager().getPresumedLineNumber(returnStmtNode->getLocStart());
+                    errs() << "False positive detected:" << CHECKER_NAME << ":" << fileName << ":" << lineNum << "\n";
                 }
             }
         }
@@ -55,11 +65,10 @@ class PatternFinder : public MatchFinder::MatchCallback
         ASTContext *Context;
 };
 
-int main(int argc, const char **argv)
-{
+int main(int argc, const char **argv) {
     CommonOptionsParser OptionsParser(argc, argv, MyToolCategory);
     ClangTool Tool(OptionsParser.getCompilations(), OptionsParser.getSourcePathList());
-    File_Name = argv[1];
+    fileName = argv[1];
     PatternFinder Printer;
     MatchFinder Finder;
     Finder.addMatcher(returnMatcher, &Printer);
