@@ -1,0 +1,399 @@
+doPost (Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)V
+Code(max_stack = 3, max_locals = 11, code_length = 223)
+0:    aload_1
+1:    invokeinterface	javax.servlet.http.HttpServletRequest.getCookies ()[Ljavax/servlet/http/Cookie; (3)	1	0
+6:    astore_3
+7:    aconst_null
+8:    astore		%4
+10:   iconst_0
+11:   istore		%5
+13:   aload_3
+14:   ifnull		#83
+17:   aload_3
+18:   astore		%6
+20:   aload		%6
+22:   arraylength
+23:   istore		%7
+25:   iconst_0
+26:   istore		%8
+28:   iload		%8
+30:   iload		%7
+32:   if_icmpge		#71
+35:   aload		%6
+37:   iload		%8
+39:   aaload
+40:   astore		%9
+42:   aload		%9
+44:   invokevirtual	javax.servlet.http.Cookie.getName ()Ljava/lang/String; (4)
+47:   ldc		"foo" (5)
+49:   invokevirtual	java.lang.String.equals (Ljava/lang/Object;)Z (6)
+52:   ifeq		#65
+55:   aload		%9
+57:   invokevirtual	javax.servlet.http.Cookie.getValue ()Ljava/lang/String; (7)
+60:   astore		%4
+62:   iconst_1
+63:   istore		%5
+65:   iinc		%8	1
+68:   goto		#28
+71:   iload		%5
+73:   ifne		#87
+76:   ldc		"" (8)
+78:   astore		%4
+80:   goto		#87
+83:   ldc		"" (8)
+85:   astore		%4
+87:   ldc		"safe!" (9)
+89:   astore		%6
+91:   new		<java.util.HashMap> (10)
+94:   dup
+95:   invokespecial	java.util.HashMap.<init> ()V (11)
+98:   astore		%7
+100:  aload		%7
+102:  ldc		"keyA-72605" (12)
+104:  ldc		"a Value" (13)
+106:  invokevirtual	java.util.HashMap.put (Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; (14)
+109:  pop
+110:  aload		%7
+112:  ldc		"keyB-72605" (15)
+114:  aload		%4
+116:  invokevirtual	java.lang.String.toString ()Ljava/lang/String; (16)
+119:  invokevirtual	java.util.HashMap.put (Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; (14)
+122:  pop
+123:  aload		%7
+125:  ldc		"keyC" (17)
+127:  ldc		"another Value" (18)
+129:  invokevirtual	java.util.HashMap.put (Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; (14)
+132:  pop
+133:  aload		%7
+135:  ldc		"keyB-72605" (15)
+137:  invokevirtual	java.util.HashMap.get (Ljava/lang/Object;)Ljava/lang/Object; (19)
+140:  checkcast		<java.lang.String> (20)
+143:  astore		%6
+145:  new		<java.lang.StringBuilder> (21)
+148:  dup
+149:  invokespecial	java.lang.StringBuilder.<init> ()V (22)
+152:  ldc		"SELECT * from USERS where USERNAME=? and PASSWORD='" (23)
+154:  invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (24)
+157:  aload		%6
+159:  invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (24)
+162:  ldc		"'" (25)
+164:  invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (24)
+167:  invokevirtual	java.lang.StringBuilder.toString ()Ljava/lang/String; (26)
+170:  astore		%8
+172:  invokestatic	org.owasp.benchmark.helpers.DatabaseHelper.getSqlConnection ()Ljava/sql/Connection; (27)
+175:  astore		%9
+177:  aload		%9
+179:  aload		%8
+181:  iconst_1
+182:  invokeinterface	java.sql.Connection.prepareStatement (Ljava/lang/String;I)Ljava/sql/PreparedStatement; (29)	3	0
+187:  astore		%10
+189:  aload		%10
+191:  iconst_1
+192:  ldc		"foo" (5)
+194:  invokeinterface	java.sql.PreparedStatement.setString (ILjava/lang/String;)V (30)	3	0
+199:  aload		%10
+201:  invokeinterface	java.sql.PreparedStatement.execute ()Z (31)	1	0
+206:  pop
+207:  goto		#222
+210:  astore		%9
+212:  new		<javax.servlet.ServletException> (33)
+215:  dup
+216:  aload		%9
+218:  invokespecial	javax.servlet.ServletException.<init> (Ljava/lang/Throwable;)V (34)
+221:  athrow
+222:  return
+
+Exception handler(s) = 
+From	To	Handler	Type
+172	207	210	java.sql.SQLException(32)
+
+Attribute(s) = 
+LineNumber(0, 42), LineNumber(7, 44), LineNumber(10, 45), LineNumber(13, 46), 
+LineNumber(17, 47), LineNumber(42, 48), LineNumber(55, 49), LineNumber(62, 50), 
+LineNumber(65, 47), LineNumber(71, 53), LineNumber(76, 55), LineNumber(83, 59), 
+LineNumber(87, 63), LineNumber(91, 64), LineNumber(100, 65), LineNumber(110, 66), 
+LineNumber(123, 67), LineNumber(133, 68), LineNumber(145, 71), LineNumber(172, 74), 
+LineNumber(177, 75), LineNumber(189, 77), LineNumber(199, 78), LineNumber(207, 81), 
+LineNumber(210, 79), LineNumber(212, 80), LineNumber(222, 82)
+LocalVariable(start_pc = 42, length = 23, index = 9:javax.servlet.http.Cookie cookie)
+LocalVariable(start_pc = 177, length = 30, index = 9:java.sql.Connection connection)
+LocalVariable(start_pc = 189, length = 18, index = 10:java.sql.PreparedStatement statement)
+LocalVariable(start_pc = 212, length = 10, index = 9:java.sql.SQLException e)
+LocalVariable(start_pc = 0, length = 223, index = 0:org.owasp.benchmark.testcode.BenchmarkTest00857 this)
+LocalVariable(start_pc = 0, length = 223, index = 1:javax.servlet.http.HttpServletRequest request)
+LocalVariable(start_pc = 0, length = 223, index = 2:javax.servlet.http.HttpServletResponse response)
+LocalVariable(start_pc = 7, length = 216, index = 3:javax.servlet.http.Cookie[] cookies)
+LocalVariable(start_pc = 10, length = 213, index = 4:String param)
+LocalVariable(start_pc = 13, length = 210, index = 5:boolean foundit)
+LocalVariable(start_pc = 91, length = 132, index = 6:String bar)
+LocalVariable(start_pc = 100, length = 123, index = 7:java.util.HashMap map72605)
+LocalVariable(start_pc = 172, length = 51, index = 8:String sql)
+LocalVariable(start_pc = 100, length = 123, index = 7:java.util.HashMap<Ljava.lang.String map72605)
+StackMapTable((FULL, offset delta=28, locals={(type=Object, class=org.owasp.benchmark.testcode.BenchmarkTest00857), (type=Object, class=javax.servlet.http.HttpServletRequest), (type=Object, class=javax.servlet.http.HttpServletResponse), (type=Object, class=[Ljavax.servlet.http.Cookie;), (type=Object, class=java.lang.String), (type=Integer), (type=Object, class=[Ljavax.servlet.http.Cookie;), (type=Integer), (type=Integer)}), (SAME, offset delta=36), (CHOP 3, offset delta=5), (SAME, offset delta=11), (SAME, offset delta=3), (FULL, offset delta=122, locals={(type=Object, class=org.owasp.benchmark.testcode.BenchmarkTest00857), (type=Object, class=javax.servlet.http.HttpServletRequest), (type=Object, class=javax.servlet.http.HttpServletResponse), (type=Object, class=[Ljavax.servlet.http.Cookie;), (type=Object, class=java.lang.String), (type=Integer), (type=Object, class=java.lang.String), (type=Object, class=java.util.HashMap), (type=Object, class=java.lang.String)}, stack items={(type=Object, class=java.sql.SQLException)}), (SAME, offset delta=11))
+
+doPost (Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)V
+Code(max_stack = 3, max_locals = 11, code_length = 223)
+0:    aload_1
+1:    invokeinterface	javax.servlet.http.HttpServletRequest.getCookies ()[Ljavax/servlet/http/Cookie; (3)	1	0
+6:    astore_3
+7:    aconst_null
+8:    astore		%4
+10:   iconst_0
+11:   istore		%5
+13:   aload_3
+14:   ifnull		#83
+17:   aload_3
+18:   astore		%6
+20:   aload		%6
+22:   arraylength
+23:   istore		%7
+25:   iconst_0
+26:   istore		%8
+28:   iload		%8
+30:   iload		%7
+32:   if_icmpge		#71
+35:   aload		%6
+37:   iload		%8
+39:   aaload
+40:   astore		%9
+42:   aload		%9
+44:   invokevirtual	javax.servlet.http.Cookie.getName ()Ljava/lang/String; (4)
+47:   ldc		"foo" (5)
+49:   invokevirtual	java.lang.String.equals (Ljava/lang/Object;)Z (6)
+52:   ifeq		#65
+55:   aload		%9
+57:   invokevirtual	javax.servlet.http.Cookie.getValue ()Ljava/lang/String; (7)
+60:   astore		%4
+62:   iconst_1
+63:   istore		%5
+65:   iinc		%8	1
+68:   goto		#28
+71:   iload		%5
+73:   ifne		#87
+76:   ldc		"" (8)
+78:   astore		%4
+80:   goto		#87
+83:   ldc		"" (8)
+85:   astore		%4
+87:   ldc		"safe!" (9)
+89:   astore		%6
+91:   new		<java.util.HashMap> (10)
+94:   dup
+95:   invokespecial	java.util.HashMap.<init> ()V (11)
+98:   astore		%7
+100:  aload		%7
+102:  ldc		"keyA-72605" (12)
+104:  ldc		"a Value" (13)
+106:  invokevirtual	java.util.HashMap.put (Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; (14)
+109:  pop
+110:  aload		%7
+112:  ldc		"keyB-72605" (15)
+114:  aload		%4
+116:  invokevirtual	java.lang.String.toString ()Ljava/lang/String; (16)
+119:  invokevirtual	java.util.HashMap.put (Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; (14)
+122:  pop
+123:  aload		%7
+125:  ldc		"keyC" (17)
+127:  ldc		"another Value" (18)
+129:  invokevirtual	java.util.HashMap.put (Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; (14)
+132:  pop
+133:  aload		%7
+135:  ldc		"keyB-72605" (15)
+137:  invokevirtual	java.util.HashMap.get (Ljava/lang/Object;)Ljava/lang/Object; (19)
+140:  checkcast		<java.lang.String> (20)
+143:  astore		%6
+145:  new		<java.lang.StringBuilder> (21)
+148:  dup
+149:  invokespecial	java.lang.StringBuilder.<init> ()V (22)
+152:  ldc		"SELECT * from USERS where USERNAME=? and PASSWORD='" (23)
+154:  invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (24)
+157:  aload		%6
+159:  invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (24)
+162:  ldc		"'" (25)
+164:  invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (24)
+167:  invokevirtual	java.lang.StringBuilder.toString ()Ljava/lang/String; (26)
+170:  astore		%8
+172:  invokestatic	org.owasp.benchmark.helpers.DatabaseHelper.getSqlConnection ()Ljava/sql/Connection; (27)
+175:  astore		%9
+177:  aload		%9
+179:  aload		%8
+181:  iconst_1
+182:  invokeinterface	java.sql.Connection.prepareStatement (Ljava/lang/String;I)Ljava/sql/PreparedStatement; (29)	3	0
+187:  astore		%10
+189:  aload		%10
+191:  iconst_1
+192:  ldc		"foo" (5)
+194:  invokeinterface	java.sql.PreparedStatement.setString (ILjava/lang/String;)V (30)	3	0
+199:  aload		%10
+201:  invokeinterface	java.sql.PreparedStatement.execute ()Z (31)	1	0
+206:  pop
+207:  goto		#222
+210:  astore		%9
+212:  new		<javax.servlet.ServletException> (33)
+215:  dup
+216:  aload		%9
+218:  invokespecial	javax.servlet.ServletException.<init> (Ljava/lang/Throwable;)V (34)
+221:  athrow
+222:  return
+
+Exception handler(s) = 
+From	To	Handler	Type
+172	207	210	java.sql.SQLException(32)
+
+Attribute(s) = 
+LineNumber(0, 42), LineNumber(7, 44), LineNumber(10, 45), LineNumber(13, 46), 
+LineNumber(17, 47), LineNumber(42, 48), LineNumber(55, 49), LineNumber(62, 50), 
+LineNumber(65, 47), LineNumber(71, 53), LineNumber(76, 55), LineNumber(83, 59), 
+LineNumber(87, 63), LineNumber(91, 64), LineNumber(100, 65), LineNumber(110, 66), 
+LineNumber(123, 67), LineNumber(133, 68), LineNumber(145, 71), LineNumber(172, 74), 
+LineNumber(177, 75), LineNumber(189, 77), LineNumber(199, 78), LineNumber(207, 81), 
+LineNumber(210, 79), LineNumber(212, 80), LineNumber(222, 82)
+LocalVariable(start_pc = 42, length = 23, index = 9:javax.servlet.http.Cookie cookie)
+LocalVariable(start_pc = 177, length = 30, index = 9:java.sql.Connection connection)
+LocalVariable(start_pc = 189, length = 18, index = 10:java.sql.PreparedStatement statement)
+LocalVariable(start_pc = 212, length = 10, index = 9:java.sql.SQLException e)
+LocalVariable(start_pc = 0, length = 223, index = 0:org.owasp.benchmark.testcode.BenchmarkTest00857 this)
+LocalVariable(start_pc = 0, length = 223, index = 1:javax.servlet.http.HttpServletRequest request)
+LocalVariable(start_pc = 0, length = 223, index = 2:javax.servlet.http.HttpServletResponse response)
+LocalVariable(start_pc = 7, length = 216, index = 3:javax.servlet.http.Cookie[] cookies)
+LocalVariable(start_pc = 10, length = 213, index = 4:String param)
+LocalVariable(start_pc = 13, length = 210, index = 5:boolean foundit)
+LocalVariable(start_pc = 91, length = 132, index = 6:String bar)
+LocalVariable(start_pc = 100, length = 123, index = 7:java.util.HashMap map72605)
+LocalVariable(start_pc = 172, length = 51, index = 8:String sql)
+LocalVariable(start_pc = 100, length = 123, index = 7:java.util.HashMap<Ljava.lang.String map72605)
+StackMapTable((FULL, offset delta=28, locals={(type=Object, class=org.owasp.benchmark.testcode.BenchmarkTest00857), (type=Object, class=javax.servlet.http.HttpServletRequest), (type=Object, class=javax.servlet.http.HttpServletResponse), (type=Object, class=[Ljavax.servlet.http.Cookie;), (type=Object, class=java.lang.String), (type=Integer), (type=Object, class=[Ljavax.servlet.http.Cookie;), (type=Integer), (type=Integer)}), (SAME, offset delta=36), (CHOP 3, offset delta=5), (SAME, offset delta=11), (SAME, offset delta=3), (FULL, offset delta=122, locals={(type=Object, class=org.owasp.benchmark.testcode.BenchmarkTest00857), (type=Object, class=javax.servlet.http.HttpServletRequest), (type=Object, class=javax.servlet.http.HttpServletResponse), (type=Object, class=[Ljavax.servlet.http.Cookie;), (type=Object, class=java.lang.String), (type=Integer), (type=Object, class=java.lang.String), (type=Object, class=java.util.HashMap), (type=Object, class=java.lang.String)}, stack items={(type=Object, class=java.sql.SQLException)}), (SAME, offset delta=11))
+
+doPost (Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)V
+Code(max_stack = 3, max_locals = 11, code_length = 223)
+0:    aload_1
+1:    invokeinterface	javax.servlet.http.HttpServletRequest.getCookies ()[Ljavax/servlet/http/Cookie; (3)	1	0
+6:    astore_3
+7:    aconst_null
+8:    astore		%4
+10:   iconst_0
+11:   istore		%5
+13:   aload_3
+14:   ifnull		#83
+17:   aload_3
+18:   astore		%6
+20:   aload		%6
+22:   arraylength
+23:   istore		%7
+25:   iconst_0
+26:   istore		%8
+28:   iload		%8
+30:   iload		%7
+32:   if_icmpge		#71
+35:   aload		%6
+37:   iload		%8
+39:   aaload
+40:   astore		%9
+42:   aload		%9
+44:   invokevirtual	javax.servlet.http.Cookie.getName ()Ljava/lang/String; (4)
+47:   ldc		"foo" (5)
+49:   invokevirtual	java.lang.String.equals (Ljava/lang/Object;)Z (6)
+52:   ifeq		#65
+55:   aload		%9
+57:   invokevirtual	javax.servlet.http.Cookie.getValue ()Ljava/lang/String; (7)
+60:   astore		%4
+62:   iconst_1
+63:   istore		%5
+65:   iinc		%8	1
+68:   goto		#28
+71:   iload		%5
+73:   ifne		#87
+76:   ldc		"" (8)
+78:   astore		%4
+80:   goto		#87
+83:   ldc		"" (8)
+85:   astore		%4
+87:   ldc		"safe!" (9)
+89:   astore		%6
+91:   new		<java.util.HashMap> (10)
+94:   dup
+95:   invokespecial	java.util.HashMap.<init> ()V (11)
+98:   astore		%7
+100:  aload		%7
+102:  ldc		"keyA-72605" (12)
+104:  ldc		"a Value" (13)
+106:  invokevirtual	java.util.HashMap.put (Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; (14)
+109:  pop
+110:  aload		%7
+112:  ldc		"keyB-72605" (15)
+114:  aload		%4
+116:  invokevirtual	java.lang.String.toString ()Ljava/lang/String; (16)
+119:  invokevirtual	java.util.HashMap.put (Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; (14)
+122:  pop
+123:  aload		%7
+125:  ldc		"keyC" (17)
+127:  ldc		"another Value" (18)
+129:  invokevirtual	java.util.HashMap.put (Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; (14)
+132:  pop
+133:  aload		%7
+135:  ldc		"keyB-72605" (15)
+137:  invokevirtual	java.util.HashMap.get (Ljava/lang/Object;)Ljava/lang/Object; (19)
+140:  checkcast		<java.lang.String> (20)
+143:  astore		%6
+145:  new		<java.lang.StringBuilder> (21)
+148:  dup
+149:  invokespecial	java.lang.StringBuilder.<init> ()V (22)
+152:  ldc		"SELECT * from USERS where USERNAME=? and PASSWORD='" (23)
+154:  invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (24)
+157:  aload		%6
+159:  invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (24)
+162:  ldc		"'" (25)
+164:  invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (24)
+167:  invokevirtual	java.lang.StringBuilder.toString ()Ljava/lang/String; (26)
+170:  astore		%8
+172:  invokestatic	org.owasp.benchmark.helpers.DatabaseHelper.getSqlConnection ()Ljava/sql/Connection; (27)
+175:  astore		%9
+177:  aload		%9
+179:  aload		%8
+181:  iconst_1
+182:  invokeinterface	java.sql.Connection.prepareStatement (Ljava/lang/String;I)Ljava/sql/PreparedStatement; (29)	3	0
+187:  astore		%10
+189:  aload		%10
+191:  iconst_1
+192:  ldc		"foo" (5)
+194:  invokeinterface	java.sql.PreparedStatement.setString (ILjava/lang/String;)V (30)	3	0
+199:  aload		%10
+201:  invokeinterface	java.sql.PreparedStatement.execute ()Z (31)	1	0
+206:  pop
+207:  goto		#222
+210:  astore		%9
+212:  new		<javax.servlet.ServletException> (33)
+215:  dup
+216:  aload		%9
+218:  invokespecial	javax.servlet.ServletException.<init> (Ljava/lang/Throwable;)V (34)
+221:  athrow
+222:  return
+
+Exception handler(s) = 
+From	To	Handler	Type
+172	207	210	java.sql.SQLException(32)
+
+Attribute(s) = 
+LineNumber(0, 42), LineNumber(7, 44), LineNumber(10, 45), LineNumber(13, 46), 
+LineNumber(17, 47), LineNumber(42, 48), LineNumber(55, 49), LineNumber(62, 50), 
+LineNumber(65, 47), LineNumber(71, 53), LineNumber(76, 55), LineNumber(83, 59), 
+LineNumber(87, 63), LineNumber(91, 64), LineNumber(100, 65), LineNumber(110, 66), 
+LineNumber(123, 67), LineNumber(133, 68), LineNumber(145, 71), LineNumber(172, 74), 
+LineNumber(177, 75), LineNumber(189, 77), LineNumber(199, 78), LineNumber(207, 81), 
+LineNumber(210, 79), LineNumber(212, 80), LineNumber(222, 82)
+LocalVariable(start_pc = 42, length = 23, index = 9:javax.servlet.http.Cookie cookie)
+LocalVariable(start_pc = 177, length = 30, index = 9:java.sql.Connection connection)
+LocalVariable(start_pc = 189, length = 18, index = 10:java.sql.PreparedStatement statement)
+LocalVariable(start_pc = 212, length = 10, index = 9:java.sql.SQLException e)
+LocalVariable(start_pc = 0, length = 223, index = 0:org.owasp.benchmark.testcode.BenchmarkTest00857 this)
+LocalVariable(start_pc = 0, length = 223, index = 1:javax.servlet.http.HttpServletRequest request)
+LocalVariable(start_pc = 0, length = 223, index = 2:javax.servlet.http.HttpServletResponse response)
+LocalVariable(start_pc = 7, length = 216, index = 3:javax.servlet.http.Cookie[] cookies)
+LocalVariable(start_pc = 10, length = 213, index = 4:String param)
+LocalVariable(start_pc = 13, length = 210, index = 5:boolean foundit)
+LocalVariable(start_pc = 91, length = 132, index = 6:String bar)
+LocalVariable(start_pc = 100, length = 123, index = 7:java.util.HashMap map72605)
+LocalVariable(start_pc = 172, length = 51, index = 8:String sql)
+LocalVariable(start_pc = 100, length = 123, index = 7:java.util.HashMap<Ljava.lang.String map72605)
+StackMapTable((FULL, offset delta=28, locals={(type=Object, class=org.owasp.benchmark.testcode.BenchmarkTest00857), (type=Object, class=javax.servlet.http.HttpServletRequest), (type=Object, class=javax.servlet.http.HttpServletResponse), (type=Object, class=[Ljavax.servlet.http.Cookie;), (type=Object, class=java.lang.String), (type=Integer), (type=Object, class=[Ljavax.servlet.http.Cookie;), (type=Integer), (type=Integer)}), (SAME, offset delta=36), (CHOP 3, offset delta=5), (SAME, offset delta=11), (SAME, offset delta=3), (FULL, offset delta=122, locals={(type=Object, class=org.owasp.benchmark.testcode.BenchmarkTest00857), (type=Object, class=javax.servlet.http.HttpServletRequest), (type=Object, class=javax.servlet.http.HttpServletResponse), (type=Object, class=[Ljavax.servlet.http.Cookie;), (type=Object, class=java.lang.String), (type=Integer), (type=Object, class=java.lang.String), (type=Object, class=java.util.HashMap), (type=Object, class=java.lang.String)}, stack items={(type=Object, class=java.sql.SQLException)}), (SAME, offset delta=11))
+

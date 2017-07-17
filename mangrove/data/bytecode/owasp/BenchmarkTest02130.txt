@@ -1,0 +1,285 @@
+doPost (Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)V
+Code(max_stack = 3, max_locals = 10, code_length = 156)
+0:    ldc		"" (3)
+2:    astore_3
+3:    aload_1
+4:    invokeinterface	javax.servlet.http.HttpServletRequest.getHeaderNames ()Ljava/util/Enumeration; (4)	1	0
+9:    astore		%4
+11:   aload		%4
+13:   invokeinterface	java.util.Enumeration.hasMoreElements ()Z (5)	1	0
+18:   ifeq		#32
+21:   aload		%4
+23:   invokeinterface	java.util.Enumeration.nextElement ()Ljava/lang/Object; (6)	1	0
+28:   checkcast		<java.lang.String> (7)
+31:   astore_3
+32:   ldc		"safe!" (8)
+34:   astore		%5
+36:   new		<java.util.HashMap> (9)
+39:   dup
+40:   invokespecial	java.util.HashMap.<init> ()V (10)
+43:   astore		%6
+45:   aload		%6
+47:   ldc		"keyA-20649" (11)
+49:   ldc		"a Value" (12)
+51:   invokevirtual	java.util.HashMap.put (Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; (13)
+54:   pop
+55:   aload		%6
+57:   ldc		"keyB-20649" (14)
+59:   aload_3
+60:   invokevirtual	java.lang.String.toString ()Ljava/lang/String; (15)
+63:   invokevirtual	java.util.HashMap.put (Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; (13)
+66:   pop
+67:   aload		%6
+69:   ldc		"keyC" (16)
+71:   ldc		"another Value" (17)
+73:   invokevirtual	java.util.HashMap.put (Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; (13)
+76:   pop
+77:   aload		%6
+79:   ldc		"keyB-20649" (14)
+81:   invokevirtual	java.util.HashMap.get (Ljava/lang/Object;)Ljava/lang/Object; (18)
+84:   checkcast		<java.lang.String> (7)
+87:   astore		%5
+89:   new		<java.lang.StringBuilder> (19)
+92:   dup
+93:   invokespecial	java.lang.StringBuilder.<init> ()V (20)
+96:   ldc		"{call verifyUserPassword('foo','" (21)
+98:   invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (22)
+101:  aload		%5
+103:  invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (22)
+106:  ldc		"')}" (23)
+108:  invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (22)
+111:  invokevirtual	java.lang.StringBuilder.toString ()Ljava/lang/String; (24)
+114:  astore		%7
+116:  invokestatic	org.owasp.benchmark.helpers.DatabaseHelper.getSqlConnection ()Ljava/sql/Connection; (25)
+119:  astore		%8
+121:  aload		%8
+123:  aload		%7
+125:  invokeinterface	java.sql.Connection.prepareCall (Ljava/lang/String;)Ljava/sql/CallableStatement; (26)	2	0
+130:  astore		%9
+132:  aload		%9
+134:  invokeinterface	java.sql.CallableStatement.execute ()Z (27)	1	0
+139:  pop
+140:  goto		#155
+143:  astore		%8
+145:  new		<javax.servlet.ServletException> (29)
+148:  dup
+149:  aload		%8
+151:  invokespecial	javax.servlet.ServletException.<init> (Ljava/lang/Throwable;)V (30)
+154:  athrow
+155:  return
+
+Exception handler(s) = 
+From	To	Handler	Type
+116	140	143	java.sql.SQLException(28)
+
+Attribute(s) = 
+LineNumber(0, 42), LineNumber(3, 43), LineNumber(11, 44), LineNumber(21, 45), 
+LineNumber(32, 49), LineNumber(36, 50), LineNumber(45, 51), LineNumber(55, 52), 
+LineNumber(67, 53), LineNumber(77, 54), LineNumber(89, 57), LineNumber(116, 60), 
+LineNumber(121, 61), LineNumber(132, 62), LineNumber(140, 65), LineNumber(143, 63), 
+LineNumber(145, 64), LineNumber(155, 66)
+LocalVariable(start_pc = 121, length = 19, index = 8:java.sql.Connection connection)
+LocalVariable(start_pc = 132, length = 8, index = 9:java.sql.CallableStatement statement)
+LocalVariable(start_pc = 145, length = 10, index = 8:java.sql.SQLException e)
+LocalVariable(start_pc = 0, length = 156, index = 0:org.owasp.benchmark.testcode.BenchmarkTest02130 this)
+LocalVariable(start_pc = 0, length = 156, index = 1:javax.servlet.http.HttpServletRequest request)
+LocalVariable(start_pc = 0, length = 156, index = 2:javax.servlet.http.HttpServletResponse response)
+LocalVariable(start_pc = 3, length = 153, index = 3:String param)
+LocalVariable(start_pc = 11, length = 145, index = 4:java.util.Enumeration headerNames)
+LocalVariable(start_pc = 36, length = 120, index = 5:String bar)
+LocalVariable(start_pc = 45, length = 111, index = 6:java.util.HashMap map20649)
+LocalVariable(start_pc = 116, length = 40, index = 7:String sql)
+LocalVariable(start_pc = 11, length = 145, index = 4:java.util.Enumeration<Ljava.lang.String headerNames)
+LocalVariable(start_pc = 45, length = 111, index = 6:java.util.HashMap<Ljava.lang.String map20649)
+StackMapTable((APPEND 2, offset delta=32, locals={(type=Object, class=java.lang.String), (type=Object, class=java.util.Enumeration)}), (FULL, offset delta=110, locals={(type=Object, class=org.owasp.benchmark.testcode.BenchmarkTest02130), (type=Object, class=javax.servlet.http.HttpServletRequest), (type=Object, class=javax.servlet.http.HttpServletResponse), (type=Object, class=java.lang.String), (type=Object, class=java.util.Enumeration), (type=Object, class=java.lang.String), (type=Object, class=java.util.HashMap), (type=Object, class=java.lang.String)}, stack items={(type=Object, class=java.sql.SQLException)}), (SAME, offset delta=11))
+
+doPost (Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)V
+Code(max_stack = 3, max_locals = 10, code_length = 156)
+0:    ldc		"" (3)
+2:    astore_3
+3:    aload_1
+4:    invokeinterface	javax.servlet.http.HttpServletRequest.getHeaderNames ()Ljava/util/Enumeration; (4)	1	0
+9:    astore		%4
+11:   aload		%4
+13:   invokeinterface	java.util.Enumeration.hasMoreElements ()Z (5)	1	0
+18:   ifeq		#32
+21:   aload		%4
+23:   invokeinterface	java.util.Enumeration.nextElement ()Ljava/lang/Object; (6)	1	0
+28:   checkcast		<java.lang.String> (7)
+31:   astore_3
+32:   ldc		"safe!" (8)
+34:   astore		%5
+36:   new		<java.util.HashMap> (9)
+39:   dup
+40:   invokespecial	java.util.HashMap.<init> ()V (10)
+43:   astore		%6
+45:   aload		%6
+47:   ldc		"keyA-20649" (11)
+49:   ldc		"a Value" (12)
+51:   invokevirtual	java.util.HashMap.put (Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; (13)
+54:   pop
+55:   aload		%6
+57:   ldc		"keyB-20649" (14)
+59:   aload_3
+60:   invokevirtual	java.lang.String.toString ()Ljava/lang/String; (15)
+63:   invokevirtual	java.util.HashMap.put (Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; (13)
+66:   pop
+67:   aload		%6
+69:   ldc		"keyC" (16)
+71:   ldc		"another Value" (17)
+73:   invokevirtual	java.util.HashMap.put (Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; (13)
+76:   pop
+77:   aload		%6
+79:   ldc		"keyB-20649" (14)
+81:   invokevirtual	java.util.HashMap.get (Ljava/lang/Object;)Ljava/lang/Object; (18)
+84:   checkcast		<java.lang.String> (7)
+87:   astore		%5
+89:   new		<java.lang.StringBuilder> (19)
+92:   dup
+93:   invokespecial	java.lang.StringBuilder.<init> ()V (20)
+96:   ldc		"{call verifyUserPassword('foo','" (21)
+98:   invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (22)
+101:  aload		%5
+103:  invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (22)
+106:  ldc		"')}" (23)
+108:  invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (22)
+111:  invokevirtual	java.lang.StringBuilder.toString ()Ljava/lang/String; (24)
+114:  astore		%7
+116:  invokestatic	org.owasp.benchmark.helpers.DatabaseHelper.getSqlConnection ()Ljava/sql/Connection; (25)
+119:  astore		%8
+121:  aload		%8
+123:  aload		%7
+125:  invokeinterface	java.sql.Connection.prepareCall (Ljava/lang/String;)Ljava/sql/CallableStatement; (26)	2	0
+130:  astore		%9
+132:  aload		%9
+134:  invokeinterface	java.sql.CallableStatement.execute ()Z (27)	1	0
+139:  pop
+140:  goto		#155
+143:  astore		%8
+145:  new		<javax.servlet.ServletException> (29)
+148:  dup
+149:  aload		%8
+151:  invokespecial	javax.servlet.ServletException.<init> (Ljava/lang/Throwable;)V (30)
+154:  athrow
+155:  return
+
+Exception handler(s) = 
+From	To	Handler	Type
+116	140	143	java.sql.SQLException(28)
+
+Attribute(s) = 
+LineNumber(0, 42), LineNumber(3, 43), LineNumber(11, 44), LineNumber(21, 45), 
+LineNumber(32, 49), LineNumber(36, 50), LineNumber(45, 51), LineNumber(55, 52), 
+LineNumber(67, 53), LineNumber(77, 54), LineNumber(89, 57), LineNumber(116, 60), 
+LineNumber(121, 61), LineNumber(132, 62), LineNumber(140, 65), LineNumber(143, 63), 
+LineNumber(145, 64), LineNumber(155, 66)
+LocalVariable(start_pc = 121, length = 19, index = 8:java.sql.Connection connection)
+LocalVariable(start_pc = 132, length = 8, index = 9:java.sql.CallableStatement statement)
+LocalVariable(start_pc = 145, length = 10, index = 8:java.sql.SQLException e)
+LocalVariable(start_pc = 0, length = 156, index = 0:org.owasp.benchmark.testcode.BenchmarkTest02130 this)
+LocalVariable(start_pc = 0, length = 156, index = 1:javax.servlet.http.HttpServletRequest request)
+LocalVariable(start_pc = 0, length = 156, index = 2:javax.servlet.http.HttpServletResponse response)
+LocalVariable(start_pc = 3, length = 153, index = 3:String param)
+LocalVariable(start_pc = 11, length = 145, index = 4:java.util.Enumeration headerNames)
+LocalVariable(start_pc = 36, length = 120, index = 5:String bar)
+LocalVariable(start_pc = 45, length = 111, index = 6:java.util.HashMap map20649)
+LocalVariable(start_pc = 116, length = 40, index = 7:String sql)
+LocalVariable(start_pc = 11, length = 145, index = 4:java.util.Enumeration<Ljava.lang.String headerNames)
+LocalVariable(start_pc = 45, length = 111, index = 6:java.util.HashMap<Ljava.lang.String map20649)
+StackMapTable((APPEND 2, offset delta=32, locals={(type=Object, class=java.lang.String), (type=Object, class=java.util.Enumeration)}), (FULL, offset delta=110, locals={(type=Object, class=org.owasp.benchmark.testcode.BenchmarkTest02130), (type=Object, class=javax.servlet.http.HttpServletRequest), (type=Object, class=javax.servlet.http.HttpServletResponse), (type=Object, class=java.lang.String), (type=Object, class=java.util.Enumeration), (type=Object, class=java.lang.String), (type=Object, class=java.util.HashMap), (type=Object, class=java.lang.String)}, stack items={(type=Object, class=java.sql.SQLException)}), (SAME, offset delta=11))
+
+doPost (Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)V
+Code(max_stack = 3, max_locals = 10, code_length = 156)
+0:    ldc		"" (3)
+2:    astore_3
+3:    aload_1
+4:    invokeinterface	javax.servlet.http.HttpServletRequest.getHeaderNames ()Ljava/util/Enumeration; (4)	1	0
+9:    astore		%4
+11:   aload		%4
+13:   invokeinterface	java.util.Enumeration.hasMoreElements ()Z (5)	1	0
+18:   ifeq		#32
+21:   aload		%4
+23:   invokeinterface	java.util.Enumeration.nextElement ()Ljava/lang/Object; (6)	1	0
+28:   checkcast		<java.lang.String> (7)
+31:   astore_3
+32:   ldc		"safe!" (8)
+34:   astore		%5
+36:   new		<java.util.HashMap> (9)
+39:   dup
+40:   invokespecial	java.util.HashMap.<init> ()V (10)
+43:   astore		%6
+45:   aload		%6
+47:   ldc		"keyA-20649" (11)
+49:   ldc		"a Value" (12)
+51:   invokevirtual	java.util.HashMap.put (Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; (13)
+54:   pop
+55:   aload		%6
+57:   ldc		"keyB-20649" (14)
+59:   aload_3
+60:   invokevirtual	java.lang.String.toString ()Ljava/lang/String; (15)
+63:   invokevirtual	java.util.HashMap.put (Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; (13)
+66:   pop
+67:   aload		%6
+69:   ldc		"keyC" (16)
+71:   ldc		"another Value" (17)
+73:   invokevirtual	java.util.HashMap.put (Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; (13)
+76:   pop
+77:   aload		%6
+79:   ldc		"keyB-20649" (14)
+81:   invokevirtual	java.util.HashMap.get (Ljava/lang/Object;)Ljava/lang/Object; (18)
+84:   checkcast		<java.lang.String> (7)
+87:   astore		%5
+89:   new		<java.lang.StringBuilder> (19)
+92:   dup
+93:   invokespecial	java.lang.StringBuilder.<init> ()V (20)
+96:   ldc		"{call verifyUserPassword('foo','" (21)
+98:   invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (22)
+101:  aload		%5
+103:  invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (22)
+106:  ldc		"')}" (23)
+108:  invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (22)
+111:  invokevirtual	java.lang.StringBuilder.toString ()Ljava/lang/String; (24)
+114:  astore		%7
+116:  invokestatic	org.owasp.benchmark.helpers.DatabaseHelper.getSqlConnection ()Ljava/sql/Connection; (25)
+119:  astore		%8
+121:  aload		%8
+123:  aload		%7
+125:  invokeinterface	java.sql.Connection.prepareCall (Ljava/lang/String;)Ljava/sql/CallableStatement; (26)	2	0
+130:  astore		%9
+132:  aload		%9
+134:  invokeinterface	java.sql.CallableStatement.execute ()Z (27)	1	0
+139:  pop
+140:  goto		#155
+143:  astore		%8
+145:  new		<javax.servlet.ServletException> (29)
+148:  dup
+149:  aload		%8
+151:  invokespecial	javax.servlet.ServletException.<init> (Ljava/lang/Throwable;)V (30)
+154:  athrow
+155:  return
+
+Exception handler(s) = 
+From	To	Handler	Type
+116	140	143	java.sql.SQLException(28)
+
+Attribute(s) = 
+LineNumber(0, 42), LineNumber(3, 43), LineNumber(11, 44), LineNumber(21, 45), 
+LineNumber(32, 49), LineNumber(36, 50), LineNumber(45, 51), LineNumber(55, 52), 
+LineNumber(67, 53), LineNumber(77, 54), LineNumber(89, 57), LineNumber(116, 60), 
+LineNumber(121, 61), LineNumber(132, 62), LineNumber(140, 65), LineNumber(143, 63), 
+LineNumber(145, 64), LineNumber(155, 66)
+LocalVariable(start_pc = 121, length = 19, index = 8:java.sql.Connection connection)
+LocalVariable(start_pc = 132, length = 8, index = 9:java.sql.CallableStatement statement)
+LocalVariable(start_pc = 145, length = 10, index = 8:java.sql.SQLException e)
+LocalVariable(start_pc = 0, length = 156, index = 0:org.owasp.benchmark.testcode.BenchmarkTest02130 this)
+LocalVariable(start_pc = 0, length = 156, index = 1:javax.servlet.http.HttpServletRequest request)
+LocalVariable(start_pc = 0, length = 156, index = 2:javax.servlet.http.HttpServletResponse response)
+LocalVariable(start_pc = 3, length = 153, index = 3:String param)
+LocalVariable(start_pc = 11, length = 145, index = 4:java.util.Enumeration headerNames)
+LocalVariable(start_pc = 36, length = 120, index = 5:String bar)
+LocalVariable(start_pc = 45, length = 111, index = 6:java.util.HashMap map20649)
+LocalVariable(start_pc = 116, length = 40, index = 7:String sql)
+LocalVariable(start_pc = 11, length = 145, index = 4:java.util.Enumeration<Ljava.lang.String headerNames)
+LocalVariable(start_pc = 45, length = 111, index = 6:java.util.HashMap<Ljava.lang.String map20649)
+StackMapTable((APPEND 2, offset delta=32, locals={(type=Object, class=java.lang.String), (type=Object, class=java.util.Enumeration)}), (FULL, offset delta=110, locals={(type=Object, class=org.owasp.benchmark.testcode.BenchmarkTest02130), (type=Object, class=javax.servlet.http.HttpServletRequest), (type=Object, class=javax.servlet.http.HttpServletResponse), (type=Object, class=java.lang.String), (type=Object, class=java.util.Enumeration), (type=Object, class=java.lang.String), (type=Object, class=java.util.HashMap), (type=Object, class=java.lang.String)}, stack items={(type=Object, class=java.sql.SQLException)}), (SAME, offset delta=11))
+

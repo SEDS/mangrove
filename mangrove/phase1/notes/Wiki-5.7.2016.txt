@@ -1,0 +1,17 @@
+## Failed Trials
+- In Frama-c, the program slicing plug-in uses the result of value analysis plug-in. Value analysis plug-in over-approximates the set of possible values for each variable. Therefore, program slicing plug-in performed simplifications on the code itself; so the control flow graph changes.
+
+- Hierarchical delta debugging tool implemented by Ghassan Misherghi and Zhendong Su is outdated. highly coupled with unsupported versions of other tools.
+
+- Implementing HDD using Clang ASTs. With Omit, we tried to implement HDD algorithm to work on AST representation of c code. I explored llvm, clang, and libtooling frameworks for this purpose. Then, we discovered creduce code reduction tool (see creduce paper), so stopped implementing a new tool.
+
+## Creduce Experiments
+creduce does not directly implement delta debugging (nor HDD) algorithm. It has ~150 transformations. Each transformation takes the source code and performs a transformation which presumably reduce code. Calling creduce with all transformations enabled (the default case) always leads to false positive to true positive conversion. creduce becomes very aggressive with all transformations. The resulting code is usually a small code snipped with a true positive.
+
+We then explored what each transformation does. 65 of transformations are implemented using clang ASTs. In the source directory of creduce, there is clang_delta directory. Under clang_delta directory `./clang_delta --transformations` command will show all description for these 65 clang transformations.
+
+For the remaining ~85 transformations, we run experiments to explore their effects. The transformation `pass_lines x` is the traditional delta debugging where `x` being the level to be passed to topformflat [CITE]. The transformation `pass_command 0` removes all command where `0` being redundant. Likewise, the transformation `pass_blank 0` removes blank lines.
+
+There are 17 transformations from clex package. A transformation `pass_clex name` removes chunk of code which matches a specific regular expression defined in the transformation `name`. This `name` is not self-descriptive. One needs to look into the source code of transformation to understand which expressions in input code are being targeted. 
+
+Then we categorized all transformations into three categories; safeOnes, ineffectiveOnes, and dangerousOnes. safeOnes usually perform changes which safe for our purposes. Although, some of them are not  100% safe. inffectiveOnes usually don't perform useful changes. They don't necessarily reduce the code. And some of them are for only c++ code. dangerousOnes perform changes which are not safe. The changes that they do often convert the warning from false to true positive.

@@ -1,0 +1,32 @@
+in method:read, at line:64, inst:3 = getfield < Application, Lorg/apache/cassandra/net/io/ContentStreamState, stream_, <Application,Lorg/apache/cassandra/net/io/TcpReader> > 1
+in method:read, at line:64, inst:5 = invokevirtual < Application, Lorg/apache/cassandra/net/io/TcpReader, getStream()Ljava/nio/channels/SocketChannel; > 3 @4 exception:4
+in method:read, at line:64, inst:7 = invokevirtual < Application, Ljava/nio/channels/SocketChannel, socket()Ljava/net/Socket; > 5 @9 exception:6
+in method:read, at line:64, inst:9 = invokevirtual < Application, Ljava/net/Socket, getRemoteSocketAddress()Ljava/net/SocketAddress; > 7 @12 exception:8
+in method:read, at line:64, inst:10 = checkcast <Application,Ljava/net/InetSocketAddress>9 <Application,Ljava/net/InetSocketAddress>
+in method:read, at line:65, inst:12 = invokevirtual < Application, Ljava/net/InetSocketAddress, getAddress()Ljava/net/InetAddress; > 10 @20 exception:11
+in method:read, at line:65, inst:14 = invokevirtual < Application, Ljava/net/InetAddress, getHostAddress()Ljava/lang/String; > 12 @23 exception:13
+in method:read, at line:65, inst:invokespecial < Application, Lorg/apache/cassandra/net/io/ContentStreamState, createFileChannel()V > 1 @28 exception:15
+in method:read, at line:65, inst:16 = getfield < Application, Lorg/apache/cassandra/net/io/ContentStreamState, streamContext_, <Application,Lorg/apache/cassandra/net/io/StreamContextManager$StreamContext> > 1
+in method:read, at line:65, inst:conditional branch(eq, to iindex=99) 16,17
+in method:read, at line:66, inst:19 = getfield < Application, Lorg/apache/cassandra/net/io/ContentStreamState, fc_, <Application,Ljava/nio/channels/FileChannel> > 1
+in method:read, at line:67, inst:23 = invokevirtual < Application, Ljava/nio/channels/FileChannel, transferFrom(Ljava/nio/channels/ReadableByteChannel;JJ)J > 19,5,20,21 @55 exception:22
+in method:read, at line:67, inst:24 = binaryop(add) 18 , 23
+in method:read, at line:68, inst:26 = getfield < Application, Lorg/apache/cassandra/net/io/ContentStreamState, streamContext_, <Application,Lorg/apache/cassandra/net/io/StreamContextManager$StreamContext> > 1
+in method:read, at line:68, inst:28 = invokevirtual < Application, Lorg/apache/cassandra/net/io/StreamContextManager$StreamContext, getExpectedBytes()J > 26 @70 exception:27
+in method:read, at line:68, inst:29 = compare 25,28 opcode=cmp
+in method:read, at line:72, inst:conditional branch(eq, to iindex=44) 29,30
+in method:read, at line:73, inst:32 = getfield < Application, Lorg/apache/cassandra/net/io/ContentStreamState, streamContext_, <Application,Lorg/apache/cassandra/net/io/StreamContextManager$StreamContext> > 1
+in method:read, at line:73, inst:34 = invokevirtual < Application, Lorg/apache/cassandra/net/io/StreamContextManager$StreamContext, getExpectedBytes()J > 32 @140 exception:33
+in method:read, at line:73, inst:35 = compare 31,34 opcode=cmp
+in method:read, at line:73, inst:conditional branch(ne, to iindex=99) 35,30
+in method:read, at line:73, inst:36 = getstatic < Application, Lorg/apache/cassandra/net/io/ContentStreamState, logger_, <Application,Lorg/apache/log4j/Logger> >
+in method:read, at line:73, inst:38 = invokevirtual < Application, Lorg/apache/log4j/Logger, isDebugEnabled()Z > 36 @150 exception:37
+in method:read, at line:73, inst:conditional branch(eq, to iindex=88) 38,30
+in method:read, at line:74, inst:39 = getstatic < Application, Lorg/apache/cassandra/net/io/ContentStreamState, logger_, <Application,Lorg/apache/log4j/Logger> >
+in method:read, at line:74, inst:40 = new <Application,Ljava/lang/StringBuilder>@159
+in method:read, at line:74, inst:invokespecial < Application, Ljava/lang/StringBuilder, <init>()V > 40 @163 exception:41
+in method:read, at line:74, inst:44 = invokevirtual < Application, Ljava/lang/StringBuilder, append(Ljava/lang/String;)Ljava/lang/StringBuilder; > 40,42 @168 exception:43
+in method:read, at line:74, inst:45 = getfield < Application, Lorg/apache/cassandra/net/io/ContentStreamState, streamContext_, <Application,Lorg/apache/cassandra/net/io/StreamContextManager$StreamContext> > 1
+in method:read, at line:74, inst:47 = invokevirtual < Application, Ljava/lang/StringBuilder, append(Ljava/lang/Object;)Ljava/lang/StringBuilder; > 44,45 @175 exception:46
+in method:read, at line:74, inst:49 = invokevirtual < Application, Ljava/lang/StringBuilder, toString()Ljava/lang/String; > 47 @178 exception:48
+in method:read, at line:85, inst:invokevirtual < Application, Lorg/apache/log4j/Logger, debug(Ljava/lang/Object;)V > 39,49 @181 exception:50

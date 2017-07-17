@@ -1,0 +1,252 @@
+doPost (Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)V
+Code(max_stack = 6, max_locals = 10, code_length = 130)
+0:    ldc		"" (3)
+2:    astore_3
+3:    aload_1
+4:    ldc		"foo" (4)
+6:    invokeinterface	javax.servlet.http.HttpServletRequest.getHeaders (Ljava/lang/String;)Ljava/util/Enumeration; (5)	2	0
+11:   astore		%4
+13:   aload		%4
+15:   invokeinterface	java.util.Enumeration.hasMoreElements ()Z (6)	1	0
+20:   ifeq		#34
+23:   aload		%4
+25:   invokeinterface	java.util.Enumeration.nextElement ()Ljava/lang/Object; (7)	1	0
+30:   checkcast		<java.lang.String> (8)
+33:   astore_3
+34:   bipush		106
+36:   istore		%6
+38:   bipush		126
+40:   iload		%6
+42:   iadd
+43:   sipush		200
+46:   if_icmple		#54
+49:   ldc		"This_should_always_happen" (9)
+51:   goto		#55
+54:   aload_3
+55:   astore		%5
+57:   new		<java.lang.StringBuilder> (10)
+60:   dup
+61:   invokespecial	java.lang.StringBuilder.<init> ()V (11)
+64:   ldc		"UPDATE USERS SET PASSWORD='" (12)
+66:   invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (13)
+69:   aload		%5
+71:   invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (13)
+74:   ldc		"' WHERE USERNAME='foo'" (14)
+76:   invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (13)
+79:   invokevirtual	java.lang.StringBuilder.toString ()Ljava/lang/String; (15)
+82:   astore		%7
+84:   invokestatic	org.owasp.benchmark.helpers.DatabaseHelper.getSqlStatement ()Ljava/sql/Statement; (16)
+87:   astore		%8
+89:   aload		%8
+91:   aload		%7
+93:   iconst_2
+94:   anewarray		<java.lang.String> (8)
+97:   dup
+98:   iconst_0
+99:   ldc		"user" (17)
+101:  aastore
+102:  dup
+103:  iconst_1
+104:  ldc		"password" (18)
+106:  aastore
+107:  invokeinterface	java.sql.Statement.executeUpdate (Ljava/lang/String;[Ljava/lang/String;)I (19)	3	0
+112:  istore		%9
+114:  goto		#129
+117:  astore		%8
+119:  new		<javax.servlet.ServletException> (21)
+122:  dup
+123:  aload		%8
+125:  invokespecial	javax.servlet.ServletException.<init> (Ljava/lang/Throwable;)V (22)
+128:  athrow
+129:  return
+
+Exception handler(s) = 
+From	To	Handler	Type
+84	114	117	java.sql.SQLException(20)
+
+Attribute(s) = 
+LineNumber(0, 42), LineNumber(3, 43), LineNumber(13, 44), LineNumber(23, 45), 
+LineNumber(34, 52), LineNumber(38, 54), LineNumber(57, 58), LineNumber(84, 61), 
+LineNumber(89, 62), LineNumber(114, 65), LineNumber(117, 63), LineNumber(119, 64), 
+LineNumber(129, 66)
+LocalVariable(start_pc = 89, length = 25, index = 8:java.sql.Statement statement)
+LocalVariable(start_pc = 119, length = 10, index = 8:java.sql.SQLException e)
+LocalVariable(start_pc = 0, length = 130, index = 0:org.owasp.benchmark.testcode.BenchmarkTest02845 this)
+LocalVariable(start_pc = 0, length = 130, index = 1:javax.servlet.http.HttpServletRequest request)
+LocalVariable(start_pc = 0, length = 130, index = 2:javax.servlet.http.HttpServletResponse response)
+LocalVariable(start_pc = 3, length = 127, index = 3:String param)
+LocalVariable(start_pc = 13, length = 117, index = 4:java.util.Enumeration headers)
+LocalVariable(start_pc = 57, length = 73, index = 5:String bar)
+LocalVariable(start_pc = 38, length = 92, index = 6:int i)
+LocalVariable(start_pc = 84, length = 46, index = 7:String sql)
+LocalVariable(start_pc = 13, length = 117, index = 4:java.util.Enumeration<Ljava.lang.String headers)
+StackMapTable((APPEND 2, offset delta=34, locals={(type=Object, class=java.lang.String), (type=Object, class=java.util.Enumeration)}), (APPEND 2, offset delta=19, locals={(type=Bogus), (type=Integer)}), (SAME_LOCALS_1_STACK, offset delta=0, stack items={(type=Object, class=java.lang.String)}), (FULL, offset delta=61, locals={(type=Object, class=org.owasp.benchmark.testcode.BenchmarkTest02845), (type=Object, class=javax.servlet.http.HttpServletRequest), (type=Object, class=javax.servlet.http.HttpServletResponse), (type=Object, class=java.lang.String), (type=Object, class=java.util.Enumeration), (type=Object, class=java.lang.String), (type=Integer), (type=Object, class=java.lang.String)}, stack items={(type=Object, class=java.sql.SQLException)}), (SAME, offset delta=11))
+
+doPost (Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)V
+Code(max_stack = 6, max_locals = 10, code_length = 130)
+0:    ldc		"" (3)
+2:    astore_3
+3:    aload_1
+4:    ldc		"foo" (4)
+6:    invokeinterface	javax.servlet.http.HttpServletRequest.getHeaders (Ljava/lang/String;)Ljava/util/Enumeration; (5)	2	0
+11:   astore		%4
+13:   aload		%4
+15:   invokeinterface	java.util.Enumeration.hasMoreElements ()Z (6)	1	0
+20:   ifeq		#34
+23:   aload		%4
+25:   invokeinterface	java.util.Enumeration.nextElement ()Ljava/lang/Object; (7)	1	0
+30:   checkcast		<java.lang.String> (8)
+33:   astore_3
+34:   bipush		106
+36:   istore		%6
+38:   bipush		126
+40:   iload		%6
+42:   iadd
+43:   sipush		200
+46:   if_icmple		#54
+49:   ldc		"This_should_always_happen" (9)
+51:   goto		#55
+54:   aload_3
+55:   astore		%5
+57:   new		<java.lang.StringBuilder> (10)
+60:   dup
+61:   invokespecial	java.lang.StringBuilder.<init> ()V (11)
+64:   ldc		"UPDATE USERS SET PASSWORD='" (12)
+66:   invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (13)
+69:   aload		%5
+71:   invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (13)
+74:   ldc		"' WHERE USERNAME='foo'" (14)
+76:   invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (13)
+79:   invokevirtual	java.lang.StringBuilder.toString ()Ljava/lang/String; (15)
+82:   astore		%7
+84:   invokestatic	org.owasp.benchmark.helpers.DatabaseHelper.getSqlStatement ()Ljava/sql/Statement; (16)
+87:   astore		%8
+89:   aload		%8
+91:   aload		%7
+93:   iconst_2
+94:   anewarray		<java.lang.String> (8)
+97:   dup
+98:   iconst_0
+99:   ldc		"user" (17)
+101:  aastore
+102:  dup
+103:  iconst_1
+104:  ldc		"password" (18)
+106:  aastore
+107:  invokeinterface	java.sql.Statement.executeUpdate (Ljava/lang/String;[Ljava/lang/String;)I (19)	3	0
+112:  istore		%9
+114:  goto		#129
+117:  astore		%8
+119:  new		<javax.servlet.ServletException> (21)
+122:  dup
+123:  aload		%8
+125:  invokespecial	javax.servlet.ServletException.<init> (Ljava/lang/Throwable;)V (22)
+128:  athrow
+129:  return
+
+Exception handler(s) = 
+From	To	Handler	Type
+84	114	117	java.sql.SQLException(20)
+
+Attribute(s) = 
+LineNumber(0, 42), LineNumber(3, 43), LineNumber(13, 44), LineNumber(23, 45), 
+LineNumber(34, 52), LineNumber(38, 54), LineNumber(57, 58), LineNumber(84, 61), 
+LineNumber(89, 62), LineNumber(114, 65), LineNumber(117, 63), LineNumber(119, 64), 
+LineNumber(129, 66)
+LocalVariable(start_pc = 89, length = 25, index = 8:java.sql.Statement statement)
+LocalVariable(start_pc = 119, length = 10, index = 8:java.sql.SQLException e)
+LocalVariable(start_pc = 0, length = 130, index = 0:org.owasp.benchmark.testcode.BenchmarkTest02845 this)
+LocalVariable(start_pc = 0, length = 130, index = 1:javax.servlet.http.HttpServletRequest request)
+LocalVariable(start_pc = 0, length = 130, index = 2:javax.servlet.http.HttpServletResponse response)
+LocalVariable(start_pc = 3, length = 127, index = 3:String param)
+LocalVariable(start_pc = 13, length = 117, index = 4:java.util.Enumeration headers)
+LocalVariable(start_pc = 57, length = 73, index = 5:String bar)
+LocalVariable(start_pc = 38, length = 92, index = 6:int i)
+LocalVariable(start_pc = 84, length = 46, index = 7:String sql)
+LocalVariable(start_pc = 13, length = 117, index = 4:java.util.Enumeration<Ljava.lang.String headers)
+StackMapTable((APPEND 2, offset delta=34, locals={(type=Object, class=java.lang.String), (type=Object, class=java.util.Enumeration)}), (APPEND 2, offset delta=19, locals={(type=Bogus), (type=Integer)}), (SAME_LOCALS_1_STACK, offset delta=0, stack items={(type=Object, class=java.lang.String)}), (FULL, offset delta=61, locals={(type=Object, class=org.owasp.benchmark.testcode.BenchmarkTest02845), (type=Object, class=javax.servlet.http.HttpServletRequest), (type=Object, class=javax.servlet.http.HttpServletResponse), (type=Object, class=java.lang.String), (type=Object, class=java.util.Enumeration), (type=Object, class=java.lang.String), (type=Integer), (type=Object, class=java.lang.String)}, stack items={(type=Object, class=java.sql.SQLException)}), (SAME, offset delta=11))
+
+doPost (Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)V
+Code(max_stack = 6, max_locals = 10, code_length = 130)
+0:    ldc		"" (3)
+2:    astore_3
+3:    aload_1
+4:    ldc		"foo" (4)
+6:    invokeinterface	javax.servlet.http.HttpServletRequest.getHeaders (Ljava/lang/String;)Ljava/util/Enumeration; (5)	2	0
+11:   astore		%4
+13:   aload		%4
+15:   invokeinterface	java.util.Enumeration.hasMoreElements ()Z (6)	1	0
+20:   ifeq		#34
+23:   aload		%4
+25:   invokeinterface	java.util.Enumeration.nextElement ()Ljava/lang/Object; (7)	1	0
+30:   checkcast		<java.lang.String> (8)
+33:   astore_3
+34:   bipush		106
+36:   istore		%6
+38:   bipush		126
+40:   iload		%6
+42:   iadd
+43:   sipush		200
+46:   if_icmple		#54
+49:   ldc		"This_should_always_happen" (9)
+51:   goto		#55
+54:   aload_3
+55:   astore		%5
+57:   new		<java.lang.StringBuilder> (10)
+60:   dup
+61:   invokespecial	java.lang.StringBuilder.<init> ()V (11)
+64:   ldc		"UPDATE USERS SET PASSWORD='" (12)
+66:   invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (13)
+69:   aload		%5
+71:   invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (13)
+74:   ldc		"' WHERE USERNAME='foo'" (14)
+76:   invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (13)
+79:   invokevirtual	java.lang.StringBuilder.toString ()Ljava/lang/String; (15)
+82:   astore		%7
+84:   invokestatic	org.owasp.benchmark.helpers.DatabaseHelper.getSqlStatement ()Ljava/sql/Statement; (16)
+87:   astore		%8
+89:   aload		%8
+91:   aload		%7
+93:   iconst_2
+94:   anewarray		<java.lang.String> (8)
+97:   dup
+98:   iconst_0
+99:   ldc		"user" (17)
+101:  aastore
+102:  dup
+103:  iconst_1
+104:  ldc		"password" (18)
+106:  aastore
+107:  invokeinterface	java.sql.Statement.executeUpdate (Ljava/lang/String;[Ljava/lang/String;)I (19)	3	0
+112:  istore		%9
+114:  goto		#129
+117:  astore		%8
+119:  new		<javax.servlet.ServletException> (21)
+122:  dup
+123:  aload		%8
+125:  invokespecial	javax.servlet.ServletException.<init> (Ljava/lang/Throwable;)V (22)
+128:  athrow
+129:  return
+
+Exception handler(s) = 
+From	To	Handler	Type
+84	114	117	java.sql.SQLException(20)
+
+Attribute(s) = 
+LineNumber(0, 42), LineNumber(3, 43), LineNumber(13, 44), LineNumber(23, 45), 
+LineNumber(34, 52), LineNumber(38, 54), LineNumber(57, 58), LineNumber(84, 61), 
+LineNumber(89, 62), LineNumber(114, 65), LineNumber(117, 63), LineNumber(119, 64), 
+LineNumber(129, 66)
+LocalVariable(start_pc = 89, length = 25, index = 8:java.sql.Statement statement)
+LocalVariable(start_pc = 119, length = 10, index = 8:java.sql.SQLException e)
+LocalVariable(start_pc = 0, length = 130, index = 0:org.owasp.benchmark.testcode.BenchmarkTest02845 this)
+LocalVariable(start_pc = 0, length = 130, index = 1:javax.servlet.http.HttpServletRequest request)
+LocalVariable(start_pc = 0, length = 130, index = 2:javax.servlet.http.HttpServletResponse response)
+LocalVariable(start_pc = 3, length = 127, index = 3:String param)
+LocalVariable(start_pc = 13, length = 117, index = 4:java.util.Enumeration headers)
+LocalVariable(start_pc = 57, length = 73, index = 5:String bar)
+LocalVariable(start_pc = 38, length = 92, index = 6:int i)
+LocalVariable(start_pc = 84, length = 46, index = 7:String sql)
+LocalVariable(start_pc = 13, length = 117, index = 4:java.util.Enumeration<Ljava.lang.String headers)
+StackMapTable((APPEND 2, offset delta=34, locals={(type=Object, class=java.lang.String), (type=Object, class=java.util.Enumeration)}), (APPEND 2, offset delta=19, locals={(type=Bogus), (type=Integer)}), (SAME_LOCALS_1_STACK, offset delta=0, stack items={(type=Object, class=java.lang.String)}), (FULL, offset delta=61, locals={(type=Object, class=org.owasp.benchmark.testcode.BenchmarkTest02845), (type=Object, class=javax.servlet.http.HttpServletRequest), (type=Object, class=javax.servlet.http.HttpServletResponse), (type=Object, class=java.lang.String), (type=Object, class=java.util.Enumeration), (type=Object, class=java.lang.String), (type=Integer), (type=Object, class=java.lang.String)}, stack items={(type=Object, class=java.sql.SQLException)}), (SAME, offset delta=11))
+

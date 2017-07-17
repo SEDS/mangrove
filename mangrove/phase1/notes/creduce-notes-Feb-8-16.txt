@@ -1,0 +1,41 @@
+After turning pass_lines off now we have pass_balanced::curly2 removing the for loop 
+that we want to see in the output file.
+
+
+Ass the juliet test cases have only 4-5 functions which are independant from each other,
+We can easly reduce them only using a small subset of creduce passed;
+	around 70% to 85% reduction
+	Here is an example run;
+		creduce --no-default-passes --add-pass 
+		pass_comments 0 451 --add-pass 
+		pass_clang_binsrch replace-function-def-with-decl 33 --add-pass 
+		pass_clang_binsrch remove-unused-function 3 --add-pass 
+		pass_blank 0 1 --add-pass 
+		pass_clang remove-unused-function 220 --add-pass 
+		pass_includes 0 0 --add-pass 
+		pass_unifdef 0 450 --add-pass 
+		pass_clang return-void 212 ./test_interest.sh CWE401_Memory_Leak__wchar_t_realloc_18.c 
+
+I run Matias's implementation on 311 juliet test cases
+	checked only 10 of results;
+		'Dead pointer usage' warning types are generally false warning
+		'Memory leak' warning types are generally true warning 
+			and there are usually other related true warnings 
+			issued along with them in Juliet test cases; Uninitialized variable, Common realloc mistake
+			
+		Double Free, frees one in the source and again in another file.
+			Dereferencing 'data' after it is deallocated / released.
+				
+		
+	
+Matias is already making use of clang ASTs in a very limited manner.
+
+ 
+ harmana
+ dynamic execution behaviour
+
+jsnice
+match 
+armanda and morso martin and iran
+
+ 

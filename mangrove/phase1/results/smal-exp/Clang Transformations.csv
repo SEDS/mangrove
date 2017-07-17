@@ -1,0 +1,291 @@
+,
+aggregate-to-scalar,"Replace accesses to an aggregate member with a corresponding scalar variable. In more detail, the transformation creates a scalar variable for an aggregate access, assigns the initial value of the aggregate member to the scalar, and substitutes all accesses to the same aggregate member with the accesses to the corresponding scalar variable. (Note that this transformation is unsound)."
+,
+binop-simplification,"Simplify a complex binary expression to simple ones. For example, x = a + (b + c) will be transformed to tmp = b + c; x = a + tmp "
+,
+callexpr-to-value,"Replace a call expression with a value or variable which has the same type as CallExpr's type. If CallExpr is type of integer/pointer, it will be replaced with 0. If it has type of union/struct, it will be replaced with a newly created global variable with a correct type. "
+,
+class-template-to-class,Change a class template to a class if this class template: 
+,"   * has only one parameter, and "
+,   * the parameter is unused. 
+,
+combine-global-var,"Combine global variable declarations with the same type. Each iteration only does one combination, i.e., for the code below: "
+,"  int a, b; "
+,  int c; 
+,  int d; 
+,"We will need to invoke this transformation twice to achieve a complete combination. This pass only combines declarations with exactly the same type, e.g., it won't combine int *x and int y,although it's valid we can have int *x, y in a DeclGroup. Note that this transformation always tries to combine the rest of declarations with the very first one, so it is an unsound transformation and could result in compilation failures. "
+,
+combine-local-var,"Combine local variable declarations with the same type. This transformation records the location of the first local variable declaration, and tries to combine other declarations in the same DeclContext as the first one. For example, for the following cod3: "
+,  int foo(void) { 
+,    int x; 
+,    int y; 
+,    if (...) { 
+,      int z; 
+,    } 
+,  } 
+,"We will only combine x and y, and won't touch z, because z is not in the same DeclContext as x and y. Note that this transformation is unsound for the same reason as combine-global-var. "
+,
+copy-propagation,A simply copy propagation pass. Copy propagation only happens to: 
+,  * variables 
+,  * member expressions 
+,  * array subscript expressions 
+,"Only those value obtained through simple assignment or initilizer will be propagated. Here ""simple assignment"" is defined as: "
+,  x = y 
+,"where both x and y are either variables, member expressions or array subscript expressions (y could be a constant). For example, x = foo() is not considered as a simple assignment. Copy propagation of LHS will stop upon any non-simple assignment. Therefore, in the above example, foo() will not be propagated. "
+,
+empty-struct-to-int,Replace an empty struct with type of int. A struct is defined to be empty if it:   * does not have any field; 
+,  * does not have any base class; 
+,  * is not a base class of another class; 
+,  * is not described by any template; 
+,  * has only one unreferenced field; 
+,  * doesn't have self pointer reference
+,
+instantiate-template-param,This pass tries to instantiate a template parameter with  its actual argument if this parameter has been instantiated only once. 
+,
+instantiate-template-type-param-to-int,"This pass tries to instantiate a template type parameter of a class inside the class's definition. For example, "
+,  template <typename T> struct A { T foo(void); } 
+,
+,  template <typename T> struct A { int foo(void); } 
+,
+,"Currently, just simply replace any reference of T with int."
+,
+lift-assignment-expr,Lift an assignment expression to an assignment statement. An assignment expression will be lifted if it apprears at : 
+,"  * the guard position of an if, while or do statement; "
+,  * function argument; 
+,"  * init, condition or inc position of a for statement "
+,
+local-to-global,Move the declaraion of a non-static local variable from a function to the global scope. Also rename the moved local variable to avoid possible name conflicts. 
+,
+move-function-body,Move function body towards its declaration. Note that this pass would generate incompilable code. 
+,
+move-global-var,Try to move global var/struct/union declarations above all function declarations except printf. Also move the declaration of printf to the top of the reduce code if it exists and is not at the top of the code.
+,
+param-to-global,"Lift the declaraion of a parameter from a function to the global scope. Also rename the lifted parameter to avoid possible name conflicts. Note that for C++ code, this pass actually lifts a parameter from a member function to the class scope rather than the global scope.  "
+,
+param-to-local,"Remove an integaral/enumeration parameter from the declaration of a function. Define the removed parameter as a local variable of the same function. Initialze the newly local variable to be 0. Also, make corresponding changes on all of the call sites of the modified function."
+,
+reduce-array-dim,Reduce the dimension of an array. Each transformation iteration reduces one dimension in the following way: 
+,  int a[2][3][4]; 
+,  void foo(void) {... a[1][2][3] ... }
+,
+,  int a[2][3 * 4]; 
+,  void foo(void) {... a[1][3 * 2 + 3] ... }
+,"The binary operations will be computed to constant during the transformation if possible. Array fields are not handled right now. Also, this pass only works with ConstantArrayType and IncompleteArrayType."
+,
+reduce-array-size,Reduce the size of an array to the maximum index of accessing this array. Each transformation iteration works on one dimension for multidimensional arrays. This transformation is legitimate for an array if: 
+,  * this array is ConstantArrayType; 
+,  * and all indeices to this array are constants. 
+,
+reduce-class-template-param,"This pass tries to remove one unused parameter from a class template declaration and also erase the corresponding template argument from template instantiations/specializations. Note that this pass does not target those templates with single argument, and skips variadic templates as well. "
+reduce-pointer-level,"Reduce pointer indirect level for a global/local variable. All valid variables are sorted by their indirect levels. The pass will ensure to first choose a valid variable with the largest indirect level. This approach could reduce the complexity of our implementation, because we don't have to consider the case where the chosen variable with the largest indirect level would be address-taken. Variables at non-largest-indirect-level are ineligible if they: "
+,  * being address-taken 
+,"  * OR being used as LHS in any pointer form, e.g., "
+,"    p, *p(assume *p is of pointer type), "
+,    while the RHS is NOT a UnaryOperator. 
+,
+reduce-pointer-pairs,Reduce a pair of pointers at the same time if they have the following shape:
+,  int **p1;
+,  int ***p2 = &p1;
+,and both p1 and p2 are not used anywhere except comparisons between p2 and &p1.
+,
+remove-addr-taken,Remove an addr-taken operator if 
+,"   * the subexpr is type of pointer, or "
+,"   * the subexpr is type of integer and the addr-taken operator is an operand of a comparison operator, or "
+,"   * the entire addr-taken expr is an argument of a function, and the argument doesn't have a correponding parameter in function's declaration."
+,
+remove-array,"Change an array var to a corresponding non-array one. For example, replace ""int a[10];"" with ""int a;"". Conditions "
+,"  * Array dimension is 1, and "
+,  * array var is not referenced except via ArraySubscriptExpr. 
+,All relevant ArraySubscriptExpr[s] will be rewritten accordingly. 
+,
+remove-base-class,This pass removes a base class from its class hierarchy if 
+,"  * it has less than or equal to 5 declarations, and "
+,  * it is not a templated class. 
+,"All its declarations will be moved into one of its subclasses, and all references to this base class will be replaced with the corresponding subclass. "
+,
+remove-ctor-initializer,This pass tries to remove an initializer from a Ctor. 
+,
+remove-enum-member-value,Remove enum member value. 
+,
+remove-namespace,Remove namespaces. This pass tries to remove namespace without introducing name conflicts. 
+,
+remove-nested-function,"Remove a nested function invocation from its enclosing expression. The transformation will create a temporary variable with the correct type, assgin the return value of the selected nested function to the created variable, and replace the function invocation with this temporary variable. (Note that this transformation is unsound because it changes the semantics of loop executions in some cases. "
+,
+remove-pointer,Only reduce the level of a pointer var if this pointer is not referenced or dereferenced except being used as an operand of a comparison operator where another operand is 0. We only change the definition of this pointer. 
+,
+remove-trivial-base-template,This pass removes a base class if it is an instantiation from a class template which doesn't have definition. 
+,
+remove-unresolved-base,This pass tries to remove a base specifier if we cannot resolve it. 
+,
+remove-unused-enum-member,Remove unused enum member declarations. 
+,
+remove-unused-field,Remove unreferenced struct fields. This pass also removes the corresponding intialization expression for a variable declared as the struct under transformation. Currenttly this pass doesn't handle nested struct definition well. 
+,
+remove-unused-function,Remove unused function declarations. 
+,
+remove-unused-outer-class,This pass an unused outer class if 
+,"  * the outer class doesn't have any base class, and "
+,"  * the outer class does not have any described template, and "
+,  * the outer class is not been referenced 
+,
+remove-unused-var,Remove unused local/global variable declarations. 
+,
+rename-class,"To increase readability, simplify class names to [A - Z] (except E, T and Z). Class names from the same hierarchy tree will have alphabetical order. For example, we could have a transformed code shown as below: "
+,  class A {}; 
+,  class B : public A {}; 
+,  class C : public B {}; 
+,
+rename-cxx-method,"Another pass to increase readability of reduced code. It renames CXX methods names to m_fn1, m_fn2, ..."
+,
+rename-fun,"Another pass to increase readability of reduced code. It renames function names to fn1, fn2, ..."
+,
+rename-param,"Another pass to increase readability of reduced code. It renames function parameters to p1, p2, ..."
+,
+rename-var,"To increase readability, rename global and local variables to a, b, ..., z. The transformation returns with error message if there are more than 26 different variables. "
+,
+replace-array-index-var,Looking for the pattern like below: 
+,  for (...;...; i++) { 
+,    a[i]; 
+,  } 
+,"if  is less than 15, then replace a[i] with  a[0] ... a[num-1]"
+replace-callexpr,Replace a CallExpr with a return expression from this callee's body. The transformation fires only if the components of the return expression are one of the following: 
+,  * global variables 
+,  * parameters 
+,  * constants 
+,"If a callee has several return statements, all of them will be exercised separately, i.e., the transformation will choose one for each iteration. This pass is unsound because the side-effect on globals and parameters caused by callees are not captured. "
+,
+replace-class-with-base-template-spec,This pass tries to replace a class with its base class if 
+,"  * this class has only one base class, and "
+,"  * this class doesn't have any explicit declaration, and "
+,  * the base class is a class template specialization 
+,
+replace-dependent-name,This pass replaces a dependent name (referred by typename) with 
+,a resolved type by looking up this dependent name in its decl context. 
+,
+replace-dependent-typedef,"This pass replaces typedef names with the underlying type if the underlying type is dependent, e.g.: "
+,  template <class T> struct S { typedef T type; }; 
+,  struct A { }; 
+,  struct B { typedef S<A>::type type; }; 
+,
+,  template <class T> struct S { typedef T type; }; 
+,  struct A { }; 
+,  struct B { typedef A type; }; 
+,
+,"It also tries to reduce the typedef chain, e.g. "
+,  typedef long xx_t; 
+,  typedef xx_t xx; 
+,
+,  typedef long xx_t; 
+,  typedef long xx; 
+,
+,
+replace-derived-class,Replace a derived class with one of its base classes if 
+,  * the derived class is empty; 
+,"  * and if the base class and the derived class are both class templates, they require the same number of arguments for instantiation. "
+,
+replace-function-def-with-decl,This pass replaces a function's definition with its declaration.
+,
+replace-one-level-typedef-type,This pass literally replaces a typedef type with the underlying type if typedef type is only been used once. It doesn't recursively resolve the underlying type.
+replace-simple-typedef,This pass replaces typedef names with the underlying type if the underlying type falls into one of the following categories:   * scalar type; 
+,  * union; 
+,  * non-templated class; 
+,  * pointer to scalar type
+,
+replace-undefined-function,"If there are more than one undefined function with the same type,pick up one and then replace all others with the selected one. "
+,
+return-void,"Make a function return void. Only change the prototype of the function and delete all return statements in the function, but skip the call sites of this function."
+,
+simple-inliner,"A really simple inliner. This transformation does a simple source-to-source inlining. To avoid the abuse of inlining, I put some constraints on the size of a function which can be inlined - if a function has less than 10 statements, then it's legitimate. "
+,Steps of inlining: 
+,  * create a tmp var for function return value; 
+,  * create a new block which is a copy of the inlined function; 
+,"  * at the top of this newly block, inlined function's parameters will be declared as local vars with callexpr's arguments as their initialization values (if any) "
+,"  * inside this newly block, replace all return statements as assignment statements, where the LHS is the created tmp var (Note that if the inlined function returns void, then this step is skipped) "
+,  * replace the callexpr with tmp var above 
+,
+,"Each transformation iteration only transforms one callexpr, also it will keep the inlined function body unchanged. If the inlined body has no reference anymore, c_delta will remove it entirely. "
+,
+simplify-callexpr,Simplify a call expression to a comma expression. Replace function arguments with: 
+,  * 0 for integer and pointer arguments 
+,  * a global temp variable for structs/unions and also append a representative return value which is the the last inner expression of the comma expression. 
+,"For example, assume we have a function foo: "
+,"  int foo(int x, int *y, struct z) Then this transformation will transform "
+,"  foo(i, p, s); "
+,to 
+,"  (0, 0, tmp_var, 0);"
+,
+simplify-comma-expr,Simplify a comma expression. It transforms the following code: 
+,"  (x, y); "
+,to 
+,  x; 
+,  (y); 
+,
+simplify-dependent-typedef,"Sometimes the underlying type of a typedef declaration is a complex dependent type which prevents further reduction. This pass tries to replace this complex dependent type with a simple one. For example, from "
+,  template<typename T> class { 
+,    typedef typename X< typename Y<T> >::type type; 
+,  }; 
+,to 
+,  template<typename T> class { 
+,    typedef T type; 
+,  };
+,
+simplify-if,Simplify an if-else statement. It transforms the following code: 
+,  if (guard1) 
+,  {... } 
+,  else if (guard2) 
+,  else 
+,  {...} 
+,to 
+,  (guard1) 
+,  {... } 
+,  if (guard2) 
+,  else 
+,  {...} 
+,"if there is no else-if left, the last else keyword will be removed. "
+,
+simplify-nested-class,"This pass tries to simplify nested classes by replacing the outer class with the inner class, if "
+,"  * the outer class doesn't have any base class, and "
+,"  * the outer class has only one inner class definition, and "
+,"  * the outer class does not have any described template, and "
+,  * the outer class does not have any other declarations except the inner class 
+,
+simplify-recursive-template-instantiation,"This pass handles a special case where we have recursive template instantiations. For example, given the code blow: "
+,"  C<B<C<B<C<B<D>, G<int> > > "
+,"it will replace an outer instantiation of B with an inner one, e.g. B<D>."
+,The the number of transformation instances counts from inside to 
+,outside. Currently we only handle class template instantiations. 
+,
+simplify-struct,"This pass replaces a struct with its parent if it has only one field, and this field is a struct, e.g, "
+,  struct S1 { 
+,    int f1;
+,    int f2;
+,  }
+,  struct S2 { 
+,    struct S1 f1;
+,  } 
+,"In the above code, struct S2 will be replaced with struct S1, including"
+,all its referenced. 
+,
+simplify-struct-union-decl,This pass combines the declaration of global vars declared as struct/union with the corresponding struct/union declaration. 
+,
+template-arg-to-int,This pass replaces a template argument in an instantiation with int if the argument: 
+,   * is type of CXXRecord; 
+,"   * the corresponding template parameter T is not used as T::x, "
+,nor template<typename T> class : T { ... };
+,"For example, from:"
+,   struct S {};
+,   template <typename T> struct C {};
+,   C<S> c;
+,to:
+,   struct S {};
+,   template <typename T> struct C {};
+,   C<int> c;
+,
+template-non-type-arg-to-int,This pass tries to replace a template non-type argument wth an integer (if its type is compatible) 
+,
+unify-function-decl,"If a function is declared as static, make its definition as static as well, and remove the declaration. "
+,
+union-to-struct,"Change a union declaration to a struct declaration. For a union declaration which has only scalar fields, i.e., fields with integer or pointer types, the transformation will set up an appropriate initializer for a variable which is declared with a union type under transformed: "
+,"  * if originally a pointer field gets initialization value, then other pointer fields with the same type will get the same initialization value, and all other fields will be initialized to 0; "
+,"  * if originally a integer field gets initialization value, then all other integer fields will be initialized to the same value, while all pointer fields will have 0. "
+,"For other cases, all initializers will be dropped. (Note that this could bring in uninitialized local variables.) "

@@ -1,0 +1,20 @@
+In general, as the juliet test cases have only 4-5 functions which are independant from each other,
+we can reduce them only using a small subset of creduce passed. Here is an example run;
+		creduce --no-default-passes 
+		--add-pass pass_includes 0 0 \
+		--add-pass pass_blank 0 1 \
+		--add-pass pass_clang_binsrch remove-unused-function 3 \
+		--add-pass pass_clang_binsrch replace-function-def-with-decl 33 \
+		--add-pass pass_clang remove-namespace 200 \
+		--add-pass pass_clang remove-unused-function 220 \
+		--add-pass pass_clang return-void 212 \
+		--add-pass pass_clang remove-unused-var 223 \
+		--add-pass pass_unifdef 0 450 \
+		--add-pass pass_comments 0 451 \
+		  ./test_interest.sh CWE401_Memory_Leak__wchar_t_realloc_18.c
+		  
+The set of passes used in the example run above is enough to have about 75% reduction.
+
+For each test case, we also need to write an interestingness script to tell creduce 
+what we are interested in. Here is an example interestingness script;
+

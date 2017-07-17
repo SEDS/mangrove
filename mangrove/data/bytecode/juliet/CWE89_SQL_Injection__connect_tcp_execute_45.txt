@@ -1,0 +1,1539 @@
+goodG2BSink ()V
+Code(max_stack = 4, max_locals = 7, code_length = 310)
+0:    aload_0
+1:    getfield		testcases.CWE89_SQL_Injection.s01.CWE89_SQL_Injection__connect_tcp_execute_45.dataGoodG2B Ljava/lang/String; (50)
+4:    astore_1
+5:    aconst_null
+6:    astore_2
+7:    aconst_null
+8:    astore_3
+9:    invokestatic	testcasesupport.IO.getDBConnection ()Ljava/sql/Connection; (3)
+12:   astore_2
+13:   aload_2
+14:   invokeinterface	java.sql.Connection.createStatement ()Ljava/sql/Statement; (4)	1	0
+19:   astore_3
+20:   aload_3
+21:   new		<java.lang.StringBuilder> (5)
+24:   dup
+25:   invokespecial	java.lang.StringBuilder.<init> ()V (6)
+28:   ldc		"insert into users (status) values ('updated') where name='" (7)
+30:   invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (8)
+33:   aload_1
+34:   invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (8)
+37:   ldc		"'" (9)
+39:   invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (8)
+42:   invokevirtual	java.lang.StringBuilder.toString ()Ljava/lang/String; (10)
+45:   invokeinterface	java.sql.Statement.execute (Ljava/lang/String;)Z (11)	2	0
+50:   invokestatic	java.lang.Boolean.valueOf (Z)Ljava/lang/Boolean; (12)
+53:   astore		%4
+55:   aload		%4
+57:   invokevirtual	java.lang.Boolean.booleanValue ()Z (13)
+60:   ifeq		#93
+63:   new		<java.lang.StringBuilder> (5)
+66:   dup
+67:   invokespecial	java.lang.StringBuilder.<init> ()V (6)
+70:   ldc		"Name, " (14)
+72:   invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (8)
+75:   aload_1
+76:   invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (8)
+79:   ldc		", updated successfully" (15)
+81:   invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (8)
+84:   invokevirtual	java.lang.StringBuilder.toString ()Ljava/lang/String; (10)
+87:   invokestatic	testcasesupport.IO.writeLine (Ljava/lang/String;)V (16)
+90:   goto		#115
+93:   new		<java.lang.StringBuilder> (5)
+96:   dup
+97:   invokespecial	java.lang.StringBuilder.<init> ()V (6)
+100:  ldc		"Unable to update records for user: " (17)
+102:  invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (8)
+105:  aload_1
+106:  invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (8)
+109:  invokevirtual	java.lang.StringBuilder.toString ()Ljava/lang/String; (10)
+112:  invokestatic	testcasesupport.IO.writeLine (Ljava/lang/String;)V (16)
+115:  aload_3
+116:  ifnull		#125
+119:  aload_3
+120:  invokeinterface	java.sql.Statement.close ()V (18)	1	0
+125:  goto		#143
+128:  astore		%4
+130:  getstatic		testcasesupport.IO.logger Ljava/util/logging/Logger; (20)
+133:  getstatic		java.util.logging.Level.WARNING Ljava/util/logging/Level; (21)
+136:  ldc		"Error closing Statement" (22)
+138:  aload		%4
+140:  invokevirtual	java.util.logging.Logger.log (Ljava/util/logging/Level;Ljava/lang/String;Ljava/lang/Throwable;)V (23)
+143:  aload_2
+144:  ifnull		#153
+147:  aload_2
+148:  invokeinterface	java.sql.Connection.close ()V (24)	1	0
+153:  goto		#309
+156:  astore		%4
+158:  getstatic		testcasesupport.IO.logger Ljava/util/logging/Logger; (20)
+161:  getstatic		java.util.logging.Level.WARNING Ljava/util/logging/Level; (21)
+164:  ldc		"Error closing Connection" (25)
+166:  aload		%4
+168:  invokevirtual	java.util.logging.Logger.log (Ljava/util/logging/Level;Ljava/lang/String;Ljava/lang/Throwable;)V (23)
+171:  goto		#309
+174:  astore		%4
+176:  getstatic		testcasesupport.IO.logger Ljava/util/logging/Logger; (20)
+179:  getstatic		java.util.logging.Level.WARNING Ljava/util/logging/Level; (21)
+182:  ldc		"Error getting database connection" (26)
+184:  aload		%4
+186:  invokevirtual	java.util.logging.Logger.log (Ljava/util/logging/Level;Ljava/lang/String;Ljava/lang/Throwable;)V (23)
+189:  aload_3
+190:  ifnull		#199
+193:  aload_3
+194:  invokeinterface	java.sql.Statement.close ()V (18)	1	0
+199:  goto		#217
+202:  astore		%4
+204:  getstatic		testcasesupport.IO.logger Ljava/util/logging/Logger; (20)
+207:  getstatic		java.util.logging.Level.WARNING Ljava/util/logging/Level; (21)
+210:  ldc		"Error closing Statement" (22)
+212:  aload		%4
+214:  invokevirtual	java.util.logging.Logger.log (Ljava/util/logging/Level;Ljava/lang/String;Ljava/lang/Throwable;)V (23)
+217:  aload_2
+218:  ifnull		#227
+221:  aload_2
+222:  invokeinterface	java.sql.Connection.close ()V (24)	1	0
+227:  goto		#309
+230:  astore		%4
+232:  getstatic		testcasesupport.IO.logger Ljava/util/logging/Logger; (20)
+235:  getstatic		java.util.logging.Level.WARNING Ljava/util/logging/Level; (21)
+238:  ldc		"Error closing Connection" (25)
+240:  aload		%4
+242:  invokevirtual	java.util.logging.Logger.log (Ljava/util/logging/Level;Ljava/lang/String;Ljava/lang/Throwable;)V (23)
+245:  goto		#309
+248:  astore		%5
+250:  aload_3
+251:  ifnull		#260
+254:  aload_3
+255:  invokeinterface	java.sql.Statement.close ()V (18)	1	0
+260:  goto		#278
+263:  astore		%6
+265:  getstatic		testcasesupport.IO.logger Ljava/util/logging/Logger; (20)
+268:  getstatic		java.util.logging.Level.WARNING Ljava/util/logging/Level; (21)
+271:  ldc		"Error closing Statement" (22)
+273:  aload		%6
+275:  invokevirtual	java.util.logging.Logger.log (Ljava/util/logging/Level;Ljava/lang/String;Ljava/lang/Throwable;)V (23)
+278:  aload_2
+279:  ifnull		#288
+282:  aload_2
+283:  invokeinterface	java.sql.Connection.close ()V (24)	1	0
+288:  goto		#306
+291:  astore		%6
+293:  getstatic		testcasesupport.IO.logger Ljava/util/logging/Logger; (20)
+296:  getstatic		java.util.logging.Level.WARNING Ljava/util/logging/Level; (21)
+299:  ldc		"Error closing Connection" (25)
+301:  aload		%6
+303:  invokevirtual	java.util.logging.Logger.log (Ljava/util/logging/Level;Ljava/lang/String;Ljava/lang/Throwable;)V (23)
+306:  aload		%5
+308:  athrow
+309:  return
+
+Exception handler(s) = 
+From	To	Handler	Type
+115	125	128	java.sql.SQLException(19)
+143	153	156	java.sql.SQLException(19)
+9	115	174	java.sql.SQLException(19)
+189	199	202	java.sql.SQLException(19)
+217	227	230	java.sql.SQLException(19)
+9	115	248	<Any exception>(0)
+174	189	248	<Any exception>(0)
+250	260	263	java.sql.SQLException(19)
+278	288	291	java.sql.SQLException(19)
+248	250	248	<Any exception>(0)
+
+Attribute(s) = 
+LineNumber(0, 179), LineNumber(5, 181), LineNumber(7, 182), LineNumber(9, 186), 
+LineNumber(13, 187), LineNumber(20, 190), LineNumber(55, 192), LineNumber(63, 194), 
+LineNumber(93, 198), LineNumber(115, 209), LineNumber(119, 211), LineNumber(125, 217), 
+LineNumber(128, 214), LineNumber(130, 216), LineNumber(143, 221), LineNumber(147, 223), 
+LineNumber(153, 229), LineNumber(156, 226), LineNumber(158, 228), LineNumber(171, 230), 
+LineNumber(174, 201), LineNumber(176, 203), LineNumber(189, 209), LineNumber(193, 211), 
+LineNumber(199, 217), LineNumber(202, 214), LineNumber(204, 216), LineNumber(217, 221), 
+LineNumber(221, 223), LineNumber(227, 229), LineNumber(230, 226), LineNumber(232, 228), 
+LineNumber(245, 230), LineNumber(248, 207), LineNumber(250, 209), LineNumber(254, 211), 
+LineNumber(260, 217), LineNumber(263, 214), LineNumber(265, 216), LineNumber(278, 221), 
+LineNumber(282, 223), LineNumber(288, 229), LineNumber(291, 226), LineNumber(293, 228), 
+LineNumber(306, 229), LineNumber(309, 232)
+LocalVariable(start_pc = 55, length = 60, index = 4:Boolean result)
+LocalVariable(start_pc = 130, length = 13, index = 4:java.sql.SQLException exceptSql)
+LocalVariable(start_pc = 158, length = 13, index = 4:java.sql.SQLException exceptSql)
+LocalVariable(start_pc = 176, length = 13, index = 4:java.sql.SQLException exceptSql)
+LocalVariable(start_pc = 204, length = 13, index = 4:java.sql.SQLException exceptSql)
+LocalVariable(start_pc = 232, length = 13, index = 4:java.sql.SQLException exceptSql)
+LocalVariable(start_pc = 265, length = 13, index = 6:java.sql.SQLException exceptSql)
+LocalVariable(start_pc = 293, length = 13, index = 6:java.sql.SQLException exceptSql)
+LocalVariable(start_pc = 0, length = 310, index = 0:testcases.CWE89_SQL_Injection.s01.CWE89_SQL_Injection__connect_tcp_execute_45 this)
+LocalVariable(start_pc = 5, length = 305, index = 1:String data)
+LocalVariable(start_pc = 7, length = 303, index = 2:java.sql.Connection dbConnection)
+LocalVariable(start_pc = 9, length = 301, index = 3:java.sql.Statement sqlStatement)
+StackMapTable((FULL, offset delta=93, locals={(type=Object, class=testcases.CWE89_SQL_Injection.s01.CWE89_SQL_Injection__connect_tcp_execute_45), (type=Object, class=java.lang.String), (type=Object, class=java.sql.Connection), (type=Object, class=java.sql.Statement), (type=Object, class=java.lang.Boolean)}), (CHOP 1, offset delta=21), (SAME, offset delta=9), (SAME_LOCALS_1_STACK, offset delta=2, stack items={(type=Object, class=java.sql.SQLException)}), (SAME, offset delta=14), (SAME, offset delta=9), (SAME_LOCALS_1_STACK, offset delta=2, stack items={(type=Object, class=java.sql.SQLException)}), (SAME_LOCALS_1_STACK, offset delta=17, stack items={(type=Object, class=java.sql.SQLException)}), (SAME, offset delta=24), (SAME_LOCALS_1_STACK, offset delta=2, stack items={(type=Object, class=java.sql.SQLException)}), (SAME, offset delta=14), (SAME, offset delta=9), (SAME_LOCALS_1_STACK, offset delta=2, stack items={(type=Object, class=java.sql.SQLException)}), (SAME_LOCALS_1_STACK, offset delta=17, stack items={(type=Object, class=java.lang.Throwable)}), (APPEND 2, offset delta=11, locals={(type=Bogus), (type=Object, class=java.lang.Throwable)}), (SAME_LOCALS_1_STACK, offset delta=2, stack items={(type=Object, class=java.sql.SQLException)}), (SAME, offset delta=14), (SAME, offset delta=9), (SAME_LOCALS_1_STACK, offset delta=2, stack items={(type=Object, class=java.sql.SQLException)}), (SAME, offset delta=14), (CHOP 2, offset delta=2))
+
+goodG2BSink ()V
+Code(max_stack = 4, max_locals = 7, code_length = 310)
+0:    aload_0
+1:    getfield		testcases.CWE89_SQL_Injection.s01.CWE89_SQL_Injection__connect_tcp_execute_45.dataGoodG2B Ljava/lang/String; (50)
+4:    astore_1
+5:    aconst_null
+6:    astore_2
+7:    aconst_null
+8:    astore_3
+9:    invokestatic	testcasesupport.IO.getDBConnection ()Ljava/sql/Connection; (3)
+12:   astore_2
+13:   aload_2
+14:   invokeinterface	java.sql.Connection.createStatement ()Ljava/sql/Statement; (4)	1	0
+19:   astore_3
+20:   aload_3
+21:   new		<java.lang.StringBuilder> (5)
+24:   dup
+25:   invokespecial	java.lang.StringBuilder.<init> ()V (6)
+28:   ldc		"insert into users (status) values ('updated') where name='" (7)
+30:   invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (8)
+33:   aload_1
+34:   invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (8)
+37:   ldc		"'" (9)
+39:   invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (8)
+42:   invokevirtual	java.lang.StringBuilder.toString ()Ljava/lang/String; (10)
+45:   invokeinterface	java.sql.Statement.execute (Ljava/lang/String;)Z (11)	2	0
+50:   invokestatic	java.lang.Boolean.valueOf (Z)Ljava/lang/Boolean; (12)
+53:   astore		%4
+55:   aload		%4
+57:   invokevirtual	java.lang.Boolean.booleanValue ()Z (13)
+60:   ifeq		#93
+63:   new		<java.lang.StringBuilder> (5)
+66:   dup
+67:   invokespecial	java.lang.StringBuilder.<init> ()V (6)
+70:   ldc		"Name, " (14)
+72:   invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (8)
+75:   aload_1
+76:   invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (8)
+79:   ldc		", updated successfully" (15)
+81:   invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (8)
+84:   invokevirtual	java.lang.StringBuilder.toString ()Ljava/lang/String; (10)
+87:   invokestatic	testcasesupport.IO.writeLine (Ljava/lang/String;)V (16)
+90:   goto		#115
+93:   new		<java.lang.StringBuilder> (5)
+96:   dup
+97:   invokespecial	java.lang.StringBuilder.<init> ()V (6)
+100:  ldc		"Unable to update records for user: " (17)
+102:  invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (8)
+105:  aload_1
+106:  invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (8)
+109:  invokevirtual	java.lang.StringBuilder.toString ()Ljava/lang/String; (10)
+112:  invokestatic	testcasesupport.IO.writeLine (Ljava/lang/String;)V (16)
+115:  aload_3
+116:  ifnull		#125
+119:  aload_3
+120:  invokeinterface	java.sql.Statement.close ()V (18)	1	0
+125:  goto		#143
+128:  astore		%4
+130:  getstatic		testcasesupport.IO.logger Ljava/util/logging/Logger; (20)
+133:  getstatic		java.util.logging.Level.WARNING Ljava/util/logging/Level; (21)
+136:  ldc		"Error closing Statement" (22)
+138:  aload		%4
+140:  invokevirtual	java.util.logging.Logger.log (Ljava/util/logging/Level;Ljava/lang/String;Ljava/lang/Throwable;)V (23)
+143:  aload_2
+144:  ifnull		#153
+147:  aload_2
+148:  invokeinterface	java.sql.Connection.close ()V (24)	1	0
+153:  goto		#309
+156:  astore		%4
+158:  getstatic		testcasesupport.IO.logger Ljava/util/logging/Logger; (20)
+161:  getstatic		java.util.logging.Level.WARNING Ljava/util/logging/Level; (21)
+164:  ldc		"Error closing Connection" (25)
+166:  aload		%4
+168:  invokevirtual	java.util.logging.Logger.log (Ljava/util/logging/Level;Ljava/lang/String;Ljava/lang/Throwable;)V (23)
+171:  goto		#309
+174:  astore		%4
+176:  getstatic		testcasesupport.IO.logger Ljava/util/logging/Logger; (20)
+179:  getstatic		java.util.logging.Level.WARNING Ljava/util/logging/Level; (21)
+182:  ldc		"Error getting database connection" (26)
+184:  aload		%4
+186:  invokevirtual	java.util.logging.Logger.log (Ljava/util/logging/Level;Ljava/lang/String;Ljava/lang/Throwable;)V (23)
+189:  aload_3
+190:  ifnull		#199
+193:  aload_3
+194:  invokeinterface	java.sql.Statement.close ()V (18)	1	0
+199:  goto		#217
+202:  astore		%4
+204:  getstatic		testcasesupport.IO.logger Ljava/util/logging/Logger; (20)
+207:  getstatic		java.util.logging.Level.WARNING Ljava/util/logging/Level; (21)
+210:  ldc		"Error closing Statement" (22)
+212:  aload		%4
+214:  invokevirtual	java.util.logging.Logger.log (Ljava/util/logging/Level;Ljava/lang/String;Ljava/lang/Throwable;)V (23)
+217:  aload_2
+218:  ifnull		#227
+221:  aload_2
+222:  invokeinterface	java.sql.Connection.close ()V (24)	1	0
+227:  goto		#309
+230:  astore		%4
+232:  getstatic		testcasesupport.IO.logger Ljava/util/logging/Logger; (20)
+235:  getstatic		java.util.logging.Level.WARNING Ljava/util/logging/Level; (21)
+238:  ldc		"Error closing Connection" (25)
+240:  aload		%4
+242:  invokevirtual	java.util.logging.Logger.log (Ljava/util/logging/Level;Ljava/lang/String;Ljava/lang/Throwable;)V (23)
+245:  goto		#309
+248:  astore		%5
+250:  aload_3
+251:  ifnull		#260
+254:  aload_3
+255:  invokeinterface	java.sql.Statement.close ()V (18)	1	0
+260:  goto		#278
+263:  astore		%6
+265:  getstatic		testcasesupport.IO.logger Ljava/util/logging/Logger; (20)
+268:  getstatic		java.util.logging.Level.WARNING Ljava/util/logging/Level; (21)
+271:  ldc		"Error closing Statement" (22)
+273:  aload		%6
+275:  invokevirtual	java.util.logging.Logger.log (Ljava/util/logging/Level;Ljava/lang/String;Ljava/lang/Throwable;)V (23)
+278:  aload_2
+279:  ifnull		#288
+282:  aload_2
+283:  invokeinterface	java.sql.Connection.close ()V (24)	1	0
+288:  goto		#306
+291:  astore		%6
+293:  getstatic		testcasesupport.IO.logger Ljava/util/logging/Logger; (20)
+296:  getstatic		java.util.logging.Level.WARNING Ljava/util/logging/Level; (21)
+299:  ldc		"Error closing Connection" (25)
+301:  aload		%6
+303:  invokevirtual	java.util.logging.Logger.log (Ljava/util/logging/Level;Ljava/lang/String;Ljava/lang/Throwable;)V (23)
+306:  aload		%5
+308:  athrow
+309:  return
+
+Exception handler(s) = 
+From	To	Handler	Type
+115	125	128	java.sql.SQLException(19)
+143	153	156	java.sql.SQLException(19)
+9	115	174	java.sql.SQLException(19)
+189	199	202	java.sql.SQLException(19)
+217	227	230	java.sql.SQLException(19)
+9	115	248	<Any exception>(0)
+174	189	248	<Any exception>(0)
+250	260	263	java.sql.SQLException(19)
+278	288	291	java.sql.SQLException(19)
+248	250	248	<Any exception>(0)
+
+Attribute(s) = 
+LineNumber(0, 179), LineNumber(5, 181), LineNumber(7, 182), LineNumber(9, 186), 
+LineNumber(13, 187), LineNumber(20, 190), LineNumber(55, 192), LineNumber(63, 194), 
+LineNumber(93, 198), LineNumber(115, 209), LineNumber(119, 211), LineNumber(125, 217), 
+LineNumber(128, 214), LineNumber(130, 216), LineNumber(143, 221), LineNumber(147, 223), 
+LineNumber(153, 229), LineNumber(156, 226), LineNumber(158, 228), LineNumber(171, 230), 
+LineNumber(174, 201), LineNumber(176, 203), LineNumber(189, 209), LineNumber(193, 211), 
+LineNumber(199, 217), LineNumber(202, 214), LineNumber(204, 216), LineNumber(217, 221), 
+LineNumber(221, 223), LineNumber(227, 229), LineNumber(230, 226), LineNumber(232, 228), 
+LineNumber(245, 230), LineNumber(248, 207), LineNumber(250, 209), LineNumber(254, 211), 
+LineNumber(260, 217), LineNumber(263, 214), LineNumber(265, 216), LineNumber(278, 221), 
+LineNumber(282, 223), LineNumber(288, 229), LineNumber(291, 226), LineNumber(293, 228), 
+LineNumber(306, 229), LineNumber(309, 232)
+LocalVariable(start_pc = 55, length = 60, index = 4:Boolean result)
+LocalVariable(start_pc = 130, length = 13, index = 4:java.sql.SQLException exceptSql)
+LocalVariable(start_pc = 158, length = 13, index = 4:java.sql.SQLException exceptSql)
+LocalVariable(start_pc = 176, length = 13, index = 4:java.sql.SQLException exceptSql)
+LocalVariable(start_pc = 204, length = 13, index = 4:java.sql.SQLException exceptSql)
+LocalVariable(start_pc = 232, length = 13, index = 4:java.sql.SQLException exceptSql)
+LocalVariable(start_pc = 265, length = 13, index = 6:java.sql.SQLException exceptSql)
+LocalVariable(start_pc = 293, length = 13, index = 6:java.sql.SQLException exceptSql)
+LocalVariable(start_pc = 0, length = 310, index = 0:testcases.CWE89_SQL_Injection.s01.CWE89_SQL_Injection__connect_tcp_execute_45 this)
+LocalVariable(start_pc = 5, length = 305, index = 1:String data)
+LocalVariable(start_pc = 7, length = 303, index = 2:java.sql.Connection dbConnection)
+LocalVariable(start_pc = 9, length = 301, index = 3:java.sql.Statement sqlStatement)
+StackMapTable((FULL, offset delta=93, locals={(type=Object, class=testcases.CWE89_SQL_Injection.s01.CWE89_SQL_Injection__connect_tcp_execute_45), (type=Object, class=java.lang.String), (type=Object, class=java.sql.Connection), (type=Object, class=java.sql.Statement), (type=Object, class=java.lang.Boolean)}), (CHOP 1, offset delta=21), (SAME, offset delta=9), (SAME_LOCALS_1_STACK, offset delta=2, stack items={(type=Object, class=java.sql.SQLException)}), (SAME, offset delta=14), (SAME, offset delta=9), (SAME_LOCALS_1_STACK, offset delta=2, stack items={(type=Object, class=java.sql.SQLException)}), (SAME_LOCALS_1_STACK, offset delta=17, stack items={(type=Object, class=java.sql.SQLException)}), (SAME, offset delta=24), (SAME_LOCALS_1_STACK, offset delta=2, stack items={(type=Object, class=java.sql.SQLException)}), (SAME, offset delta=14), (SAME, offset delta=9), (SAME_LOCALS_1_STACK, offset delta=2, stack items={(type=Object, class=java.sql.SQLException)}), (SAME_LOCALS_1_STACK, offset delta=17, stack items={(type=Object, class=java.lang.Throwable)}), (APPEND 2, offset delta=11, locals={(type=Bogus), (type=Object, class=java.lang.Throwable)}), (SAME_LOCALS_1_STACK, offset delta=2, stack items={(type=Object, class=java.sql.SQLException)}), (SAME, offset delta=14), (SAME, offset delta=9), (SAME_LOCALS_1_STACK, offset delta=2, stack items={(type=Object, class=java.sql.SQLException)}), (SAME, offset delta=14), (CHOP 2, offset delta=2))
+
+goodG2BSink ()V
+Code(max_stack = 4, max_locals = 7, code_length = 310)
+0:    aload_0
+1:    getfield		testcases.CWE89_SQL_Injection.s01.CWE89_SQL_Injection__connect_tcp_execute_45.dataGoodG2B Ljava/lang/String; (50)
+4:    astore_1
+5:    aconst_null
+6:    astore_2
+7:    aconst_null
+8:    astore_3
+9:    invokestatic	testcasesupport.IO.getDBConnection ()Ljava/sql/Connection; (3)
+12:   astore_2
+13:   aload_2
+14:   invokeinterface	java.sql.Connection.createStatement ()Ljava/sql/Statement; (4)	1	0
+19:   astore_3
+20:   aload_3
+21:   new		<java.lang.StringBuilder> (5)
+24:   dup
+25:   invokespecial	java.lang.StringBuilder.<init> ()V (6)
+28:   ldc		"insert into users (status) values ('updated') where name='" (7)
+30:   invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (8)
+33:   aload_1
+34:   invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (8)
+37:   ldc		"'" (9)
+39:   invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (8)
+42:   invokevirtual	java.lang.StringBuilder.toString ()Ljava/lang/String; (10)
+45:   invokeinterface	java.sql.Statement.execute (Ljava/lang/String;)Z (11)	2	0
+50:   invokestatic	java.lang.Boolean.valueOf (Z)Ljava/lang/Boolean; (12)
+53:   astore		%4
+55:   aload		%4
+57:   invokevirtual	java.lang.Boolean.booleanValue ()Z (13)
+60:   ifeq		#93
+63:   new		<java.lang.StringBuilder> (5)
+66:   dup
+67:   invokespecial	java.lang.StringBuilder.<init> ()V (6)
+70:   ldc		"Name, " (14)
+72:   invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (8)
+75:   aload_1
+76:   invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (8)
+79:   ldc		", updated successfully" (15)
+81:   invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (8)
+84:   invokevirtual	java.lang.StringBuilder.toString ()Ljava/lang/String; (10)
+87:   invokestatic	testcasesupport.IO.writeLine (Ljava/lang/String;)V (16)
+90:   goto		#115
+93:   new		<java.lang.StringBuilder> (5)
+96:   dup
+97:   invokespecial	java.lang.StringBuilder.<init> ()V (6)
+100:  ldc		"Unable to update records for user: " (17)
+102:  invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (8)
+105:  aload_1
+106:  invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (8)
+109:  invokevirtual	java.lang.StringBuilder.toString ()Ljava/lang/String; (10)
+112:  invokestatic	testcasesupport.IO.writeLine (Ljava/lang/String;)V (16)
+115:  aload_3
+116:  ifnull		#125
+119:  aload_3
+120:  invokeinterface	java.sql.Statement.close ()V (18)	1	0
+125:  goto		#143
+128:  astore		%4
+130:  getstatic		testcasesupport.IO.logger Ljava/util/logging/Logger; (20)
+133:  getstatic		java.util.logging.Level.WARNING Ljava/util/logging/Level; (21)
+136:  ldc		"Error closing Statement" (22)
+138:  aload		%4
+140:  invokevirtual	java.util.logging.Logger.log (Ljava/util/logging/Level;Ljava/lang/String;Ljava/lang/Throwable;)V (23)
+143:  aload_2
+144:  ifnull		#153
+147:  aload_2
+148:  invokeinterface	java.sql.Connection.close ()V (24)	1	0
+153:  goto		#309
+156:  astore		%4
+158:  getstatic		testcasesupport.IO.logger Ljava/util/logging/Logger; (20)
+161:  getstatic		java.util.logging.Level.WARNING Ljava/util/logging/Level; (21)
+164:  ldc		"Error closing Connection" (25)
+166:  aload		%4
+168:  invokevirtual	java.util.logging.Logger.log (Ljava/util/logging/Level;Ljava/lang/String;Ljava/lang/Throwable;)V (23)
+171:  goto		#309
+174:  astore		%4
+176:  getstatic		testcasesupport.IO.logger Ljava/util/logging/Logger; (20)
+179:  getstatic		java.util.logging.Level.WARNING Ljava/util/logging/Level; (21)
+182:  ldc		"Error getting database connection" (26)
+184:  aload		%4
+186:  invokevirtual	java.util.logging.Logger.log (Ljava/util/logging/Level;Ljava/lang/String;Ljava/lang/Throwable;)V (23)
+189:  aload_3
+190:  ifnull		#199
+193:  aload_3
+194:  invokeinterface	java.sql.Statement.close ()V (18)	1	0
+199:  goto		#217
+202:  astore		%4
+204:  getstatic		testcasesupport.IO.logger Ljava/util/logging/Logger; (20)
+207:  getstatic		java.util.logging.Level.WARNING Ljava/util/logging/Level; (21)
+210:  ldc		"Error closing Statement" (22)
+212:  aload		%4
+214:  invokevirtual	java.util.logging.Logger.log (Ljava/util/logging/Level;Ljava/lang/String;Ljava/lang/Throwable;)V (23)
+217:  aload_2
+218:  ifnull		#227
+221:  aload_2
+222:  invokeinterface	java.sql.Connection.close ()V (24)	1	0
+227:  goto		#309
+230:  astore		%4
+232:  getstatic		testcasesupport.IO.logger Ljava/util/logging/Logger; (20)
+235:  getstatic		java.util.logging.Level.WARNING Ljava/util/logging/Level; (21)
+238:  ldc		"Error closing Connection" (25)
+240:  aload		%4
+242:  invokevirtual	java.util.logging.Logger.log (Ljava/util/logging/Level;Ljava/lang/String;Ljava/lang/Throwable;)V (23)
+245:  goto		#309
+248:  astore		%5
+250:  aload_3
+251:  ifnull		#260
+254:  aload_3
+255:  invokeinterface	java.sql.Statement.close ()V (18)	1	0
+260:  goto		#278
+263:  astore		%6
+265:  getstatic		testcasesupport.IO.logger Ljava/util/logging/Logger; (20)
+268:  getstatic		java.util.logging.Level.WARNING Ljava/util/logging/Level; (21)
+271:  ldc		"Error closing Statement" (22)
+273:  aload		%6
+275:  invokevirtual	java.util.logging.Logger.log (Ljava/util/logging/Level;Ljava/lang/String;Ljava/lang/Throwable;)V (23)
+278:  aload_2
+279:  ifnull		#288
+282:  aload_2
+283:  invokeinterface	java.sql.Connection.close ()V (24)	1	0
+288:  goto		#306
+291:  astore		%6
+293:  getstatic		testcasesupport.IO.logger Ljava/util/logging/Logger; (20)
+296:  getstatic		java.util.logging.Level.WARNING Ljava/util/logging/Level; (21)
+299:  ldc		"Error closing Connection" (25)
+301:  aload		%6
+303:  invokevirtual	java.util.logging.Logger.log (Ljava/util/logging/Level;Ljava/lang/String;Ljava/lang/Throwable;)V (23)
+306:  aload		%5
+308:  athrow
+309:  return
+
+Exception handler(s) = 
+From	To	Handler	Type
+115	125	128	java.sql.SQLException(19)
+143	153	156	java.sql.SQLException(19)
+9	115	174	java.sql.SQLException(19)
+189	199	202	java.sql.SQLException(19)
+217	227	230	java.sql.SQLException(19)
+9	115	248	<Any exception>(0)
+174	189	248	<Any exception>(0)
+250	260	263	java.sql.SQLException(19)
+278	288	291	java.sql.SQLException(19)
+248	250	248	<Any exception>(0)
+
+Attribute(s) = 
+LineNumber(0, 179), LineNumber(5, 181), LineNumber(7, 182), LineNumber(9, 186), 
+LineNumber(13, 187), LineNumber(20, 190), LineNumber(55, 192), LineNumber(63, 194), 
+LineNumber(93, 198), LineNumber(115, 209), LineNumber(119, 211), LineNumber(125, 217), 
+LineNumber(128, 214), LineNumber(130, 216), LineNumber(143, 221), LineNumber(147, 223), 
+LineNumber(153, 229), LineNumber(156, 226), LineNumber(158, 228), LineNumber(171, 230), 
+LineNumber(174, 201), LineNumber(176, 203), LineNumber(189, 209), LineNumber(193, 211), 
+LineNumber(199, 217), LineNumber(202, 214), LineNumber(204, 216), LineNumber(217, 221), 
+LineNumber(221, 223), LineNumber(227, 229), LineNumber(230, 226), LineNumber(232, 228), 
+LineNumber(245, 230), LineNumber(248, 207), LineNumber(250, 209), LineNumber(254, 211), 
+LineNumber(260, 217), LineNumber(263, 214), LineNumber(265, 216), LineNumber(278, 221), 
+LineNumber(282, 223), LineNumber(288, 229), LineNumber(291, 226), LineNumber(293, 228), 
+LineNumber(306, 229), LineNumber(309, 232)
+LocalVariable(start_pc = 55, length = 60, index = 4:Boolean result)
+LocalVariable(start_pc = 130, length = 13, index = 4:java.sql.SQLException exceptSql)
+LocalVariable(start_pc = 158, length = 13, index = 4:java.sql.SQLException exceptSql)
+LocalVariable(start_pc = 176, length = 13, index = 4:java.sql.SQLException exceptSql)
+LocalVariable(start_pc = 204, length = 13, index = 4:java.sql.SQLException exceptSql)
+LocalVariable(start_pc = 232, length = 13, index = 4:java.sql.SQLException exceptSql)
+LocalVariable(start_pc = 265, length = 13, index = 6:java.sql.SQLException exceptSql)
+LocalVariable(start_pc = 293, length = 13, index = 6:java.sql.SQLException exceptSql)
+LocalVariable(start_pc = 0, length = 310, index = 0:testcases.CWE89_SQL_Injection.s01.CWE89_SQL_Injection__connect_tcp_execute_45 this)
+LocalVariable(start_pc = 5, length = 305, index = 1:String data)
+LocalVariable(start_pc = 7, length = 303, index = 2:java.sql.Connection dbConnection)
+LocalVariable(start_pc = 9, length = 301, index = 3:java.sql.Statement sqlStatement)
+StackMapTable((FULL, offset delta=93, locals={(type=Object, class=testcases.CWE89_SQL_Injection.s01.CWE89_SQL_Injection__connect_tcp_execute_45), (type=Object, class=java.lang.String), (type=Object, class=java.sql.Connection), (type=Object, class=java.sql.Statement), (type=Object, class=java.lang.Boolean)}), (CHOP 1, offset delta=21), (SAME, offset delta=9), (SAME_LOCALS_1_STACK, offset delta=2, stack items={(type=Object, class=java.sql.SQLException)}), (SAME, offset delta=14), (SAME, offset delta=9), (SAME_LOCALS_1_STACK, offset delta=2, stack items={(type=Object, class=java.sql.SQLException)}), (SAME_LOCALS_1_STACK, offset delta=17, stack items={(type=Object, class=java.sql.SQLException)}), (SAME, offset delta=24), (SAME_LOCALS_1_STACK, offset delta=2, stack items={(type=Object, class=java.sql.SQLException)}), (SAME, offset delta=14), (SAME, offset delta=9), (SAME_LOCALS_1_STACK, offset delta=2, stack items={(type=Object, class=java.sql.SQLException)}), (SAME_LOCALS_1_STACK, offset delta=17, stack items={(type=Object, class=java.lang.Throwable)}), (APPEND 2, offset delta=11, locals={(type=Bogus), (type=Object, class=java.lang.Throwable)}), (SAME_LOCALS_1_STACK, offset delta=2, stack items={(type=Object, class=java.sql.SQLException)}), (SAME, offset delta=14), (SAME, offset delta=9), (SAME_LOCALS_1_STACK, offset delta=2, stack items={(type=Object, class=java.sql.SQLException)}), (SAME, offset delta=14), (CHOP 2, offset delta=2))
+
+goodG2BSink ()V
+Code(max_stack = 4, max_locals = 7, code_length = 310)
+0:    aload_0
+1:    getfield		testcases.CWE89_SQL_Injection.s01.CWE89_SQL_Injection__connect_tcp_execute_45.dataGoodG2B Ljava/lang/String; (50)
+4:    astore_1
+5:    aconst_null
+6:    astore_2
+7:    aconst_null
+8:    astore_3
+9:    invokestatic	testcasesupport.IO.getDBConnection ()Ljava/sql/Connection; (3)
+12:   astore_2
+13:   aload_2
+14:   invokeinterface	java.sql.Connection.createStatement ()Ljava/sql/Statement; (4)	1	0
+19:   astore_3
+20:   aload_3
+21:   new		<java.lang.StringBuilder> (5)
+24:   dup
+25:   invokespecial	java.lang.StringBuilder.<init> ()V (6)
+28:   ldc		"insert into users (status) values ('updated') where name='" (7)
+30:   invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (8)
+33:   aload_1
+34:   invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (8)
+37:   ldc		"'" (9)
+39:   invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (8)
+42:   invokevirtual	java.lang.StringBuilder.toString ()Ljava/lang/String; (10)
+45:   invokeinterface	java.sql.Statement.execute (Ljava/lang/String;)Z (11)	2	0
+50:   invokestatic	java.lang.Boolean.valueOf (Z)Ljava/lang/Boolean; (12)
+53:   astore		%4
+55:   aload		%4
+57:   invokevirtual	java.lang.Boolean.booleanValue ()Z (13)
+60:   ifeq		#93
+63:   new		<java.lang.StringBuilder> (5)
+66:   dup
+67:   invokespecial	java.lang.StringBuilder.<init> ()V (6)
+70:   ldc		"Name, " (14)
+72:   invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (8)
+75:   aload_1
+76:   invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (8)
+79:   ldc		", updated successfully" (15)
+81:   invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (8)
+84:   invokevirtual	java.lang.StringBuilder.toString ()Ljava/lang/String; (10)
+87:   invokestatic	testcasesupport.IO.writeLine (Ljava/lang/String;)V (16)
+90:   goto		#115
+93:   new		<java.lang.StringBuilder> (5)
+96:   dup
+97:   invokespecial	java.lang.StringBuilder.<init> ()V (6)
+100:  ldc		"Unable to update records for user: " (17)
+102:  invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (8)
+105:  aload_1
+106:  invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (8)
+109:  invokevirtual	java.lang.StringBuilder.toString ()Ljava/lang/String; (10)
+112:  invokestatic	testcasesupport.IO.writeLine (Ljava/lang/String;)V (16)
+115:  aload_3
+116:  ifnull		#125
+119:  aload_3
+120:  invokeinterface	java.sql.Statement.close ()V (18)	1	0
+125:  goto		#143
+128:  astore		%4
+130:  getstatic		testcasesupport.IO.logger Ljava/util/logging/Logger; (20)
+133:  getstatic		java.util.logging.Level.WARNING Ljava/util/logging/Level; (21)
+136:  ldc		"Error closing Statement" (22)
+138:  aload		%4
+140:  invokevirtual	java.util.logging.Logger.log (Ljava/util/logging/Level;Ljava/lang/String;Ljava/lang/Throwable;)V (23)
+143:  aload_2
+144:  ifnull		#153
+147:  aload_2
+148:  invokeinterface	java.sql.Connection.close ()V (24)	1	0
+153:  goto		#309
+156:  astore		%4
+158:  getstatic		testcasesupport.IO.logger Ljava/util/logging/Logger; (20)
+161:  getstatic		java.util.logging.Level.WARNING Ljava/util/logging/Level; (21)
+164:  ldc		"Error closing Connection" (25)
+166:  aload		%4
+168:  invokevirtual	java.util.logging.Logger.log (Ljava/util/logging/Level;Ljava/lang/String;Ljava/lang/Throwable;)V (23)
+171:  goto		#309
+174:  astore		%4
+176:  getstatic		testcasesupport.IO.logger Ljava/util/logging/Logger; (20)
+179:  getstatic		java.util.logging.Level.WARNING Ljava/util/logging/Level; (21)
+182:  ldc		"Error getting database connection" (26)
+184:  aload		%4
+186:  invokevirtual	java.util.logging.Logger.log (Ljava/util/logging/Level;Ljava/lang/String;Ljava/lang/Throwable;)V (23)
+189:  aload_3
+190:  ifnull		#199
+193:  aload_3
+194:  invokeinterface	java.sql.Statement.close ()V (18)	1	0
+199:  goto		#217
+202:  astore		%4
+204:  getstatic		testcasesupport.IO.logger Ljava/util/logging/Logger; (20)
+207:  getstatic		java.util.logging.Level.WARNING Ljava/util/logging/Level; (21)
+210:  ldc		"Error closing Statement" (22)
+212:  aload		%4
+214:  invokevirtual	java.util.logging.Logger.log (Ljava/util/logging/Level;Ljava/lang/String;Ljava/lang/Throwable;)V (23)
+217:  aload_2
+218:  ifnull		#227
+221:  aload_2
+222:  invokeinterface	java.sql.Connection.close ()V (24)	1	0
+227:  goto		#309
+230:  astore		%4
+232:  getstatic		testcasesupport.IO.logger Ljava/util/logging/Logger; (20)
+235:  getstatic		java.util.logging.Level.WARNING Ljava/util/logging/Level; (21)
+238:  ldc		"Error closing Connection" (25)
+240:  aload		%4
+242:  invokevirtual	java.util.logging.Logger.log (Ljava/util/logging/Level;Ljava/lang/String;Ljava/lang/Throwable;)V (23)
+245:  goto		#309
+248:  astore		%5
+250:  aload_3
+251:  ifnull		#260
+254:  aload_3
+255:  invokeinterface	java.sql.Statement.close ()V (18)	1	0
+260:  goto		#278
+263:  astore		%6
+265:  getstatic		testcasesupport.IO.logger Ljava/util/logging/Logger; (20)
+268:  getstatic		java.util.logging.Level.WARNING Ljava/util/logging/Level; (21)
+271:  ldc		"Error closing Statement" (22)
+273:  aload		%6
+275:  invokevirtual	java.util.logging.Logger.log (Ljava/util/logging/Level;Ljava/lang/String;Ljava/lang/Throwable;)V (23)
+278:  aload_2
+279:  ifnull		#288
+282:  aload_2
+283:  invokeinterface	java.sql.Connection.close ()V (24)	1	0
+288:  goto		#306
+291:  astore		%6
+293:  getstatic		testcasesupport.IO.logger Ljava/util/logging/Logger; (20)
+296:  getstatic		java.util.logging.Level.WARNING Ljava/util/logging/Level; (21)
+299:  ldc		"Error closing Connection" (25)
+301:  aload		%6
+303:  invokevirtual	java.util.logging.Logger.log (Ljava/util/logging/Level;Ljava/lang/String;Ljava/lang/Throwable;)V (23)
+306:  aload		%5
+308:  athrow
+309:  return
+
+Exception handler(s) = 
+From	To	Handler	Type
+115	125	128	java.sql.SQLException(19)
+143	153	156	java.sql.SQLException(19)
+9	115	174	java.sql.SQLException(19)
+189	199	202	java.sql.SQLException(19)
+217	227	230	java.sql.SQLException(19)
+9	115	248	<Any exception>(0)
+174	189	248	<Any exception>(0)
+250	260	263	java.sql.SQLException(19)
+278	288	291	java.sql.SQLException(19)
+248	250	248	<Any exception>(0)
+
+Attribute(s) = 
+LineNumber(0, 179), LineNumber(5, 181), LineNumber(7, 182), LineNumber(9, 186), 
+LineNumber(13, 187), LineNumber(20, 190), LineNumber(55, 192), LineNumber(63, 194), 
+LineNumber(93, 198), LineNumber(115, 209), LineNumber(119, 211), LineNumber(125, 217), 
+LineNumber(128, 214), LineNumber(130, 216), LineNumber(143, 221), LineNumber(147, 223), 
+LineNumber(153, 229), LineNumber(156, 226), LineNumber(158, 228), LineNumber(171, 230), 
+LineNumber(174, 201), LineNumber(176, 203), LineNumber(189, 209), LineNumber(193, 211), 
+LineNumber(199, 217), LineNumber(202, 214), LineNumber(204, 216), LineNumber(217, 221), 
+LineNumber(221, 223), LineNumber(227, 229), LineNumber(230, 226), LineNumber(232, 228), 
+LineNumber(245, 230), LineNumber(248, 207), LineNumber(250, 209), LineNumber(254, 211), 
+LineNumber(260, 217), LineNumber(263, 214), LineNumber(265, 216), LineNumber(278, 221), 
+LineNumber(282, 223), LineNumber(288, 229), LineNumber(291, 226), LineNumber(293, 228), 
+LineNumber(306, 229), LineNumber(309, 232)
+LocalVariable(start_pc = 55, length = 60, index = 4:Boolean result)
+LocalVariable(start_pc = 130, length = 13, index = 4:java.sql.SQLException exceptSql)
+LocalVariable(start_pc = 158, length = 13, index = 4:java.sql.SQLException exceptSql)
+LocalVariable(start_pc = 176, length = 13, index = 4:java.sql.SQLException exceptSql)
+LocalVariable(start_pc = 204, length = 13, index = 4:java.sql.SQLException exceptSql)
+LocalVariable(start_pc = 232, length = 13, index = 4:java.sql.SQLException exceptSql)
+LocalVariable(start_pc = 265, length = 13, index = 6:java.sql.SQLException exceptSql)
+LocalVariable(start_pc = 293, length = 13, index = 6:java.sql.SQLException exceptSql)
+LocalVariable(start_pc = 0, length = 310, index = 0:testcases.CWE89_SQL_Injection.s01.CWE89_SQL_Injection__connect_tcp_execute_45 this)
+LocalVariable(start_pc = 5, length = 305, index = 1:String data)
+LocalVariable(start_pc = 7, length = 303, index = 2:java.sql.Connection dbConnection)
+LocalVariable(start_pc = 9, length = 301, index = 3:java.sql.Statement sqlStatement)
+StackMapTable((FULL, offset delta=93, locals={(type=Object, class=testcases.CWE89_SQL_Injection.s01.CWE89_SQL_Injection__connect_tcp_execute_45), (type=Object, class=java.lang.String), (type=Object, class=java.sql.Connection), (type=Object, class=java.sql.Statement), (type=Object, class=java.lang.Boolean)}), (CHOP 1, offset delta=21), (SAME, offset delta=9), (SAME_LOCALS_1_STACK, offset delta=2, stack items={(type=Object, class=java.sql.SQLException)}), (SAME, offset delta=14), (SAME, offset delta=9), (SAME_LOCALS_1_STACK, offset delta=2, stack items={(type=Object, class=java.sql.SQLException)}), (SAME_LOCALS_1_STACK, offset delta=17, stack items={(type=Object, class=java.sql.SQLException)}), (SAME, offset delta=24), (SAME_LOCALS_1_STACK, offset delta=2, stack items={(type=Object, class=java.sql.SQLException)}), (SAME, offset delta=14), (SAME, offset delta=9), (SAME_LOCALS_1_STACK, offset delta=2, stack items={(type=Object, class=java.sql.SQLException)}), (SAME_LOCALS_1_STACK, offset delta=17, stack items={(type=Object, class=java.lang.Throwable)}), (APPEND 2, offset delta=11, locals={(type=Bogus), (type=Object, class=java.lang.Throwable)}), (SAME_LOCALS_1_STACK, offset delta=2, stack items={(type=Object, class=java.sql.SQLException)}), (SAME, offset delta=14), (SAME, offset delta=9), (SAME_LOCALS_1_STACK, offset delta=2, stack items={(type=Object, class=java.sql.SQLException)}), (SAME, offset delta=14), (CHOP 2, offset delta=2))
+
+goodG2BSink ()V
+Code(max_stack = 4, max_locals = 7, code_length = 310)
+0:    aload_0
+1:    getfield		testcases.CWE89_SQL_Injection.s01.CWE89_SQL_Injection__connect_tcp_execute_45.dataGoodG2B Ljava/lang/String; (50)
+4:    astore_1
+5:    aconst_null
+6:    astore_2
+7:    aconst_null
+8:    astore_3
+9:    invokestatic	testcasesupport.IO.getDBConnection ()Ljava/sql/Connection; (3)
+12:   astore_2
+13:   aload_2
+14:   invokeinterface	java.sql.Connection.createStatement ()Ljava/sql/Statement; (4)	1	0
+19:   astore_3
+20:   aload_3
+21:   new		<java.lang.StringBuilder> (5)
+24:   dup
+25:   invokespecial	java.lang.StringBuilder.<init> ()V (6)
+28:   ldc		"insert into users (status) values ('updated') where name='" (7)
+30:   invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (8)
+33:   aload_1
+34:   invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (8)
+37:   ldc		"'" (9)
+39:   invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (8)
+42:   invokevirtual	java.lang.StringBuilder.toString ()Ljava/lang/String; (10)
+45:   invokeinterface	java.sql.Statement.execute (Ljava/lang/String;)Z (11)	2	0
+50:   invokestatic	java.lang.Boolean.valueOf (Z)Ljava/lang/Boolean; (12)
+53:   astore		%4
+55:   aload		%4
+57:   invokevirtual	java.lang.Boolean.booleanValue ()Z (13)
+60:   ifeq		#93
+63:   new		<java.lang.StringBuilder> (5)
+66:   dup
+67:   invokespecial	java.lang.StringBuilder.<init> ()V (6)
+70:   ldc		"Name, " (14)
+72:   invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (8)
+75:   aload_1
+76:   invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (8)
+79:   ldc		", updated successfully" (15)
+81:   invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (8)
+84:   invokevirtual	java.lang.StringBuilder.toString ()Ljava/lang/String; (10)
+87:   invokestatic	testcasesupport.IO.writeLine (Ljava/lang/String;)V (16)
+90:   goto		#115
+93:   new		<java.lang.StringBuilder> (5)
+96:   dup
+97:   invokespecial	java.lang.StringBuilder.<init> ()V (6)
+100:  ldc		"Unable to update records for user: " (17)
+102:  invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (8)
+105:  aload_1
+106:  invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (8)
+109:  invokevirtual	java.lang.StringBuilder.toString ()Ljava/lang/String; (10)
+112:  invokestatic	testcasesupport.IO.writeLine (Ljava/lang/String;)V (16)
+115:  aload_3
+116:  ifnull		#125
+119:  aload_3
+120:  invokeinterface	java.sql.Statement.close ()V (18)	1	0
+125:  goto		#143
+128:  astore		%4
+130:  getstatic		testcasesupport.IO.logger Ljava/util/logging/Logger; (20)
+133:  getstatic		java.util.logging.Level.WARNING Ljava/util/logging/Level; (21)
+136:  ldc		"Error closing Statement" (22)
+138:  aload		%4
+140:  invokevirtual	java.util.logging.Logger.log (Ljava/util/logging/Level;Ljava/lang/String;Ljava/lang/Throwable;)V (23)
+143:  aload_2
+144:  ifnull		#153
+147:  aload_2
+148:  invokeinterface	java.sql.Connection.close ()V (24)	1	0
+153:  goto		#309
+156:  astore		%4
+158:  getstatic		testcasesupport.IO.logger Ljava/util/logging/Logger; (20)
+161:  getstatic		java.util.logging.Level.WARNING Ljava/util/logging/Level; (21)
+164:  ldc		"Error closing Connection" (25)
+166:  aload		%4
+168:  invokevirtual	java.util.logging.Logger.log (Ljava/util/logging/Level;Ljava/lang/String;Ljava/lang/Throwable;)V (23)
+171:  goto		#309
+174:  astore		%4
+176:  getstatic		testcasesupport.IO.logger Ljava/util/logging/Logger; (20)
+179:  getstatic		java.util.logging.Level.WARNING Ljava/util/logging/Level; (21)
+182:  ldc		"Error getting database connection" (26)
+184:  aload		%4
+186:  invokevirtual	java.util.logging.Logger.log (Ljava/util/logging/Level;Ljava/lang/String;Ljava/lang/Throwable;)V (23)
+189:  aload_3
+190:  ifnull		#199
+193:  aload_3
+194:  invokeinterface	java.sql.Statement.close ()V (18)	1	0
+199:  goto		#217
+202:  astore		%4
+204:  getstatic		testcasesupport.IO.logger Ljava/util/logging/Logger; (20)
+207:  getstatic		java.util.logging.Level.WARNING Ljava/util/logging/Level; (21)
+210:  ldc		"Error closing Statement" (22)
+212:  aload		%4
+214:  invokevirtual	java.util.logging.Logger.log (Ljava/util/logging/Level;Ljava/lang/String;Ljava/lang/Throwable;)V (23)
+217:  aload_2
+218:  ifnull		#227
+221:  aload_2
+222:  invokeinterface	java.sql.Connection.close ()V (24)	1	0
+227:  goto		#309
+230:  astore		%4
+232:  getstatic		testcasesupport.IO.logger Ljava/util/logging/Logger; (20)
+235:  getstatic		java.util.logging.Level.WARNING Ljava/util/logging/Level; (21)
+238:  ldc		"Error closing Connection" (25)
+240:  aload		%4
+242:  invokevirtual	java.util.logging.Logger.log (Ljava/util/logging/Level;Ljava/lang/String;Ljava/lang/Throwable;)V (23)
+245:  goto		#309
+248:  astore		%5
+250:  aload_3
+251:  ifnull		#260
+254:  aload_3
+255:  invokeinterface	java.sql.Statement.close ()V (18)	1	0
+260:  goto		#278
+263:  astore		%6
+265:  getstatic		testcasesupport.IO.logger Ljava/util/logging/Logger; (20)
+268:  getstatic		java.util.logging.Level.WARNING Ljava/util/logging/Level; (21)
+271:  ldc		"Error closing Statement" (22)
+273:  aload		%6
+275:  invokevirtual	java.util.logging.Logger.log (Ljava/util/logging/Level;Ljava/lang/String;Ljava/lang/Throwable;)V (23)
+278:  aload_2
+279:  ifnull		#288
+282:  aload_2
+283:  invokeinterface	java.sql.Connection.close ()V (24)	1	0
+288:  goto		#306
+291:  astore		%6
+293:  getstatic		testcasesupport.IO.logger Ljava/util/logging/Logger; (20)
+296:  getstatic		java.util.logging.Level.WARNING Ljava/util/logging/Level; (21)
+299:  ldc		"Error closing Connection" (25)
+301:  aload		%6
+303:  invokevirtual	java.util.logging.Logger.log (Ljava/util/logging/Level;Ljava/lang/String;Ljava/lang/Throwable;)V (23)
+306:  aload		%5
+308:  athrow
+309:  return
+
+Exception handler(s) = 
+From	To	Handler	Type
+115	125	128	java.sql.SQLException(19)
+143	153	156	java.sql.SQLException(19)
+9	115	174	java.sql.SQLException(19)
+189	199	202	java.sql.SQLException(19)
+217	227	230	java.sql.SQLException(19)
+9	115	248	<Any exception>(0)
+174	189	248	<Any exception>(0)
+250	260	263	java.sql.SQLException(19)
+278	288	291	java.sql.SQLException(19)
+248	250	248	<Any exception>(0)
+
+Attribute(s) = 
+LineNumber(0, 179), LineNumber(5, 181), LineNumber(7, 182), LineNumber(9, 186), 
+LineNumber(13, 187), LineNumber(20, 190), LineNumber(55, 192), LineNumber(63, 194), 
+LineNumber(93, 198), LineNumber(115, 209), LineNumber(119, 211), LineNumber(125, 217), 
+LineNumber(128, 214), LineNumber(130, 216), LineNumber(143, 221), LineNumber(147, 223), 
+LineNumber(153, 229), LineNumber(156, 226), LineNumber(158, 228), LineNumber(171, 230), 
+LineNumber(174, 201), LineNumber(176, 203), LineNumber(189, 209), LineNumber(193, 211), 
+LineNumber(199, 217), LineNumber(202, 214), LineNumber(204, 216), LineNumber(217, 221), 
+LineNumber(221, 223), LineNumber(227, 229), LineNumber(230, 226), LineNumber(232, 228), 
+LineNumber(245, 230), LineNumber(248, 207), LineNumber(250, 209), LineNumber(254, 211), 
+LineNumber(260, 217), LineNumber(263, 214), LineNumber(265, 216), LineNumber(278, 221), 
+LineNumber(282, 223), LineNumber(288, 229), LineNumber(291, 226), LineNumber(293, 228), 
+LineNumber(306, 229), LineNumber(309, 232)
+LocalVariable(start_pc = 55, length = 60, index = 4:Boolean result)
+LocalVariable(start_pc = 130, length = 13, index = 4:java.sql.SQLException exceptSql)
+LocalVariable(start_pc = 158, length = 13, index = 4:java.sql.SQLException exceptSql)
+LocalVariable(start_pc = 176, length = 13, index = 4:java.sql.SQLException exceptSql)
+LocalVariable(start_pc = 204, length = 13, index = 4:java.sql.SQLException exceptSql)
+LocalVariable(start_pc = 232, length = 13, index = 4:java.sql.SQLException exceptSql)
+LocalVariable(start_pc = 265, length = 13, index = 6:java.sql.SQLException exceptSql)
+LocalVariable(start_pc = 293, length = 13, index = 6:java.sql.SQLException exceptSql)
+LocalVariable(start_pc = 0, length = 310, index = 0:testcases.CWE89_SQL_Injection.s01.CWE89_SQL_Injection__connect_tcp_execute_45 this)
+LocalVariable(start_pc = 5, length = 305, index = 1:String data)
+LocalVariable(start_pc = 7, length = 303, index = 2:java.sql.Connection dbConnection)
+LocalVariable(start_pc = 9, length = 301, index = 3:java.sql.Statement sqlStatement)
+StackMapTable((FULL, offset delta=93, locals={(type=Object, class=testcases.CWE89_SQL_Injection.s01.CWE89_SQL_Injection__connect_tcp_execute_45), (type=Object, class=java.lang.String), (type=Object, class=java.sql.Connection), (type=Object, class=java.sql.Statement), (type=Object, class=java.lang.Boolean)}), (CHOP 1, offset delta=21), (SAME, offset delta=9), (SAME_LOCALS_1_STACK, offset delta=2, stack items={(type=Object, class=java.sql.SQLException)}), (SAME, offset delta=14), (SAME, offset delta=9), (SAME_LOCALS_1_STACK, offset delta=2, stack items={(type=Object, class=java.sql.SQLException)}), (SAME_LOCALS_1_STACK, offset delta=17, stack items={(type=Object, class=java.sql.SQLException)}), (SAME, offset delta=24), (SAME_LOCALS_1_STACK, offset delta=2, stack items={(type=Object, class=java.sql.SQLException)}), (SAME, offset delta=14), (SAME, offset delta=9), (SAME_LOCALS_1_STACK, offset delta=2, stack items={(type=Object, class=java.sql.SQLException)}), (SAME_LOCALS_1_STACK, offset delta=17, stack items={(type=Object, class=java.lang.Throwable)}), (APPEND 2, offset delta=11, locals={(type=Bogus), (type=Object, class=java.lang.Throwable)}), (SAME_LOCALS_1_STACK, offset delta=2, stack items={(type=Object, class=java.sql.SQLException)}), (SAME, offset delta=14), (SAME, offset delta=9), (SAME_LOCALS_1_STACK, offset delta=2, stack items={(type=Object, class=java.sql.SQLException)}), (SAME, offset delta=14), (CHOP 2, offset delta=2))
+
+goodG2BSink ()V
+Code(max_stack = 4, max_locals = 7, code_length = 310)
+0:    aload_0
+1:    getfield		testcases.CWE89_SQL_Injection.s01.CWE89_SQL_Injection__connect_tcp_execute_45.dataGoodG2B Ljava/lang/String; (50)
+4:    astore_1
+5:    aconst_null
+6:    astore_2
+7:    aconst_null
+8:    astore_3
+9:    invokestatic	testcasesupport.IO.getDBConnection ()Ljava/sql/Connection; (3)
+12:   astore_2
+13:   aload_2
+14:   invokeinterface	java.sql.Connection.createStatement ()Ljava/sql/Statement; (4)	1	0
+19:   astore_3
+20:   aload_3
+21:   new		<java.lang.StringBuilder> (5)
+24:   dup
+25:   invokespecial	java.lang.StringBuilder.<init> ()V (6)
+28:   ldc		"insert into users (status) values ('updated') where name='" (7)
+30:   invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (8)
+33:   aload_1
+34:   invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (8)
+37:   ldc		"'" (9)
+39:   invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (8)
+42:   invokevirtual	java.lang.StringBuilder.toString ()Ljava/lang/String; (10)
+45:   invokeinterface	java.sql.Statement.execute (Ljava/lang/String;)Z (11)	2	0
+50:   invokestatic	java.lang.Boolean.valueOf (Z)Ljava/lang/Boolean; (12)
+53:   astore		%4
+55:   aload		%4
+57:   invokevirtual	java.lang.Boolean.booleanValue ()Z (13)
+60:   ifeq		#93
+63:   new		<java.lang.StringBuilder> (5)
+66:   dup
+67:   invokespecial	java.lang.StringBuilder.<init> ()V (6)
+70:   ldc		"Name, " (14)
+72:   invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (8)
+75:   aload_1
+76:   invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (8)
+79:   ldc		", updated successfully" (15)
+81:   invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (8)
+84:   invokevirtual	java.lang.StringBuilder.toString ()Ljava/lang/String; (10)
+87:   invokestatic	testcasesupport.IO.writeLine (Ljava/lang/String;)V (16)
+90:   goto		#115
+93:   new		<java.lang.StringBuilder> (5)
+96:   dup
+97:   invokespecial	java.lang.StringBuilder.<init> ()V (6)
+100:  ldc		"Unable to update records for user: " (17)
+102:  invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (8)
+105:  aload_1
+106:  invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (8)
+109:  invokevirtual	java.lang.StringBuilder.toString ()Ljava/lang/String; (10)
+112:  invokestatic	testcasesupport.IO.writeLine (Ljava/lang/String;)V (16)
+115:  aload_3
+116:  ifnull		#125
+119:  aload_3
+120:  invokeinterface	java.sql.Statement.close ()V (18)	1	0
+125:  goto		#143
+128:  astore		%4
+130:  getstatic		testcasesupport.IO.logger Ljava/util/logging/Logger; (20)
+133:  getstatic		java.util.logging.Level.WARNING Ljava/util/logging/Level; (21)
+136:  ldc		"Error closing Statement" (22)
+138:  aload		%4
+140:  invokevirtual	java.util.logging.Logger.log (Ljava/util/logging/Level;Ljava/lang/String;Ljava/lang/Throwable;)V (23)
+143:  aload_2
+144:  ifnull		#153
+147:  aload_2
+148:  invokeinterface	java.sql.Connection.close ()V (24)	1	0
+153:  goto		#309
+156:  astore		%4
+158:  getstatic		testcasesupport.IO.logger Ljava/util/logging/Logger; (20)
+161:  getstatic		java.util.logging.Level.WARNING Ljava/util/logging/Level; (21)
+164:  ldc		"Error closing Connection" (25)
+166:  aload		%4
+168:  invokevirtual	java.util.logging.Logger.log (Ljava/util/logging/Level;Ljava/lang/String;Ljava/lang/Throwable;)V (23)
+171:  goto		#309
+174:  astore		%4
+176:  getstatic		testcasesupport.IO.logger Ljava/util/logging/Logger; (20)
+179:  getstatic		java.util.logging.Level.WARNING Ljava/util/logging/Level; (21)
+182:  ldc		"Error getting database connection" (26)
+184:  aload		%4
+186:  invokevirtual	java.util.logging.Logger.log (Ljava/util/logging/Level;Ljava/lang/String;Ljava/lang/Throwable;)V (23)
+189:  aload_3
+190:  ifnull		#199
+193:  aload_3
+194:  invokeinterface	java.sql.Statement.close ()V (18)	1	0
+199:  goto		#217
+202:  astore		%4
+204:  getstatic		testcasesupport.IO.logger Ljava/util/logging/Logger; (20)
+207:  getstatic		java.util.logging.Level.WARNING Ljava/util/logging/Level; (21)
+210:  ldc		"Error closing Statement" (22)
+212:  aload		%4
+214:  invokevirtual	java.util.logging.Logger.log (Ljava/util/logging/Level;Ljava/lang/String;Ljava/lang/Throwable;)V (23)
+217:  aload_2
+218:  ifnull		#227
+221:  aload_2
+222:  invokeinterface	java.sql.Connection.close ()V (24)	1	0
+227:  goto		#309
+230:  astore		%4
+232:  getstatic		testcasesupport.IO.logger Ljava/util/logging/Logger; (20)
+235:  getstatic		java.util.logging.Level.WARNING Ljava/util/logging/Level; (21)
+238:  ldc		"Error closing Connection" (25)
+240:  aload		%4
+242:  invokevirtual	java.util.logging.Logger.log (Ljava/util/logging/Level;Ljava/lang/String;Ljava/lang/Throwable;)V (23)
+245:  goto		#309
+248:  astore		%5
+250:  aload_3
+251:  ifnull		#260
+254:  aload_3
+255:  invokeinterface	java.sql.Statement.close ()V (18)	1	0
+260:  goto		#278
+263:  astore		%6
+265:  getstatic		testcasesupport.IO.logger Ljava/util/logging/Logger; (20)
+268:  getstatic		java.util.logging.Level.WARNING Ljava/util/logging/Level; (21)
+271:  ldc		"Error closing Statement" (22)
+273:  aload		%6
+275:  invokevirtual	java.util.logging.Logger.log (Ljava/util/logging/Level;Ljava/lang/String;Ljava/lang/Throwable;)V (23)
+278:  aload_2
+279:  ifnull		#288
+282:  aload_2
+283:  invokeinterface	java.sql.Connection.close ()V (24)	1	0
+288:  goto		#306
+291:  astore		%6
+293:  getstatic		testcasesupport.IO.logger Ljava/util/logging/Logger; (20)
+296:  getstatic		java.util.logging.Level.WARNING Ljava/util/logging/Level; (21)
+299:  ldc		"Error closing Connection" (25)
+301:  aload		%6
+303:  invokevirtual	java.util.logging.Logger.log (Ljava/util/logging/Level;Ljava/lang/String;Ljava/lang/Throwable;)V (23)
+306:  aload		%5
+308:  athrow
+309:  return
+
+Exception handler(s) = 
+From	To	Handler	Type
+115	125	128	java.sql.SQLException(19)
+143	153	156	java.sql.SQLException(19)
+9	115	174	java.sql.SQLException(19)
+189	199	202	java.sql.SQLException(19)
+217	227	230	java.sql.SQLException(19)
+9	115	248	<Any exception>(0)
+174	189	248	<Any exception>(0)
+250	260	263	java.sql.SQLException(19)
+278	288	291	java.sql.SQLException(19)
+248	250	248	<Any exception>(0)
+
+Attribute(s) = 
+LineNumber(0, 179), LineNumber(5, 181), LineNumber(7, 182), LineNumber(9, 186), 
+LineNumber(13, 187), LineNumber(20, 190), LineNumber(55, 192), LineNumber(63, 194), 
+LineNumber(93, 198), LineNumber(115, 209), LineNumber(119, 211), LineNumber(125, 217), 
+LineNumber(128, 214), LineNumber(130, 216), LineNumber(143, 221), LineNumber(147, 223), 
+LineNumber(153, 229), LineNumber(156, 226), LineNumber(158, 228), LineNumber(171, 230), 
+LineNumber(174, 201), LineNumber(176, 203), LineNumber(189, 209), LineNumber(193, 211), 
+LineNumber(199, 217), LineNumber(202, 214), LineNumber(204, 216), LineNumber(217, 221), 
+LineNumber(221, 223), LineNumber(227, 229), LineNumber(230, 226), LineNumber(232, 228), 
+LineNumber(245, 230), LineNumber(248, 207), LineNumber(250, 209), LineNumber(254, 211), 
+LineNumber(260, 217), LineNumber(263, 214), LineNumber(265, 216), LineNumber(278, 221), 
+LineNumber(282, 223), LineNumber(288, 229), LineNumber(291, 226), LineNumber(293, 228), 
+LineNumber(306, 229), LineNumber(309, 232)
+LocalVariable(start_pc = 55, length = 60, index = 4:Boolean result)
+LocalVariable(start_pc = 130, length = 13, index = 4:java.sql.SQLException exceptSql)
+LocalVariable(start_pc = 158, length = 13, index = 4:java.sql.SQLException exceptSql)
+LocalVariable(start_pc = 176, length = 13, index = 4:java.sql.SQLException exceptSql)
+LocalVariable(start_pc = 204, length = 13, index = 4:java.sql.SQLException exceptSql)
+LocalVariable(start_pc = 232, length = 13, index = 4:java.sql.SQLException exceptSql)
+LocalVariable(start_pc = 265, length = 13, index = 6:java.sql.SQLException exceptSql)
+LocalVariable(start_pc = 293, length = 13, index = 6:java.sql.SQLException exceptSql)
+LocalVariable(start_pc = 0, length = 310, index = 0:testcases.CWE89_SQL_Injection.s01.CWE89_SQL_Injection__connect_tcp_execute_45 this)
+LocalVariable(start_pc = 5, length = 305, index = 1:String data)
+LocalVariable(start_pc = 7, length = 303, index = 2:java.sql.Connection dbConnection)
+LocalVariable(start_pc = 9, length = 301, index = 3:java.sql.Statement sqlStatement)
+StackMapTable((FULL, offset delta=93, locals={(type=Object, class=testcases.CWE89_SQL_Injection.s01.CWE89_SQL_Injection__connect_tcp_execute_45), (type=Object, class=java.lang.String), (type=Object, class=java.sql.Connection), (type=Object, class=java.sql.Statement), (type=Object, class=java.lang.Boolean)}), (CHOP 1, offset delta=21), (SAME, offset delta=9), (SAME_LOCALS_1_STACK, offset delta=2, stack items={(type=Object, class=java.sql.SQLException)}), (SAME, offset delta=14), (SAME, offset delta=9), (SAME_LOCALS_1_STACK, offset delta=2, stack items={(type=Object, class=java.sql.SQLException)}), (SAME_LOCALS_1_STACK, offset delta=17, stack items={(type=Object, class=java.sql.SQLException)}), (SAME, offset delta=24), (SAME_LOCALS_1_STACK, offset delta=2, stack items={(type=Object, class=java.sql.SQLException)}), (SAME, offset delta=14), (SAME, offset delta=9), (SAME_LOCALS_1_STACK, offset delta=2, stack items={(type=Object, class=java.sql.SQLException)}), (SAME_LOCALS_1_STACK, offset delta=17, stack items={(type=Object, class=java.lang.Throwable)}), (APPEND 2, offset delta=11, locals={(type=Bogus), (type=Object, class=java.lang.Throwable)}), (SAME_LOCALS_1_STACK, offset delta=2, stack items={(type=Object, class=java.sql.SQLException)}), (SAME, offset delta=14), (SAME, offset delta=9), (SAME_LOCALS_1_STACK, offset delta=2, stack items={(type=Object, class=java.sql.SQLException)}), (SAME, offset delta=14), (CHOP 2, offset delta=2))
+
+goodG2BSink ()V
+Code(max_stack = 4, max_locals = 7, code_length = 310)
+0:    aload_0
+1:    getfield		testcases.CWE89_SQL_Injection.s01.CWE89_SQL_Injection__connect_tcp_execute_45.dataGoodG2B Ljava/lang/String; (50)
+4:    astore_1
+5:    aconst_null
+6:    astore_2
+7:    aconst_null
+8:    astore_3
+9:    invokestatic	testcasesupport.IO.getDBConnection ()Ljava/sql/Connection; (3)
+12:   astore_2
+13:   aload_2
+14:   invokeinterface	java.sql.Connection.createStatement ()Ljava/sql/Statement; (4)	1	0
+19:   astore_3
+20:   aload_3
+21:   new		<java.lang.StringBuilder> (5)
+24:   dup
+25:   invokespecial	java.lang.StringBuilder.<init> ()V (6)
+28:   ldc		"insert into users (status) values ('updated') where name='" (7)
+30:   invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (8)
+33:   aload_1
+34:   invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (8)
+37:   ldc		"'" (9)
+39:   invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (8)
+42:   invokevirtual	java.lang.StringBuilder.toString ()Ljava/lang/String; (10)
+45:   invokeinterface	java.sql.Statement.execute (Ljava/lang/String;)Z (11)	2	0
+50:   invokestatic	java.lang.Boolean.valueOf (Z)Ljava/lang/Boolean; (12)
+53:   astore		%4
+55:   aload		%4
+57:   invokevirtual	java.lang.Boolean.booleanValue ()Z (13)
+60:   ifeq		#93
+63:   new		<java.lang.StringBuilder> (5)
+66:   dup
+67:   invokespecial	java.lang.StringBuilder.<init> ()V (6)
+70:   ldc		"Name, " (14)
+72:   invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (8)
+75:   aload_1
+76:   invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (8)
+79:   ldc		", updated successfully" (15)
+81:   invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (8)
+84:   invokevirtual	java.lang.StringBuilder.toString ()Ljava/lang/String; (10)
+87:   invokestatic	testcasesupport.IO.writeLine (Ljava/lang/String;)V (16)
+90:   goto		#115
+93:   new		<java.lang.StringBuilder> (5)
+96:   dup
+97:   invokespecial	java.lang.StringBuilder.<init> ()V (6)
+100:  ldc		"Unable to update records for user: " (17)
+102:  invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (8)
+105:  aload_1
+106:  invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (8)
+109:  invokevirtual	java.lang.StringBuilder.toString ()Ljava/lang/String; (10)
+112:  invokestatic	testcasesupport.IO.writeLine (Ljava/lang/String;)V (16)
+115:  aload_3
+116:  ifnull		#125
+119:  aload_3
+120:  invokeinterface	java.sql.Statement.close ()V (18)	1	0
+125:  goto		#143
+128:  astore		%4
+130:  getstatic		testcasesupport.IO.logger Ljava/util/logging/Logger; (20)
+133:  getstatic		java.util.logging.Level.WARNING Ljava/util/logging/Level; (21)
+136:  ldc		"Error closing Statement" (22)
+138:  aload		%4
+140:  invokevirtual	java.util.logging.Logger.log (Ljava/util/logging/Level;Ljava/lang/String;Ljava/lang/Throwable;)V (23)
+143:  aload_2
+144:  ifnull		#153
+147:  aload_2
+148:  invokeinterface	java.sql.Connection.close ()V (24)	1	0
+153:  goto		#309
+156:  astore		%4
+158:  getstatic		testcasesupport.IO.logger Ljava/util/logging/Logger; (20)
+161:  getstatic		java.util.logging.Level.WARNING Ljava/util/logging/Level; (21)
+164:  ldc		"Error closing Connection" (25)
+166:  aload		%4
+168:  invokevirtual	java.util.logging.Logger.log (Ljava/util/logging/Level;Ljava/lang/String;Ljava/lang/Throwable;)V (23)
+171:  goto		#309
+174:  astore		%4
+176:  getstatic		testcasesupport.IO.logger Ljava/util/logging/Logger; (20)
+179:  getstatic		java.util.logging.Level.WARNING Ljava/util/logging/Level; (21)
+182:  ldc		"Error getting database connection" (26)
+184:  aload		%4
+186:  invokevirtual	java.util.logging.Logger.log (Ljava/util/logging/Level;Ljava/lang/String;Ljava/lang/Throwable;)V (23)
+189:  aload_3
+190:  ifnull		#199
+193:  aload_3
+194:  invokeinterface	java.sql.Statement.close ()V (18)	1	0
+199:  goto		#217
+202:  astore		%4
+204:  getstatic		testcasesupport.IO.logger Ljava/util/logging/Logger; (20)
+207:  getstatic		java.util.logging.Level.WARNING Ljava/util/logging/Level; (21)
+210:  ldc		"Error closing Statement" (22)
+212:  aload		%4
+214:  invokevirtual	java.util.logging.Logger.log (Ljava/util/logging/Level;Ljava/lang/String;Ljava/lang/Throwable;)V (23)
+217:  aload_2
+218:  ifnull		#227
+221:  aload_2
+222:  invokeinterface	java.sql.Connection.close ()V (24)	1	0
+227:  goto		#309
+230:  astore		%4
+232:  getstatic		testcasesupport.IO.logger Ljava/util/logging/Logger; (20)
+235:  getstatic		java.util.logging.Level.WARNING Ljava/util/logging/Level; (21)
+238:  ldc		"Error closing Connection" (25)
+240:  aload		%4
+242:  invokevirtual	java.util.logging.Logger.log (Ljava/util/logging/Level;Ljava/lang/String;Ljava/lang/Throwable;)V (23)
+245:  goto		#309
+248:  astore		%5
+250:  aload_3
+251:  ifnull		#260
+254:  aload_3
+255:  invokeinterface	java.sql.Statement.close ()V (18)	1	0
+260:  goto		#278
+263:  astore		%6
+265:  getstatic		testcasesupport.IO.logger Ljava/util/logging/Logger; (20)
+268:  getstatic		java.util.logging.Level.WARNING Ljava/util/logging/Level; (21)
+271:  ldc		"Error closing Statement" (22)
+273:  aload		%6
+275:  invokevirtual	java.util.logging.Logger.log (Ljava/util/logging/Level;Ljava/lang/String;Ljava/lang/Throwable;)V (23)
+278:  aload_2
+279:  ifnull		#288
+282:  aload_2
+283:  invokeinterface	java.sql.Connection.close ()V (24)	1	0
+288:  goto		#306
+291:  astore		%6
+293:  getstatic		testcasesupport.IO.logger Ljava/util/logging/Logger; (20)
+296:  getstatic		java.util.logging.Level.WARNING Ljava/util/logging/Level; (21)
+299:  ldc		"Error closing Connection" (25)
+301:  aload		%6
+303:  invokevirtual	java.util.logging.Logger.log (Ljava/util/logging/Level;Ljava/lang/String;Ljava/lang/Throwable;)V (23)
+306:  aload		%5
+308:  athrow
+309:  return
+
+Exception handler(s) = 
+From	To	Handler	Type
+115	125	128	java.sql.SQLException(19)
+143	153	156	java.sql.SQLException(19)
+9	115	174	java.sql.SQLException(19)
+189	199	202	java.sql.SQLException(19)
+217	227	230	java.sql.SQLException(19)
+9	115	248	<Any exception>(0)
+174	189	248	<Any exception>(0)
+250	260	263	java.sql.SQLException(19)
+278	288	291	java.sql.SQLException(19)
+248	250	248	<Any exception>(0)
+
+Attribute(s) = 
+LineNumber(0, 179), LineNumber(5, 181), LineNumber(7, 182), LineNumber(9, 186), 
+LineNumber(13, 187), LineNumber(20, 190), LineNumber(55, 192), LineNumber(63, 194), 
+LineNumber(93, 198), LineNumber(115, 209), LineNumber(119, 211), LineNumber(125, 217), 
+LineNumber(128, 214), LineNumber(130, 216), LineNumber(143, 221), LineNumber(147, 223), 
+LineNumber(153, 229), LineNumber(156, 226), LineNumber(158, 228), LineNumber(171, 230), 
+LineNumber(174, 201), LineNumber(176, 203), LineNumber(189, 209), LineNumber(193, 211), 
+LineNumber(199, 217), LineNumber(202, 214), LineNumber(204, 216), LineNumber(217, 221), 
+LineNumber(221, 223), LineNumber(227, 229), LineNumber(230, 226), LineNumber(232, 228), 
+LineNumber(245, 230), LineNumber(248, 207), LineNumber(250, 209), LineNumber(254, 211), 
+LineNumber(260, 217), LineNumber(263, 214), LineNumber(265, 216), LineNumber(278, 221), 
+LineNumber(282, 223), LineNumber(288, 229), LineNumber(291, 226), LineNumber(293, 228), 
+LineNumber(306, 229), LineNumber(309, 232)
+LocalVariable(start_pc = 55, length = 60, index = 4:Boolean result)
+LocalVariable(start_pc = 130, length = 13, index = 4:java.sql.SQLException exceptSql)
+LocalVariable(start_pc = 158, length = 13, index = 4:java.sql.SQLException exceptSql)
+LocalVariable(start_pc = 176, length = 13, index = 4:java.sql.SQLException exceptSql)
+LocalVariable(start_pc = 204, length = 13, index = 4:java.sql.SQLException exceptSql)
+LocalVariable(start_pc = 232, length = 13, index = 4:java.sql.SQLException exceptSql)
+LocalVariable(start_pc = 265, length = 13, index = 6:java.sql.SQLException exceptSql)
+LocalVariable(start_pc = 293, length = 13, index = 6:java.sql.SQLException exceptSql)
+LocalVariable(start_pc = 0, length = 310, index = 0:testcases.CWE89_SQL_Injection.s01.CWE89_SQL_Injection__connect_tcp_execute_45 this)
+LocalVariable(start_pc = 5, length = 305, index = 1:String data)
+LocalVariable(start_pc = 7, length = 303, index = 2:java.sql.Connection dbConnection)
+LocalVariable(start_pc = 9, length = 301, index = 3:java.sql.Statement sqlStatement)
+StackMapTable((FULL, offset delta=93, locals={(type=Object, class=testcases.CWE89_SQL_Injection.s01.CWE89_SQL_Injection__connect_tcp_execute_45), (type=Object, class=java.lang.String), (type=Object, class=java.sql.Connection), (type=Object, class=java.sql.Statement), (type=Object, class=java.lang.Boolean)}), (CHOP 1, offset delta=21), (SAME, offset delta=9), (SAME_LOCALS_1_STACK, offset delta=2, stack items={(type=Object, class=java.sql.SQLException)}), (SAME, offset delta=14), (SAME, offset delta=9), (SAME_LOCALS_1_STACK, offset delta=2, stack items={(type=Object, class=java.sql.SQLException)}), (SAME_LOCALS_1_STACK, offset delta=17, stack items={(type=Object, class=java.sql.SQLException)}), (SAME, offset delta=24), (SAME_LOCALS_1_STACK, offset delta=2, stack items={(type=Object, class=java.sql.SQLException)}), (SAME, offset delta=14), (SAME, offset delta=9), (SAME_LOCALS_1_STACK, offset delta=2, stack items={(type=Object, class=java.sql.SQLException)}), (SAME_LOCALS_1_STACK, offset delta=17, stack items={(type=Object, class=java.lang.Throwable)}), (APPEND 2, offset delta=11, locals={(type=Bogus), (type=Object, class=java.lang.Throwable)}), (SAME_LOCALS_1_STACK, offset delta=2, stack items={(type=Object, class=java.sql.SQLException)}), (SAME, offset delta=14), (SAME, offset delta=9), (SAME_LOCALS_1_STACK, offset delta=2, stack items={(type=Object, class=java.sql.SQLException)}), (SAME, offset delta=14), (CHOP 2, offset delta=2))
+
+goodG2BSink ()V
+Code(max_stack = 4, max_locals = 7, code_length = 310)
+0:    aload_0
+1:    getfield		testcases.CWE89_SQL_Injection.s01.CWE89_SQL_Injection__connect_tcp_execute_45.dataGoodG2B Ljava/lang/String; (50)
+4:    astore_1
+5:    aconst_null
+6:    astore_2
+7:    aconst_null
+8:    astore_3
+9:    invokestatic	testcasesupport.IO.getDBConnection ()Ljava/sql/Connection; (3)
+12:   astore_2
+13:   aload_2
+14:   invokeinterface	java.sql.Connection.createStatement ()Ljava/sql/Statement; (4)	1	0
+19:   astore_3
+20:   aload_3
+21:   new		<java.lang.StringBuilder> (5)
+24:   dup
+25:   invokespecial	java.lang.StringBuilder.<init> ()V (6)
+28:   ldc		"insert into users (status) values ('updated') where name='" (7)
+30:   invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (8)
+33:   aload_1
+34:   invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (8)
+37:   ldc		"'" (9)
+39:   invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (8)
+42:   invokevirtual	java.lang.StringBuilder.toString ()Ljava/lang/String; (10)
+45:   invokeinterface	java.sql.Statement.execute (Ljava/lang/String;)Z (11)	2	0
+50:   invokestatic	java.lang.Boolean.valueOf (Z)Ljava/lang/Boolean; (12)
+53:   astore		%4
+55:   aload		%4
+57:   invokevirtual	java.lang.Boolean.booleanValue ()Z (13)
+60:   ifeq		#93
+63:   new		<java.lang.StringBuilder> (5)
+66:   dup
+67:   invokespecial	java.lang.StringBuilder.<init> ()V (6)
+70:   ldc		"Name, " (14)
+72:   invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (8)
+75:   aload_1
+76:   invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (8)
+79:   ldc		", updated successfully" (15)
+81:   invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (8)
+84:   invokevirtual	java.lang.StringBuilder.toString ()Ljava/lang/String; (10)
+87:   invokestatic	testcasesupport.IO.writeLine (Ljava/lang/String;)V (16)
+90:   goto		#115
+93:   new		<java.lang.StringBuilder> (5)
+96:   dup
+97:   invokespecial	java.lang.StringBuilder.<init> ()V (6)
+100:  ldc		"Unable to update records for user: " (17)
+102:  invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (8)
+105:  aload_1
+106:  invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (8)
+109:  invokevirtual	java.lang.StringBuilder.toString ()Ljava/lang/String; (10)
+112:  invokestatic	testcasesupport.IO.writeLine (Ljava/lang/String;)V (16)
+115:  aload_3
+116:  ifnull		#125
+119:  aload_3
+120:  invokeinterface	java.sql.Statement.close ()V (18)	1	0
+125:  goto		#143
+128:  astore		%4
+130:  getstatic		testcasesupport.IO.logger Ljava/util/logging/Logger; (20)
+133:  getstatic		java.util.logging.Level.WARNING Ljava/util/logging/Level; (21)
+136:  ldc		"Error closing Statement" (22)
+138:  aload		%4
+140:  invokevirtual	java.util.logging.Logger.log (Ljava/util/logging/Level;Ljava/lang/String;Ljava/lang/Throwable;)V (23)
+143:  aload_2
+144:  ifnull		#153
+147:  aload_2
+148:  invokeinterface	java.sql.Connection.close ()V (24)	1	0
+153:  goto		#309
+156:  astore		%4
+158:  getstatic		testcasesupport.IO.logger Ljava/util/logging/Logger; (20)
+161:  getstatic		java.util.logging.Level.WARNING Ljava/util/logging/Level; (21)
+164:  ldc		"Error closing Connection" (25)
+166:  aload		%4
+168:  invokevirtual	java.util.logging.Logger.log (Ljava/util/logging/Level;Ljava/lang/String;Ljava/lang/Throwable;)V (23)
+171:  goto		#309
+174:  astore		%4
+176:  getstatic		testcasesupport.IO.logger Ljava/util/logging/Logger; (20)
+179:  getstatic		java.util.logging.Level.WARNING Ljava/util/logging/Level; (21)
+182:  ldc		"Error getting database connection" (26)
+184:  aload		%4
+186:  invokevirtual	java.util.logging.Logger.log (Ljava/util/logging/Level;Ljava/lang/String;Ljava/lang/Throwable;)V (23)
+189:  aload_3
+190:  ifnull		#199
+193:  aload_3
+194:  invokeinterface	java.sql.Statement.close ()V (18)	1	0
+199:  goto		#217
+202:  astore		%4
+204:  getstatic		testcasesupport.IO.logger Ljava/util/logging/Logger; (20)
+207:  getstatic		java.util.logging.Level.WARNING Ljava/util/logging/Level; (21)
+210:  ldc		"Error closing Statement" (22)
+212:  aload		%4
+214:  invokevirtual	java.util.logging.Logger.log (Ljava/util/logging/Level;Ljava/lang/String;Ljava/lang/Throwable;)V (23)
+217:  aload_2
+218:  ifnull		#227
+221:  aload_2
+222:  invokeinterface	java.sql.Connection.close ()V (24)	1	0
+227:  goto		#309
+230:  astore		%4
+232:  getstatic		testcasesupport.IO.logger Ljava/util/logging/Logger; (20)
+235:  getstatic		java.util.logging.Level.WARNING Ljava/util/logging/Level; (21)
+238:  ldc		"Error closing Connection" (25)
+240:  aload		%4
+242:  invokevirtual	java.util.logging.Logger.log (Ljava/util/logging/Level;Ljava/lang/String;Ljava/lang/Throwable;)V (23)
+245:  goto		#309
+248:  astore		%5
+250:  aload_3
+251:  ifnull		#260
+254:  aload_3
+255:  invokeinterface	java.sql.Statement.close ()V (18)	1	0
+260:  goto		#278
+263:  astore		%6
+265:  getstatic		testcasesupport.IO.logger Ljava/util/logging/Logger; (20)
+268:  getstatic		java.util.logging.Level.WARNING Ljava/util/logging/Level; (21)
+271:  ldc		"Error closing Statement" (22)
+273:  aload		%6
+275:  invokevirtual	java.util.logging.Logger.log (Ljava/util/logging/Level;Ljava/lang/String;Ljava/lang/Throwable;)V (23)
+278:  aload_2
+279:  ifnull		#288
+282:  aload_2
+283:  invokeinterface	java.sql.Connection.close ()V (24)	1	0
+288:  goto		#306
+291:  astore		%6
+293:  getstatic		testcasesupport.IO.logger Ljava/util/logging/Logger; (20)
+296:  getstatic		java.util.logging.Level.WARNING Ljava/util/logging/Level; (21)
+299:  ldc		"Error closing Connection" (25)
+301:  aload		%6
+303:  invokevirtual	java.util.logging.Logger.log (Ljava/util/logging/Level;Ljava/lang/String;Ljava/lang/Throwable;)V (23)
+306:  aload		%5
+308:  athrow
+309:  return
+
+Exception handler(s) = 
+From	To	Handler	Type
+115	125	128	java.sql.SQLException(19)
+143	153	156	java.sql.SQLException(19)
+9	115	174	java.sql.SQLException(19)
+189	199	202	java.sql.SQLException(19)
+217	227	230	java.sql.SQLException(19)
+9	115	248	<Any exception>(0)
+174	189	248	<Any exception>(0)
+250	260	263	java.sql.SQLException(19)
+278	288	291	java.sql.SQLException(19)
+248	250	248	<Any exception>(0)
+
+Attribute(s) = 
+LineNumber(0, 179), LineNumber(5, 181), LineNumber(7, 182), LineNumber(9, 186), 
+LineNumber(13, 187), LineNumber(20, 190), LineNumber(55, 192), LineNumber(63, 194), 
+LineNumber(93, 198), LineNumber(115, 209), LineNumber(119, 211), LineNumber(125, 217), 
+LineNumber(128, 214), LineNumber(130, 216), LineNumber(143, 221), LineNumber(147, 223), 
+LineNumber(153, 229), LineNumber(156, 226), LineNumber(158, 228), LineNumber(171, 230), 
+LineNumber(174, 201), LineNumber(176, 203), LineNumber(189, 209), LineNumber(193, 211), 
+LineNumber(199, 217), LineNumber(202, 214), LineNumber(204, 216), LineNumber(217, 221), 
+LineNumber(221, 223), LineNumber(227, 229), LineNumber(230, 226), LineNumber(232, 228), 
+LineNumber(245, 230), LineNumber(248, 207), LineNumber(250, 209), LineNumber(254, 211), 
+LineNumber(260, 217), LineNumber(263, 214), LineNumber(265, 216), LineNumber(278, 221), 
+LineNumber(282, 223), LineNumber(288, 229), LineNumber(291, 226), LineNumber(293, 228), 
+LineNumber(306, 229), LineNumber(309, 232)
+LocalVariable(start_pc = 55, length = 60, index = 4:Boolean result)
+LocalVariable(start_pc = 130, length = 13, index = 4:java.sql.SQLException exceptSql)
+LocalVariable(start_pc = 158, length = 13, index = 4:java.sql.SQLException exceptSql)
+LocalVariable(start_pc = 176, length = 13, index = 4:java.sql.SQLException exceptSql)
+LocalVariable(start_pc = 204, length = 13, index = 4:java.sql.SQLException exceptSql)
+LocalVariable(start_pc = 232, length = 13, index = 4:java.sql.SQLException exceptSql)
+LocalVariable(start_pc = 265, length = 13, index = 6:java.sql.SQLException exceptSql)
+LocalVariable(start_pc = 293, length = 13, index = 6:java.sql.SQLException exceptSql)
+LocalVariable(start_pc = 0, length = 310, index = 0:testcases.CWE89_SQL_Injection.s01.CWE89_SQL_Injection__connect_tcp_execute_45 this)
+LocalVariable(start_pc = 5, length = 305, index = 1:String data)
+LocalVariable(start_pc = 7, length = 303, index = 2:java.sql.Connection dbConnection)
+LocalVariable(start_pc = 9, length = 301, index = 3:java.sql.Statement sqlStatement)
+StackMapTable((FULL, offset delta=93, locals={(type=Object, class=testcases.CWE89_SQL_Injection.s01.CWE89_SQL_Injection__connect_tcp_execute_45), (type=Object, class=java.lang.String), (type=Object, class=java.sql.Connection), (type=Object, class=java.sql.Statement), (type=Object, class=java.lang.Boolean)}), (CHOP 1, offset delta=21), (SAME, offset delta=9), (SAME_LOCALS_1_STACK, offset delta=2, stack items={(type=Object, class=java.sql.SQLException)}), (SAME, offset delta=14), (SAME, offset delta=9), (SAME_LOCALS_1_STACK, offset delta=2, stack items={(type=Object, class=java.sql.SQLException)}), (SAME_LOCALS_1_STACK, offset delta=17, stack items={(type=Object, class=java.sql.SQLException)}), (SAME, offset delta=24), (SAME_LOCALS_1_STACK, offset delta=2, stack items={(type=Object, class=java.sql.SQLException)}), (SAME, offset delta=14), (SAME, offset delta=9), (SAME_LOCALS_1_STACK, offset delta=2, stack items={(type=Object, class=java.sql.SQLException)}), (SAME_LOCALS_1_STACK, offset delta=17, stack items={(type=Object, class=java.lang.Throwable)}), (APPEND 2, offset delta=11, locals={(type=Bogus), (type=Object, class=java.lang.Throwable)}), (SAME_LOCALS_1_STACK, offset delta=2, stack items={(type=Object, class=java.sql.SQLException)}), (SAME, offset delta=14), (SAME, offset delta=9), (SAME_LOCALS_1_STACK, offset delta=2, stack items={(type=Object, class=java.sql.SQLException)}), (SAME, offset delta=14), (CHOP 2, offset delta=2))
+
+goodG2BSink ()V
+Code(max_stack = 4, max_locals = 7, code_length = 310)
+0:    aload_0
+1:    getfield		testcases.CWE89_SQL_Injection.s01.CWE89_SQL_Injection__connect_tcp_execute_45.dataGoodG2B Ljava/lang/String; (50)
+4:    astore_1
+5:    aconst_null
+6:    astore_2
+7:    aconst_null
+8:    astore_3
+9:    invokestatic	testcasesupport.IO.getDBConnection ()Ljava/sql/Connection; (3)
+12:   astore_2
+13:   aload_2
+14:   invokeinterface	java.sql.Connection.createStatement ()Ljava/sql/Statement; (4)	1	0
+19:   astore_3
+20:   aload_3
+21:   new		<java.lang.StringBuilder> (5)
+24:   dup
+25:   invokespecial	java.lang.StringBuilder.<init> ()V (6)
+28:   ldc		"insert into users (status) values ('updated') where name='" (7)
+30:   invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (8)
+33:   aload_1
+34:   invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (8)
+37:   ldc		"'" (9)
+39:   invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (8)
+42:   invokevirtual	java.lang.StringBuilder.toString ()Ljava/lang/String; (10)
+45:   invokeinterface	java.sql.Statement.execute (Ljava/lang/String;)Z (11)	2	0
+50:   invokestatic	java.lang.Boolean.valueOf (Z)Ljava/lang/Boolean; (12)
+53:   astore		%4
+55:   aload		%4
+57:   invokevirtual	java.lang.Boolean.booleanValue ()Z (13)
+60:   ifeq		#93
+63:   new		<java.lang.StringBuilder> (5)
+66:   dup
+67:   invokespecial	java.lang.StringBuilder.<init> ()V (6)
+70:   ldc		"Name, " (14)
+72:   invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (8)
+75:   aload_1
+76:   invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (8)
+79:   ldc		", updated successfully" (15)
+81:   invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (8)
+84:   invokevirtual	java.lang.StringBuilder.toString ()Ljava/lang/String; (10)
+87:   invokestatic	testcasesupport.IO.writeLine (Ljava/lang/String;)V (16)
+90:   goto		#115
+93:   new		<java.lang.StringBuilder> (5)
+96:   dup
+97:   invokespecial	java.lang.StringBuilder.<init> ()V (6)
+100:  ldc		"Unable to update records for user: " (17)
+102:  invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (8)
+105:  aload_1
+106:  invokevirtual	java.lang.StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; (8)
+109:  invokevirtual	java.lang.StringBuilder.toString ()Ljava/lang/String; (10)
+112:  invokestatic	testcasesupport.IO.writeLine (Ljava/lang/String;)V (16)
+115:  aload_3
+116:  ifnull		#125
+119:  aload_3
+120:  invokeinterface	java.sql.Statement.close ()V (18)	1	0
+125:  goto		#143
+128:  astore		%4
+130:  getstatic		testcasesupport.IO.logger Ljava/util/logging/Logger; (20)
+133:  getstatic		java.util.logging.Level.WARNING Ljava/util/logging/Level; (21)
+136:  ldc		"Error closing Statement" (22)
+138:  aload		%4
+140:  invokevirtual	java.util.logging.Logger.log (Ljava/util/logging/Level;Ljava/lang/String;Ljava/lang/Throwable;)V (23)
+143:  aload_2
+144:  ifnull		#153
+147:  aload_2
+148:  invokeinterface	java.sql.Connection.close ()V (24)	1	0
+153:  goto		#309
+156:  astore		%4
+158:  getstatic		testcasesupport.IO.logger Ljava/util/logging/Logger; (20)
+161:  getstatic		java.util.logging.Level.WARNING Ljava/util/logging/Level; (21)
+164:  ldc		"Error closing Connection" (25)
+166:  aload		%4
+168:  invokevirtual	java.util.logging.Logger.log (Ljava/util/logging/Level;Ljava/lang/String;Ljava/lang/Throwable;)V (23)
+171:  goto		#309
+174:  astore		%4
+176:  getstatic		testcasesupport.IO.logger Ljava/util/logging/Logger; (20)
+179:  getstatic		java.util.logging.Level.WARNING Ljava/util/logging/Level; (21)
+182:  ldc		"Error getting database connection" (26)
+184:  aload		%4
+186:  invokevirtual	java.util.logging.Logger.log (Ljava/util/logging/Level;Ljava/lang/String;Ljava/lang/Throwable;)V (23)
+189:  aload_3
+190:  ifnull		#199
+193:  aload_3
+194:  invokeinterface	java.sql.Statement.close ()V (18)	1	0
+199:  goto		#217
+202:  astore		%4
+204:  getstatic		testcasesupport.IO.logger Ljava/util/logging/Logger; (20)
+207:  getstatic		java.util.logging.Level.WARNING Ljava/util/logging/Level; (21)
+210:  ldc		"Error closing Statement" (22)
+212:  aload		%4
+214:  invokevirtual	java.util.logging.Logger.log (Ljava/util/logging/Level;Ljava/lang/String;Ljava/lang/Throwable;)V (23)
+217:  aload_2
+218:  ifnull		#227
+221:  aload_2
+222:  invokeinterface	java.sql.Connection.close ()V (24)	1	0
+227:  goto		#309
+230:  astore		%4
+232:  getstatic		testcasesupport.IO.logger Ljava/util/logging/Logger; (20)
+235:  getstatic		java.util.logging.Level.WARNING Ljava/util/logging/Level; (21)
+238:  ldc		"Error closing Connection" (25)
+240:  aload		%4
+242:  invokevirtual	java.util.logging.Logger.log (Ljava/util/logging/Level;Ljava/lang/String;Ljava/lang/Throwable;)V (23)
+245:  goto		#309
+248:  astore		%5
+250:  aload_3
+251:  ifnull		#260
+254:  aload_3
+255:  invokeinterface	java.sql.Statement.close ()V (18)	1	0
+260:  goto		#278
+263:  astore		%6
+265:  getstatic		testcasesupport.IO.logger Ljava/util/logging/Logger; (20)
+268:  getstatic		java.util.logging.Level.WARNING Ljava/util/logging/Level; (21)
+271:  ldc		"Error closing Statement" (22)
+273:  aload		%6
+275:  invokevirtual	java.util.logging.Logger.log (Ljava/util/logging/Level;Ljava/lang/String;Ljava/lang/Throwable;)V (23)
+278:  aload_2
+279:  ifnull		#288
+282:  aload_2
+283:  invokeinterface	java.sql.Connection.close ()V (24)	1	0
+288:  goto		#306
+291:  astore		%6
+293:  getstatic		testcasesupport.IO.logger Ljava/util/logging/Logger; (20)
+296:  getstatic		java.util.logging.Level.WARNING Ljava/util/logging/Level; (21)
+299:  ldc		"Error closing Connection" (25)
+301:  aload		%6
+303:  invokevirtual	java.util.logging.Logger.log (Ljava/util/logging/Level;Ljava/lang/String;Ljava/lang/Throwable;)V (23)
+306:  aload		%5
+308:  athrow
+309:  return
+
+Exception handler(s) = 
+From	To	Handler	Type
+115	125	128	java.sql.SQLException(19)
+143	153	156	java.sql.SQLException(19)
+9	115	174	java.sql.SQLException(19)
+189	199	202	java.sql.SQLException(19)
+217	227	230	java.sql.SQLException(19)
+9	115	248	<Any exception>(0)
+174	189	248	<Any exception>(0)
+250	260	263	java.sql.SQLException(19)
+278	288	291	java.sql.SQLException(19)
+248	250	248	<Any exception>(0)
+
+Attribute(s) = 
+LineNumber(0, 179), LineNumber(5, 181), LineNumber(7, 182), LineNumber(9, 186), 
+LineNumber(13, 187), LineNumber(20, 190), LineNumber(55, 192), LineNumber(63, 194), 
+LineNumber(93, 198), LineNumber(115, 209), LineNumber(119, 211), LineNumber(125, 217), 
+LineNumber(128, 214), LineNumber(130, 216), LineNumber(143, 221), LineNumber(147, 223), 
+LineNumber(153, 229), LineNumber(156, 226), LineNumber(158, 228), LineNumber(171, 230), 
+LineNumber(174, 201), LineNumber(176, 203), LineNumber(189, 209), LineNumber(193, 211), 
+LineNumber(199, 217), LineNumber(202, 214), LineNumber(204, 216), LineNumber(217, 221), 
+LineNumber(221, 223), LineNumber(227, 229), LineNumber(230, 226), LineNumber(232, 228), 
+LineNumber(245, 230), LineNumber(248, 207), LineNumber(250, 209), LineNumber(254, 211), 
+LineNumber(260, 217), LineNumber(263, 214), LineNumber(265, 216), LineNumber(278, 221), 
+LineNumber(282, 223), LineNumber(288, 229), LineNumber(291, 226), LineNumber(293, 228), 
+LineNumber(306, 229), LineNumber(309, 232)
+LocalVariable(start_pc = 55, length = 60, index = 4:Boolean result)
+LocalVariable(start_pc = 130, length = 13, index = 4:java.sql.SQLException exceptSql)
+LocalVariable(start_pc = 158, length = 13, index = 4:java.sql.SQLException exceptSql)
+LocalVariable(start_pc = 176, length = 13, index = 4:java.sql.SQLException exceptSql)
+LocalVariable(start_pc = 204, length = 13, index = 4:java.sql.SQLException exceptSql)
+LocalVariable(start_pc = 232, length = 13, index = 4:java.sql.SQLException exceptSql)
+LocalVariable(start_pc = 265, length = 13, index = 6:java.sql.SQLException exceptSql)
+LocalVariable(start_pc = 293, length = 13, index = 6:java.sql.SQLException exceptSql)
+LocalVariable(start_pc = 0, length = 310, index = 0:testcases.CWE89_SQL_Injection.s01.CWE89_SQL_Injection__connect_tcp_execute_45 this)
+LocalVariable(start_pc = 5, length = 305, index = 1:String data)
+LocalVariable(start_pc = 7, length = 303, index = 2:java.sql.Connection dbConnection)
+LocalVariable(start_pc = 9, length = 301, index = 3:java.sql.Statement sqlStatement)
+StackMapTable((FULL, offset delta=93, locals={(type=Object, class=testcases.CWE89_SQL_Injection.s01.CWE89_SQL_Injection__connect_tcp_execute_45), (type=Object, class=java.lang.String), (type=Object, class=java.sql.Connection), (type=Object, class=java.sql.Statement), (type=Object, class=java.lang.Boolean)}), (CHOP 1, offset delta=21), (SAME, offset delta=9), (SAME_LOCALS_1_STACK, offset delta=2, stack items={(type=Object, class=java.sql.SQLException)}), (SAME, offset delta=14), (SAME, offset delta=9), (SAME_LOCALS_1_STACK, offset delta=2, stack items={(type=Object, class=java.sql.SQLException)}), (SAME_LOCALS_1_STACK, offset delta=17, stack items={(type=Object, class=java.sql.SQLException)}), (SAME, offset delta=24), (SAME_LOCALS_1_STACK, offset delta=2, stack items={(type=Object, class=java.sql.SQLException)}), (SAME, offset delta=14), (SAME, offset delta=9), (SAME_LOCALS_1_STACK, offset delta=2, stack items={(type=Object, class=java.sql.SQLException)}), (SAME_LOCALS_1_STACK, offset delta=17, stack items={(type=Object, class=java.lang.Throwable)}), (APPEND 2, offset delta=11, locals={(type=Bogus), (type=Object, class=java.lang.Throwable)}), (SAME_LOCALS_1_STACK, offset delta=2, stack items={(type=Object, class=java.sql.SQLException)}), (SAME, offset delta=14), (SAME, offset delta=9), (SAME_LOCALS_1_STACK, offset delta=2, stack items={(type=Object, class=java.sql.SQLException)}), (SAME, offset delta=14), (CHOP 2, offset delta=2))
+
