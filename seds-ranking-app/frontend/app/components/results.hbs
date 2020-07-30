@@ -1,0 +1,34 @@
+<div class="results-box">
+  <div class="sidebar {{if this.hasErrors 'warning'}}">
+
+    {{#if this.hasErrors}}
+      <img src="/assets/images/warning-white.svg" alt="status" class="icon">
+    {{else}}
+      <img src="/assets/images/check-white.svg" alt="status" class="icon">
+    {{/if}}
+  </div>
+  <div class="content">
+    <div class="header">
+      <div class="title">
+        Results
+        {{#if this.hasErrors}}
+          <div class="sub-title">We discovered some false positives.</div>
+        {{else}}
+          <div class="sub-title">We didn't discover any false positives.</div>
+        {{/if}}
+      </div>
+      <div class="trashcan" {{action clear}}>
+        <img src="/assets/images/trash-grey.svg" alt="trash results">
+      </div>
+    </div>
+    <div class="tests-group">
+      <div class="test-group">
+        <ul class="warnings">
+          {{#each @results.messages as |message|}}
+            <li class="warning">{{message}}</li>
+          {{/each}}
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

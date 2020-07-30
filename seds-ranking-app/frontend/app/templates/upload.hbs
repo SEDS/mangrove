@@ -1,0 +1,54 @@
+<div class="page upload-page">
+  <div class="page-title">
+    Click to upload a .cpp file for us to analyze. The results will be displayed
+    after we are done processing the file.
+  </div>
+
+  <div class="page-subtitle">
+    Choose which <b>tool</b> you want us to check against
+  </div>
+
+  <div class="inputs-group">
+    <div class="radio-group">
+      {{#each this.tool as |t|}}
+        {{#radio-button
+            value=t
+            groupValue=this.selectedTool
+            name="tools"
+            changed=(action "toolChanged")
+          }}
+          <span>{{t}}</span>
+        {{/radio-button}}
+      {{/each}}
+    </div>
+
+    <div class="page-subtitle">
+      Chose which <b>weakness</b> you want us to run against
+    </div>
+
+    <div class="radio-group">
+      {{#each this.weaknesses as |weakness|}}
+        {{#radio-button
+            value=weakness
+            groupValue=this.selectedWeakness
+            name="weaknesses"
+            changed=(action "weaknessChanged")
+          }}
+          <span>CWE-{{weakness}}</span>
+        {{/radio-button}}
+      {{/each}}
+    </div>
+
+    {{#with (changeset @model) as |changeset|}}
+        {{#file-upload name="file"
+          accept=".cpp,.h"
+          onfileadd=(action 'setFile' changeset)}}
+          <span id="upload-avatar" class="upload-hero-button" tabindex={{0}}>Select a File</span>
+        {{/file-upload}}
+    {{/with}}
+  </div>
+
+  {{#if this.results}}
+    <Results @results={{this.results}} @parent={{this}}></Results>
+  {{/if}}
+</div>
